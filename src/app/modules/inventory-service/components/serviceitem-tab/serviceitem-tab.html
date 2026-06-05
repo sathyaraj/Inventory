@@ -1,0 +1,110 @@
+<div [formGroup]="form"  class=" w-full bg-gray-200 text-xs font-sans" >
+  <div class="p-3 bg-white">
+
+  <div class="px-2 py-1 mb-3">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Basic Information
+    </span>
+  </div>
+
+ <div class="grid grid-cols-1 md:grid-cols-2 gap-4 gap-6 mb-3">
+
+      <!-- LEFT FORM -->
+      <div class="space-y-1">
+
+        <!-- Item -->
+        <div class="flex items-center">
+           <label class="w-43 text-[14px] font-medium text-gray-700">Service</label>
+          <input formControlName="serviceCode" placeholder="code"  maxlength="10"  class="w-20 border border-gray-300 px-2 py-[4px] bg-white"> 
+          <input formControlName="serviceName" placeholder="Item Description" class="w-52 border border-gray-300 px-2 py-[4px]">
+          
+          <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('serviceItem')"></lucide-icon>
+          </button>
+         
+          
+        </div>
+         <!-- <div *ngIf="isInvalid('itemCode')" class="text-red-500 text-xs ml-40">
+            Item Code is required
+          </div> -->
+        </div>
+
+        <div class="space-y-1">
+        <!-- Item Set -->
+        <div class="flex items-center gap-3">
+                  <label class="w-40 text-[14px] font-medium text-gray-700">Service RefNo:</label>
+          <input formControlName="serviceSet" readonly class="w-28 border border-gray-300 px-2 py-[4px] bg-white">
+        </div>
+        </div>
+        
+        </div>
+
+
+  <!-- dynamic field -->
+
+    <app-admindynamic-form
+    [form]="form"
+    [fields]="fields">
+  </app-admindynamic-form>
+   
+  
+  <div class=" px-2 py-1 mt-3 mb-2">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Tax & Account
+    </span>
+  </div>
+
+   <app-admindynamic-form
+    [form]="form"
+    [fields]="taxfields">
+  </app-admindynamic-form>
+
+    
+  <div class=" px-2 py-1 mt-3 mb-2">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Configuraion
+    </span>
+  </div>
+
+  <app-admindynamic-form
+    [form]="form"
+    [fields]="configfields">
+  </app-admindynamic-form>
+
+
+          <div class=" px-2 py-1 mt-3 mb-2">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Service Control
+    </span>
+  </div>
+
+  <app-admindynamic-form
+    [form]="form"
+    [fields]="controlfields">
+  </app-admindynamic-form>
+
+
+
+    <!-- <div class=" px-2 py-1 mb-3">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Item Controls
+    </span>
+  </div>
+
+          <div class=" px-2 py-1 mb-3">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Status
+    </span>
+  </div> -->
+
+  
+  </div>
+
+</div>
+
+
+
+
+
+
+

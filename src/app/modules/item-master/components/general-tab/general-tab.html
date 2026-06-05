@@ -1,0 +1,1191 @@
+<div [formGroup]="form"  class=" w-full bg-gray-200 text-xs font-sans" >
+  <div class="p-3 bg-white">
+
+      <div class="px-2 py-1 mb-3">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Basic Information
+    </span>
+  </div>
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+      <!-- LEFT FORM -->
+      <div class="space-y-1">
+
+        <!-- Item -->
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Item*:</label>
+          <input formControlName="itemCode" placeholder="code"  maxlength="10"  class="w-28 border border-gray-300 px-2 py-[4px] bg-white"> 
+          <!-- <input formControlName="itemName" placeholder="Item Description" class="flex-1 border border-gray-300 px-2 py-[4px]"> -->
+          <div class=" relative dropdown-wrapper-item">
+          <input
+              type="text"
+              formControlName="itemName"
+              (focus)="showStockDropdown=true"
+              (blur)="stockDropdown()"
+              (input)="filterStocks($event)"
+              placeholder="Item Name"
+              class="w-47 border border-gray-300 px-2 py-[4px]"
+              />
+
+              <div *ngIf="showStockDropdown"
+              class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
+
+              <div
+              *ngFor="let group of filteredStock"
+              (click)="selectStock(group)"
+              class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+
+              {{group.itemCode}}-{{group.name}}
+
+              </div>
+
+              <div *ngIf="filteredmeter.length===0"
+              class="px-2 py-1 text-gray-400">
+              No results
+              </div>
+
+              </div>
+              </div>
+          
+          <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+          <lucide-icon [img]="plus" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('Item')"></lucide-icon>
+          </button>
+         
+          
+        </div>
+         <div *ngIf="isInvalid('itemCode')" class="text-red-500 text-xs ml-40">
+            Item Code is required
+          </div>
+        </div>
+
+        <div class="space-y-1">
+        <!-- Item Set -->
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Item RefNo:</label>
+          <input formControlName="itemSet" readonly class="w-28 border border-gray-300 px-2 py-[4px] bg-white">
+        </div>
+        </div>
+        
+        </div>
+
+        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+          <div class="space-y-1">
+        <!-- Commodity Group -->
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Commodity Group:</label>
+
+         <div class="relative w-75 dropdown-wrapper">
+
+              <!-- Input -->
+              <input
+                type="text"
+                formControlName="commodityGroup"
+                [value]="selectedGroupName"
+               
+                (focus)="onGroupFocus()"
+                (blur)="closeDropdown()"
+                (input)="filterGroups($event)"
+                placeholder="Commodity Group"
+                class="w-75 border border-gray-300 px-2 py-[3px] bg-white" />
+
+              <!-- Dropdown -->
+              <div *ngIf="showGroupDropdown"
+                  class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
+
+                <div *ngFor="let group of filteredGroups"
+                    (click)="selectGroup(group)"
+                    class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+                  {{ group.name }}
+
+                </div>
+
+                <div *ngIf="filteredGroups.length === 0" class="px-2 py-1 text-gray-400">
+                  No results
+                </div>
+
+              </div>
+
+            </div>
+                    <!-- <select 
+            formControlName="commodityGroup"
+            class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
+
+            <option value="">Select Group</option>
+
+            <option *ngFor="let group of commodityGroups" [value]="group.id">
+              {{ group.name }}
+            </option>
+
+          </select> -->
+          <!-- <input formControlName="commodityGroup" placeholder="code" class="w-28 border border-gray-300 px-2 py-[4px] bg-white"> -->
+          <!-- <input formControlName="commodityGroupDesc" placeholder="Description" class="flex-1 border border-gray-300 px-2 py-[4px] bg-white"> -->
+          <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('CommodityGroup')"></lucide-icon>
+            </button>
+        </div>
+        </div>
+
+         <div class="space-y-1">
+        <!-- Commodity Code -->
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Commodity Code:</label>
+              <input formControlName="commodityCode" readonly placeholder="code" class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
+          <!--<input formControlName="commodityCodeDesc" placeholder="Description" class="flex-1 border border-gray-300 px-2 py-[4px] bg-white"> -->
+          <!-- <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('CommodityCode')"></lucide-icon>
+            </button> -->
+            
+        </div>
+          </div>
+        </div>
+        
+      <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <div class="space-y-1">
+        <!-- Meter Group -->
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Meter Group:</label>
+           <div class="relative w-75 dropdown-wrapper1">
+          <input
+          type="text"
+          formControlName="meterGroup"
+          (focus)="showmeterDropdown=true"
+          (blur)="closeMeterDropdown()"
+          (input)="filterMeter($event)"
+          placeholder="Meter Group"
+          class="w-75 border border-gray-300 px-2 py-[3px] bg-white"
+          />
+
+          <div *ngIf="showmeterDropdown"
+          class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
+
+          <div
+          *ngFor="let group of filteredmeter"
+          (click)="selectMeter(group)"
+          class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+
+          {{group.name}}
+
+          </div>
+
+          <div *ngIf="filteredmeter.length===0"
+          class="px-2 py-1 text-gray-400">
+          No results
+          </div>
+
+          </div>
+          </div>
+          <!-- <input formControlName="meterGroup" placeholder="code" class="w-28 border border-gray-300 px-2 py-[4px] bg-white">
+          <input formControlName="meterGroupDesc" placeholder="Description" class="flex-1 border border-gray-300 px-2 py-[4px] bg-white"> -->
+          <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+              <lucide-icon [img]="plus" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('meterGroup')"></lucide-icon>
+            </button>
+            
+        </div>
+        </div>
+        <div class="space-y-1">
+        <!-- Meter -->
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Meter:</label>
+          <input formControlName="meter" readonly placeholder="code" class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
+          <!-- <input formControlName="meterDesc" placeholder="Description" class="flex-1 border border-gray-300 px-2 py-[4px] bg-white"> -->
+          <!-- <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+              <lucide-icon [img]="chevronsright" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('CommodityGroup')"></lucide-icon>
+            </button> -->
+        </div>
+
+        </div>
+      </div>
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+        <div class="space-y-1">
+
+        <!-- Lot -->
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">LOT Type*:</label>
+          <!-- <input formControlName="lotType" class="flex-1 border border-gray-300 px-2 py-[4px]" value="NOLOT"> -->
+          <select 
+            formControlName="lotType" 
+            class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
+            <option value="" disabled selected>Select LOT Type</option>
+            <option value="LOT">LOT</option>
+            <option value="NOLOT">NOLOT</option>
+          </select>
+
+          <!-- <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('LotType')"></lucide-icon>
+            </button> -->
+        </div>
+        </div>
+        <div class="space-y-1">
+        <!-- Max Qty -->
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Order Quantity*:</label>
+          <input formControlName="qty" placeholder="Quantity" (input)="checkQuantity('qty')" (keypress)="allowOnlyNumbers($event)" class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+        <div *ngIf="isInvalid('qty')" class="text-red-500 text-xs ml-40">
+            Quantity is required
+          </div>
+        </div>
+        </div>
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+          <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Model:</label>
+          <input formControlName="model" class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+        </div>
+        <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Serial No:</label>
+          <input formControlName="serialno" class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+        </div>
+        </div>
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+                <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Manufacturer:</label>
+          <input formControlName="Manufacturer" class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+        </div>
+                        <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Manufacturer Date:</label>
+          <!-- <input type="date" formControlName="ManufactureDate"   class="w-75 border border-gray-300 px-2 py-[4px]" placeholder="dd/mm/yyyy"> -->
+         <app-date-picker formControlName="ManufactureDate"></app-date-picker>
+        </div>
+        </div>
+        </div>
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+         <div class="space-y-1">
+
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Warranty Period:</label>
+          <input type="number" formControlName="period" placeholder="PERIOD" class="w-30 border border-gray-300 px-2 py-[4px]">
+                      <select 
+              formControlName="warrantyType" 
+              class="w-45 border border-gray-300 px-2 py-[3px] bg-white">
+
+              <option value="" disabled selected hidden>
+                Warranty Type
+              </option>
+              <option value="days" selected>Days</option>
+              <option value="month" >Month</option>
+              <option value="year">Year</option>
+
+            </select>
+        </div>
+        </div>
+        <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Warranty End Date:</label>
+          <!-- <input type="date" formControlName="WarEndDate" placeholder="END DATE" class="w-75 border border-gray-300 px-2 py-[4px]"> -->
+                   <app-date-picker formControlName="WarEndDate"></app-date-picker>
+        </div>
+        </div>
+        </div>
+        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+         <div class="space-y-1">
+
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Overall Remarks:</label>
+          <textarea 
+  formControlName="overallremarks"
+  placeholder="Enter remarks"
+  rows="3"
+  class="w-75 border border-gray-300 px-2 py-[4px] rounded resize-none">
+</textarea>
+              
+        </div>
+        </div>
+        </div>
+  <div class=" px-2 py-1 mb-3">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Inventory Control
+    </span>
+  </div>
+     <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+          <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Minimum Stock:</label>
+          <input formControlName="minimumStock" type="number" class="w-75 border border-gray-300 px-2 py-[4px]"  (input)="calculationsafetystocklevel()">
+        </div>
+        </div>
+        <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Maximum Stock:</label>
+          <input formControlName="maximumStock" type="number" class="w-75 border border-gray-300 px-2 py-[4px]" (input)="calculationtotalstock()" >
+        </div>
+        </div>
+        </div>
+
+         <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+          <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Reorder Level(%):</label>
+          <input formControlName="reorderLevel" class="w-75 border border-gray-300 px-2 py-[4px]" maxlength="3" type="number" (input)="calculationReorderLevel()">
+        </div>
+        <div *ngIf="form.controls['reorderLevel'].invalid && form.controls['reorderLevel'].touched"  class="text-red-500 text-xs ml-40">
+          Reorder level(%) must be between 1 and 100
+        </div>
+        </div>
+        <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Reorder Quantity:</label>
+          <input formControlName="reorderQuantity" readonly class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+        </div>
+        </div>
+
+        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+          <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Safety Stock:</label>
+          <input formControlName="safetyStock" readonly class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+        </div>
+        <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Lead Time (days):</label>
+          <input formControlName="leadTime" class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+        </div>
+        </div>
+
+        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+          <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Current Stock:</label>
+          <input formControlName="currentStock" type="number" class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+        </div>
+      <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Total Stock:</label>
+          <input formControlName="totalStock" readonly class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+        </div>
+        </div>
+
+         <div *ngIf="itemId" class="grid grid-cols-[40%_40%] gap-6 mb-3">
+          <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Stock Return:</label>
+          <select 
+            formControlName="stockreturn"
+            class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
+            <option value="" disabled selected>Select Stock Return</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        </div>
+      <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Return Reason:</label>
+        <textarea 
+  formControlName="returnreason"
+  placeholder="Enter Stock Return Reason"
+  rows="3"
+  class="w-75 border border-gray-300 px-2 py-[4px] rounded resize-none">
+</textarea>
+
+        </div>
+        </div>
+        </div>
+
+         <div class=" px-2 py-1 mb-3">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Units & Conversion
+    </span>
+  </div>
+
+        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+        <div class="space-y-1">
+
+              <div class="flex items-center">
+            <label class="w-40 text-[14px]">Order Unit:</label>
+
+            <div class="relative w-75 dropdown-wrapper2">
+
+            <input
+            type="text"
+            formControlName="orderUnit"
+            [value]="selectedOrderUnit"
+            (focus)="showOrderUnitDropdown=true"
+            (blur)="closeOrderUnitDropdown()"
+            (input)="filterOrderUnit($event)"
+            placeholder="Order Unit"
+            class="w-75 border border-gray-300 px-2 py-[3px] bg-white"
+            />
+
+            <div *ngIf="showOrderUnitDropdown"
+            class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
+
+            <div
+            *ngFor="let unit of filteredOrderUnits"
+            (click)="selectOrderUnit(unit)"
+            class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+
+            {{unit.name}}
+
+            </div>
+
+            <div *ngIf="filteredOrderUnits.length==0"
+            class="px-2 py-1 text-gray-400">
+            No results
+            </div>
+
+            </div>
+
+            </div>
+            <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+                          <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('Orderunit')"></lucide-icon>
+                        </button>
+            </div>
+        <!-- Order Unit -->
+      
+        </div>
+        <div class="space-y-1">
+        <!-- Issue Unit -->
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Issue Unit:</label>
+          <input formControlName="issueUnit" readonly class="w-40 border border-gray-300 px-2 py-[4px] bg-white">
+          <!--<button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('Issueunit')"></lucide-icon>
+            </button>-->
+          <input formControlName="conversion" placeholder="conversion factor" class="w-35 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationconversion()">
+        </div>
+        </div>
+        </div>
+        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <!-- <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Stock/Base Quantity:</label>
+              <input formControlName="baseqty"  class="w-75 border border-gray-300 px-2 py-[4px]" />
+        </div>
+        </div> -->
+        <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Total order unit:</label>
+          <input formControlName="totalorderunit" readonly class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
+        </div>
+        </div>
+        </div>
+
+        <!-- <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Total Quantity:</label>
+              <input formControlName="totalqty" readonly  class="w-75 border border-gray-300 px-2 py-[4px]" />
+        </div>
+        </div>
+        </div> -->
+
+          <div class=" px-2 py-1 mb-3">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Costing Information
+    </span>
+  </div>
+
+        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Order Unit Cost:</label>
+          <input formControlName="orderunitCost" type="number"
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationorderofunit()">
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Issue Unit Cost:</label>
+          <input formControlName="issueunitcost" type="number"
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- Row 1 -->
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Unit Cost:</label>
+          <input formControlName="unitCost" readonly
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
+        </div>
+      </div>
+<!-- 
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Standard Cost:</label>
+          <input formControlName="standardCost"
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
+        </div>
+      </div> -->
+
+    </div>
+
+
+    <!-- Row 2 -->
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Last Purchase Cost:</label>
+          <input formControlName="lastPurchaseCost" type="number"
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationlastPurchaseCost()">
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Average Cost:</label>
+          <input formControlName="averageCost" readonly
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- Row 3 -->
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Currency:</label>
+
+          <select formControlName="currency"
+                  class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
+            <option value="">
+          Select Currency
+        </option>
+
+        <option
+          *ngFor="let item of currencylist"
+          [value]="item.currencyCode"
+        >
+          {{ item.currencyCode }} - {{ item.currencyName }}
+        </option>
+
+          </select>
+
+        </div>
+      </div>
+
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Tax %:</label>
+          <input formControlName="taxPercent" type="number"
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationfreight()">
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- Row 4 -->
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Discount %:</label>
+          <input formControlName="discountPercent" type="number"
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationfreight()">
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Freight Cost:</label>
+          <input formControlName="freightCost" type="number"
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationfreight()">
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- Row 5 -->
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Landed Cost:</label>
+          <input formControlName="landedCost"
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Reorder Cost:</label>
+          <input formControlName="reorderCost" readonly 
+                 class="w-75 border border-gray-300 px-2 py-[4px] bg-white" >
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- Row 6 -->
+    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+      <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Costing Method:</label>
+
+          <select formControlName="costingMethod"
+                  class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
+            <option value="">Select</option>
+            <option value="FIFO">FIFO</option>
+            <option value="LIFO">LIFO</option>
+            <option value="Weighted Average">Weighted Average</option>
+          </select>
+
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <!-- Receipt -->
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Receipt Tolerance %:</label>
+          <input formControlName="receiptTolerance" class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
+        </div>
+        </div>
+
+    </div>
+
+     <div class=" px-2 py-1 mb-3">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Item Controls
+    </span>
+  </div>
+
+ 
+
+        <div class="grid grid-cols-[40%_40%] gap-6">
+        <div class="space-y-[2px] mt-2 ">
+          <div class="flex items-center">
+          <label class="flex items-center gap-2 py-1 w-40 text-[14px]">
+             Rotating:
+          </label>
+          <input type="checkbox" formControlName="rotating">
+          </div>  
+          </div>
+          <div class="space-y-[2px] mt-2">
+                      <div class="flex items-center">
+            <label class="w-40 flex items-center gap-2 py-1 text-[14px]">
+             Condition Enabled:
+          </label>
+          <input type="checkbox" formControlName="conditionEnabled" (change)="conditionenabled()">
+          </div>
+          </div>
+          </div>
+
+           <div class="grid grid-cols-[40%_40%] gap-6">
+            <div class="space-y-[2px] mt-2">
+            <div class="flex items-center">
+              <label class="w-40 flex items-center gap-2 py-1 text-[14px]">
+               Kit:
+              </label>
+               <input type="checkbox" formControlName="kit">
+            </div>
+           </div>
+          <div class="space-y-[2px] mt-2">
+            <div class="flex items-center">
+              <label class="w-40 flex items-center gap-2 py-1 text-[14px]">
+                Capitalized:
+              </label>
+          <input type="checkbox" formControlName="capitalized"> 
+            </div>
+            </div>
+            </div>
+
+            <div class="grid grid-cols-[40%_40%] gap-6">
+            <div class="space-y-[2px] mt-2">
+               <div class="flex items-center">
+          <label class="w-40 flex items-center gap-2 py-1 text-[14px]">
+            Inspect on Receipt:
+          </label>
+          <input type="checkbox" formControlName="inspectOnReceipt"> 
+            </div>
+            </div>
+        <div class="space-y-[2px] mt-2">
+          <div class="flex items-center">
+          <label class="flex w-40 items-center gap-2 py-1 text-[14px]">
+           Add as Spare Part:
+          </label>
+           <input type="checkbox" formControlName="sparePart">
+          </div>
+          </div>
+          </div>
+
+          <div class="grid grid-cols-[40%_40%] gap-6">
+            <div class="space-y-[2px] mt-2">
+              <div class="flex items-center">
+          <label class="flex w-40 items-center gap-2 py-1 text-[14px]">
+             Attach to Parent Asset:
+          </label>
+          <input type="checkbox" formControlName="attachToAsset">
+          </div>
+          </div>
+          <div class="space-y-[2px] mt-2">
+            <div class="flex items-center">
+          <label class="flex w-40 items-center gap-2 py-1 text-[14px]">
+            Tax Exempt:
+          </label>
+           <input type="checkbox" formControlName="taxExempt">
+          </div>
+          </div>
+        </div>
+
+          <div class=" px-2 py-1 mb-3">
+    <span class="text-[14px] font-semibold text-indigo-700">
+      Status
+    </span>
+  </div>
+
+             <!-- RIGHT SETTINGS -->
+       <div class="grid grid-cols-[40%_40%] gap-6">
+
+      <!-- <div class="space-y-1 col-span-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Item Image:</label>
+          <input type="file" formControlName="image" class="flex-1 border border-gray-300 px-2 py-[4px]" />
+        </div>
+        </div> -->
+        <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px]">Status:</label>
+
+                      <select formControlName="status"
+                    class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
+
+              <option value="" disabled selected>Select Status</option>
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="PENDING">PENDING</option>
+              <option value="PLANNING">PLANNING</option>
+              <option value="PENDING_OBSOLESCENCE">PENDING OBSOLESCENCE</option>
+              <option value="OBSOLETE">OBSOLETE</option>
+
+            </select>
+
+          <!-- <input formControlName="status" class="border border-gray-300 px-2 py-[4px] w-75 bg-white"> -->
+          <!-- <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('Status')"></lucide-icon> -->
+        </div>
+        </div>
+        </div>
+
+
+      <!-- IMAGE -->
+       <!-- <div class="grid grid-cols-[40%_40%] gap-6">
+
+      <div>
+        <div class="text-sm mb-1 text-[12px]">Click to see image in its actual size</div>
+        <div class="w-28 h-28 border border-gray-300 bg-white flex items-center justify-center text-gray-400">
+          X
+        </div>
+      </div>
+
+    </div> -->
+
+  </div>
+      <div class="m-3 bg-white border">
+
+<div class="flex items-center justify-between bg-gray-100 px-3 py-1 border-b">
+
+  <!-- Left Title -->
+  <span class="text-sm font-medium text-gray-700">
+    Alternate Items
+  </span>
+
+  <!-- Right Buttons -->
+            <div class="flex items-center gap-2">
+
+              <button 
+                (click)="startAdd()" 
+                class="px-3 py-[2px] text-xs border rounded bg-white hover:bg-gray-50">
+                New Row
+              </button>
+
+              <button 
+                *ngIf="isAdding" 
+                (click)="saveNewRow()" 
+                class="px-3 py-[2px] text-xs border rounded bg-green-200 hover:bg-green-300">
+                Save
+              </button>
+
+              <button 
+                *ngIf="isAdding" 
+                (click)="cancelAdd()" 
+                class="px-3 py-[2px] text-xs border rounded bg-white hover:bg-gray-50">
+                Cancel
+              </button>
+
+            </div>
+
+          </div>
+
+      <table class="w-full text-xs">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="border px-1 text-left">Item</th>
+            <th class="border px-1 text-left">Description</th>
+            <th class="border px-1 text-left">Commodity Group</th>
+            <th class="border px-1 text-left">Commodity Code</th>
+            <th class="border px-1 text-left">Rotating:</th>
+            <th class="border px-1 text-left"></th>
+          </tr>
+        </thead>
+        <tbody formArrayName="alternates">
+
+                <tr *ngFor="let row of alternates.controls; let i = index" [formGroupName]="i">
+
+                  <td class="border px-1">
+                    <div class="flex items-center gap-1">
+                      <input formControlName="al_item"
+                            class="flex-1 text-xs border h-5 px-1">
+
+                      <lucide-icon
+                        [img]="chevronsright"
+                        class="w-4 h-4 cursor-pointer"
+                        (click)="openCommodityHandleralter('AlItem',i)">
+                      </lucide-icon>
+                    </div>
+                  </td>
+
+                  <td class="border px-1">
+                    <input formControlName="al_description" class="w-full border h-5">
+                  </td>
+
+                  <td class="border px-1">
+                    <input formControlName="al_commodityGroup" class="w-full border h-5">
+                  </td>
+
+                  <td class="border px-1">
+                    <input formControlName="al_commodityCode" class="w-full border h-5">
+                  </td>
+
+                  <td class="border px-1 text-center">
+                    <input type="checkbox" formControlName="al_rotating">
+                  </td>
+
+                  <!-- ✅ DELETE BUTTON -->
+                  <td class="border px-1 text-center">
+                    <button (click)="deleteRow(i)" class="text-red-600 text-xs">
+                      Delete
+                    </button>
+                  </td>
+
+                </tr>
+
+        </tbody>
+      </table>
+
+      </div>
+
+       <div *ngIf="form.get('conditionEnabled')?.value" class="m-3 bg-white border">
+
+      <div class="flex items-center justify-between bg-gray-100 px-3 py-1 border-b">
+        <span>Condition Codes</span>
+        <!-- <button (click)="startconditionAdd()" class="border px-2 text-xs">New Row</button> -->
+      
+
+       <div class="text-sm font-medium text-gray-700">
+
+              <button 
+                (click)="startconditionAdd()" 
+                class="px-3 py-[2px] text-xs border rounded bg-white hover:bg-gray-50">
+                New Row
+              </button>
+
+              <button 
+                *ngIf="isAddingcondition" 
+                (click)="codesaveNewRow()" 
+                class="px-3 py-[2px] text-xs border rounded bg-green-200 hover:bg-green-300">
+                Save
+              </button>
+
+              <button 
+                *ngIf="isAddingcondition" 
+                (click)="codecancelAdd()" 
+                class="px-3 py-[2px] text-xs border rounded bg-white hover:bg-gray-50">
+                Cancel
+              </button>
+              </div>
+            </div>
+
+      <table class="w-full text-xs">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="border px-1 text-left">Condition Codes</th>
+            <th class="border px-1 text-left">Description</th>
+            <th class="border px-1 text-left">Condition Rate</th>
+            <th class="border px-1 text-left"></th>
+          </tr>
+        </thead>
+        <tbody formArrayName="condition">
+           <tr *ngFor="let row of condition.controls; let i = index" [formGroupName]="i" class="bg-yellow-50">
+                  <td class="border px-1">
+                   <input formControlName="con_code"  class="w-full text-xs border h-5">
+
+                  </td>
+                  <td class="border px-1">
+                    <input formControlName="con_description"  class="w-full text-xs border h-5">
+                  </td>
+                  <td class="border px-1">
+                    <input formControlName="con_conditionrate" class="w-full text-xs border h-5">
+                  </td>
+                  <td class="border px-1 text-center">
+                    <button (click)="codedeleteRow(i)" class="text-red-600 text-xs">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+          <tr>
+            <td colspan="5" class="text-center py-2 text-gray-400">
+              There are no rows to display.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      </div>
+</div>
+
+<div *ngIf="showPopup"
+     class="fixed inset-0 bg-opacity-30 flex items-center justify-center z-50">
+
+  <div class="bg-white w-[600px] rounded-lg shadow-lg">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-4 py-3 border-b">
+      <h3 class="font-semibold">Select Item</h3>
+      <button (click)="closePopup()">✖</button>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="p-4">
+      <input
+        type="text"
+        placeholder="Search..."
+        (input)="filterList($event)"
+        class="w-full px-3 py-2 border rounded-md mb-3">
+
+      <!-- LIST -->
+      <div class="max-h-60 overflow-y-auto border rounded-md">
+
+        <div *ngFor="let item of filteredItems"
+             (click)="selectItem(1)"
+             class="px-3 py-2 hover:bg-blue-100 cursor-pointer border-b">
+
+          {{item.code}} - {{item.name}}
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="flex justify-end px-4 py-3 border-t">
+      <button (click)="closePopup()" class="px-3 py-1 border rounded">
+        Close
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<div *ngIf="showstockcancel"
+     class="fixed inset-0 bg-opacity-30 flex items-center justify-center z-50">
+
+  <div class="bg-white w-[600px] rounded-lg shadow-lg">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-4 py-3 border-b">
+      <h3 class="font-semibold">Select Item</h3>
+      <button (click)="closePopup()">✖</button>
+    </div>
+
+    <!-- SEARCH -->
+<div class="p-4">
+      <input
+        type="text"
+        placeholder="Search..."
+        (input)="filterList($event)"
+        class="w-full px-3 py-2 border rounded-md mb-3"> 
+      <!-- LIST -->
+      <div class="max-h-60 overflow-y-auto border rounded-md">
+
+        <div *ngFor="let item of filteredItems"
+             (click)="selectItem(item)"
+             class="px-3 py-2 hover:bg-blue-100 cursor-pointer border-b">
+
+          {{item.code}} - {{item.name}}
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="flex justify-end px-4 py-3 border-t">
+      <button (click)="closePopup()" class="px-3 py-1 border rounded">
+        Close
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+
+<div *ngIf="showCommonpopup"
+     class="fixed inset-0 flex items-center justify-center bg-gray-400/30 z-50">
+
+  <div [ngClass]="selectedAction === 'AlItem' ? 'w-[650px]' : 'w-[450px]'" 
+  class="bg-gray-100 border border-gray-500 shadow-md">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-3 py-1 bg-gray-200 border-b border-gray-400">
+      <span class="text-sm font-semibold">Select Value</span>
+      <button (click)="closecommodity()" class="text-sm px-2 hover:bg-gray-300">✖</button>
+    </div>
+    <div class=" item-center border-1 m-1">
+      <div class="flex justify-between items-center px-3 py-2 bg-gray-200  text-xs">
+        <div class="px-2 font-semibold">{{ selectedAction === "AlItem"?"Item":"" }}</div>
+          <button class="flex justify-between px-2 text-xs">
+         <lucide-icon [img]="funnel" class="flex justify-center items-center w-5 h-5 text-black ml-1 cursor-pointer" (click)="toggleFilter()"></lucide-icon>
+         <p class="font-semibold pt-1">Filter</p>
+        </button>
+            <div class="font-medium text-[12px]">
+              Page {{ currentPage }} of {{ totalPages }}
+            </div>
+
+            <div class="flex gap-2">
+              <button (click)="prevPage()" class="border px-2">
+                <lucide-icon [img]="arrowbigleft" class="w-4 h-4"></lucide-icon>
+              </button>
+              <button (click)="nextPage()" class="border px-2">
+                <lucide-icon [img]="arrowbigright" class="w-4 h-4"></lucide-icon>
+              </button>
+            </div>
+
+
+      </div>
+    <!-- BODY -->
+        <div class="bg-white p-3 min-h-[150px]">
+
+          <!-- Example Table (Maximo style) -->
+         
+
+            <div *ngIf="selectedAction === 'AlItem'">
+              <table  class="w-full text-xs border border-gray-300">
+                
+                <!-- Header -->
+                <thead class="bg-gray-200">
+                  <tr>
+                     <th class="border px-2 text-left font-medium">Item</th>
+                    <th class="border px-2 text-left font-medium">Description</th>
+                    <th class="border px-2 text-left font-medium">CommodityGroup</th>
+                    <th class="border px-2 text-left font-medium">CommodityCode</th>
+                    <th class="border px-2 text-left font-medium">Itemset</th>
+                  </tr>
+
+                    
+                  <!-- Filter Row -->
+                  
+                </thead>
+
+                <!-- Body -->
+                <tbody>
+                  <tr *ngFor="let item of pItems" 
+                    class="cursor-pointer hover:bg-gray-100" 
+                    (click)="selectItemalter(item)">
+                  <td class="border px-2 text-blue-600 underline">{{ item.item }}</td>
+                  <td class="border px-2">{{ item.description }}</td>
+                  <td class="border px-2">{{ item.group }}</td>
+                  <td class="border px-2">{{ item.code }}</td>
+                  <td class="border px-2">{{ item.set}}</td>
+
+                </tr>
+
+                  <!-- Empty state -->
+                  <tr *ngIf="cfilteredItems.length === 0">
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      There are no rows to display.
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+
+          <div *ngIf="selectedAction === 'Item'">
+              <table class="w-full text-xs border border-gray-300">
+  <!-- Header -->
+  <thead class="bg-gray-200 sticky top-0">
+    <tr>
+      <th class="border px-2 text-left font-medium">Item</th>
+      <th class="border px-2 text-left font-medium">Description</th>
+     
+    </tr>
+  </thead>
+
+  <!-- Body -->
+   <tbody>
+    <tr *ngFor="let item of pItems" 
+        class="cursor-pointer hover:bg-gray-100" 
+        (click)="selectItem(item)">
+      <td class="border px-2 text-blue-600 underline">{{ item.item }}</td>
+      <td class="border px-2">{{ item.description }}</td>
+    </tr>
+  </tbody>
+</table>
+            </div>
+
+            
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="flex justify-end gap-2 px-3 py-2 bg-gray-200 border-t border-gray-400">
+      <!-- <button (click)="codeinsertItem()"
+              class="px-3 py-1 border border-gray-500 bg-gray-100 hover:bg-gray-300 text-xs">
+        OK
+      </button> -->
+
+      <button (click)="closecommodity()"
+              class="px-3 py-1 border border-gray-500 bg-gray-100 hover:bg-gray-300 text-xs">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showMessageBox"
+  (onConfirm)="confirmDelete(itemId)"
+  (onCancel)="showMessageBox = false">
+</app-message-box>
+

@@ -1,0 +1,170 @@
+ <div
+  class="bg-white"
+  [formGroup]="form"
+>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+    <!-- FIELD -->
+    <div
+      *ngFor="let field of fields"
+      [ngClass]="{
+        'md:col-span-2': field.colSpan === 2
+      }"
+    >
+
+      <!-- LABEL -->
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+
+        {{ field.label }}
+
+         <span
+    *ngIf="form.get(field.controlName)?.hasValidator(requiredValidator)"
+    class="text-red-500 ml-1"
+  >
+    *
+  </span>
+
+      </label>
+
+      <!-- TEXT / EMAIL / NUMBER -->
+      <div
+        *ngIf="
+          field.type === 'text' ||
+          field.type === 'email' ||
+          field.type === 'number' ||
+          field.type === 'password' ||
+          field.type === 'date' 
+        "
+        class="relative"
+      >
+
+        <!-- ICON -->
+        <lucide-icon
+          *ngIf="field.icon"
+          [img]="field.icon"
+          class="absolute left-2 top-1/2
+                 -translate-y-1/2
+                 w-4 h-4 text-gray-400"
+        >
+        </lucide-icon>
+
+        <input
+          [type]="field.type"
+          [formControlName]="field.controlName"
+          [placeholder]="field.placeholder"
+          class="w-full border border-gray-300
+                 pl-10 pr-3 py-1
+                 focus:outline-none
+                 focus:ring-2
+                 focus:ring-blue-300"
+        />
+
+      </div>
+
+      <!-- SELECT -->
+      <div
+        *ngIf="field.type === 'select'"
+        class="relative"
+      >
+
+        <lucide-icon
+          *ngIf="field.icon"
+          [img]="field.icon"
+          class="absolute left-3 top-1/2
+                 -translate-y-1/2
+                 w-4 h-4 text-gray-400 z-10"
+        >
+        </lucide-icon>
+
+        <select
+          [formControlName]="field.controlName"
+          class="w-full border border-gray-300
+                 pl-10 pr-3 py-1
+                 focus:outline-none
+                 focus:ring-2
+                 focus:ring-blue-300"
+        >
+
+          <option
+            *ngFor="let op of field.options"
+            [value]="op.value"
+          >
+            {{ op.label }}
+          </option>
+
+        </select>
+
+      </div>
+
+      <!-- FILE -->
+      <div
+        *ngIf="field.type === 'file'"
+        class="relative"
+      >
+
+        <lucide-icon
+          *ngIf="field.icon"
+          [img]="field.icon"
+          class="absolute left-3 top-1/2
+                 -translate-y-1/2
+                 w-4 h-4 text-gray-400 z-10"
+        >
+        </lucide-icon>
+
+        <input
+          type="file"
+          class="w-full border border-gray-300
+                 pl-10 pr-3 py-1
+                 bg-white"
+          (change)="onFileChange($event, field.controlName)"
+        />
+
+      </div>
+
+      <!-- TEXTAREA -->
+      <div
+        *ngIf="field.type === 'textarea'"
+        class="relative"
+      >
+
+        <lucide-icon
+          *ngIf="field.icon"
+          [img]="field.icon"
+          class="absolute left-3 top-4
+                 w-4 h-4 text-gray-400"
+        >
+        </lucide-icon>
+
+        <textarea
+          rows="4"
+          [formControlName]="field.controlName"
+          [placeholder]="field.placeholder"
+          class="w-full border border-gray-300
+                 pl-10 pr-3 py-1
+                 focus:outline-none
+                 focus:ring-2
+                 focus:ring-blue-300"
+        >
+        </textarea>
+
+      </div>
+
+      <!-- ERROR -->
+      <div
+        *ngIf="
+          form.get(field.controlName)?.touched &&
+          form.get(field.controlName)?.invalid
+        "
+        class="text-red-500 text-xs mt-1"
+      >
+
+        {{ field.label }} is required
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

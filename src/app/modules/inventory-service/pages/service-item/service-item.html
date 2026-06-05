@@ -1,0 +1,65 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold text-gray-800">
+       Service Item
+    </h1>
+
+    <button
+      class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+      (click)="openCreateModal()">
+      + New Service Item
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white p-4 shadow-sm mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+      <input type="text"
+        placeholder="Search Service item"
+        class="w-full px-3 py-2 border rounded">
+
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white shadow-sm overflow-hidden">
+
+    <table class="w-full text-sm">
+      <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="p-3 text-left">Service Code</th>
+            <th class="p-3 text-left">Description</th>
+            <th class="p-3 text-left">Vendor</th>
+            <th class="p-3 text-left">Status</th>
+            <th class="p-3 text-center">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr class="border-0 hover:bg-gray-50">
+          <td class="px-6 py-3">ISS-0045</td>
+          <td class="px-6 py-3">28-02-2026</td>
+          <td class="px-6 py-3">Electrical Cable</td>
+          <td class="px-6 py-3">Main Warehouse</td>          
+          <td class="px-6 py-3 space-x-2">
+            <button class="text-indigo-600">View</button>
+            <button class="text-red-500">Cancel</button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-end mt-4">
+    <button class="px-3 py-1 border rounded mr-2">Prev</button>
+    <button class="px-3 py-1 border rounded">Next</button>
+  </div>
+
+</div>

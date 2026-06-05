@@ -1,0 +1,145 @@
+<div [formGroup]="form" class="text-xs">
+
+  <!-- HEADER -->
+  <div class="px-3 py-2 bg-gray-100 flex justify-between">
+    <div class="font-semibold">Commodity Groups</div>
+
+    <button (click)="addGroup()" class="text-blue-600 hover:underline">
+      New Row
+    </button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-xs border">
+
+      <!-- HEADER -->
+      <thead class="bg-white">
+        <tr>
+          <th class="border px-2 py-1">Commodity Group</th>
+          <th class="border px-2 py-1">Use for Service</th>
+          <th class="border px-2 py-1">Action</th>
+        </tr>
+      </thead>
+
+      <!-- BODY -->
+      <tbody formArrayName="commodityGroups">
+
+        <ng-container *ngFor="let grp of commodityGroups.controls; let i = index">
+
+          <!-- DISPLAY ROW -->
+          <tr [formGroupName]="i">
+
+            <td class="border px-2 py-1">
+              {{ grp.get('commodityGroup')?.value }}
+            </td>
+
+            <td class="border px-2 py-1 text-center">
+              <input type="checkbox"
+                     [checked]="grp.get('useForService')?.value"
+                     disabled>
+            </td>
+
+            <td class="border px-2 py-1 flex gap-2">
+              <button (click)="toggleDetails(i)" class="text-blue-600">
+                {{ expandedIndex === i ? 'Hide' : 'Edit' }}
+              </button>
+
+              <button (click)="deleteGroup(i)" class="text-red-600">
+                Delete
+              </button>
+            </td>
+
+          </tr>
+
+          <!-- EXPANDED -->
+          <tr *ngIf="expandedIndex === i" [formGroupName]="i">
+            <td colspan="3" class="p-4 bg-gray-50">
+
+              <!-- GROUP FORM -->
+              <div class="grid grid-cols-2 gap-4 mb-4">
+
+                <input formControlName="commodityGroup"
+                       placeholder="Commodity Group"
+                       class="border px-2 py-1" />
+
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" formControlName="useForService">
+                  Use for Service
+                </label>
+
+              </div>
+
+              <!-- CODES HEADER -->
+              <div class="flex justify-between mb-2">
+                <div class="font-medium">Commodity Codes</div>
+
+                <button (click)="addCode(i)"
+                        class="text-blue-600 text-xs">
+                  + Add Code
+                </button>
+              </div>
+
+              <!-- CODES TABLE -->
+              <table class="w-full text-xs border mb-3">
+
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="border px-2 py-1">Commodity Code</th>
+                    <th class="border px-2 py-1">Use for Service</th>
+                    <th class="border px-2 py-1">Action</th>
+                  </tr>
+                </thead>
+
+                <tbody formArrayName="codes">
+
+                  <tr *ngFor="let code of getCodes(i).controls; let j = index"
+                      [formGroupName]="j">
+
+                    <td class="border px-2 py-1">
+                      <input formControlName="commodityCode"
+                             class="w-full border px-1">
+                    </td>
+
+                    <td class="border px-2 py-1 text-center">
+                      <input type="checkbox" formControlName="useForService">
+                    </td>
+
+                    <td class="border px-2 py-1 text-center">
+                      <button (click)="deleteCode(i, j)"
+                              class="text-red-600">
+                        Delete
+                      </button>
+                    </td>
+
+                  </tr>
+
+                  <tr *ngIf="getCodes(i).length === 0">
+                    <td colspan="3" class="text-center py-2 text-gray-400">
+                      No codes added
+                    </td>
+                  </tr>
+
+                </tbody>
+
+              </table>
+
+              <!-- SAVE -->
+              <div class="text-right">
+                <button (click)="saveGroup(i)"
+                        class="bg-gray-200 px-3 py-1">
+                  Save
+                </button>
+              </div>
+
+            </td>
+          </tr>
+
+        </ng-container>
+
+      </tbody>
+
+    </table>
+  </div>
+
+</div>

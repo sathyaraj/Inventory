@@ -1,0 +1,114 @@
+<form [formGroup]="form" *ngIf="form" >
+
+
+<div class="h-screen overflow-hidden bg-gray-100 p-2">
+
+  <div class="bg-white shadow-lg flex flex-col overflow-hidden p-5">
+
+
+
+
+
+  <app-dynamic-form
+    [form]="form"
+    [fields]="fields">
+  </app-dynamic-form>
+  <div class="flex justify-end gap-3 mt-6">        
+        <button
+         (click)="resetForm()"
+          type="button"
+          class="flex items-center gap-3
+                 px-3 py-2
+                 border border-gray-300
+                 text-gray-700 text-[14px]
+                 hover:bg-gray-100 transition"
+        >
+        <lucide-icon
+            [img]="RotateCcw"
+            class="w-4 h-4">
+          </lucide-icon>
+          Reset
+        </button>
+
+        <button
+          type="button"
+            (click)="save()"
+          class="flex items-center gap-1
+                 px-3 py-2
+                 bg-gradient-to-r
+                 from-blue-600 to-indigo-600
+                 text-white text-[14px]
+                 font-medium
+                 shadow-lg hover:shadow-xl
+                 transition-all"
+        >
+         <lucide-icon
+            [img]="Save"
+            class="w-4 h-4">
+          </lucide-icon>
+            {{ editId > 0 ? 'Update' : 'Save' }}
+        </button>
+
+      </div>
+
+
+  
+
+
+    </div>
+
+    <!-- FOOTER -->
+    <!-- <div class="border-t bg-gray-50 px-6 py-3 flex justify-between">
+
+      <button
+        type="button"
+        (click)="prevStep()"
+        class="px-5 py-2 border  hover:bg-gray-100"
+      >
+        Previous
+      </button>
+
+      <div class="flex gap-3">
+
+        <button
+          type="button"
+          class="px-5 py-2 bg-gray-200  hover:bg-gray-300"
+        >
+          Save Draft
+        </button>
+
+        <button
+          *ngIf="currentStep < steps.length"
+          type="button"
+          (click)="nextStep()"
+          class="px-6 py-2 bg-blue-600 text-white  hover:bg-blue-700"
+        >
+          Next
+        </button>
+
+        <button
+          *ngIf="currentStep === steps.length"
+          type="button"
+          (click)="submit()"
+          class="px-6 py-2 bg-green-600 text-white  hover:bg-green-700"
+        >
+          Submit
+        </button>
+
+      </div>
+
+    </div> -->
+
+  </div>
+
+</form>
+
+
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showMessageBox"
+  (onConfirm)="confirmadd()"
+  (onCancel)="showMessageBox = false">
+</app-message-box>

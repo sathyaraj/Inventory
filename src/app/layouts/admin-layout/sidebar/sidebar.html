@@ -1,0 +1,433 @@
+<div
+  [ngClass]="isOpen ? 'w-72' : 'w-0'"
+  class="h-screen bg-white border-r border-gray-200 flex flex-col shadow-xl transition-all duration-300 overflow-hidden"
+>
+
+  <!-- LOGO -->
+  <div class="px-5 py-4 border-b bg-gradient-to-r from-blue-600 to-indigo-600">
+
+    <div class="flex items-center justify-between">
+
+      <!-- BRAND -->
+      <div class="flex items-center gap-3">
+
+        <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-md">
+
+          <img
+            src="/assets/images/trash1.webp"
+            alt="Logo"
+            class="w-8 h-8 object-contain"
+          />
+
+        </div>
+
+        <div>
+
+          <h1 class="text-2xl font-bold text-white leading-none">
+            KMS
+          </h1>
+
+          <p class="text-[10px] uppercase tracking-[3px] text-blue-100 mt-1">
+            Digitechs
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- TOGGLE -->
+      <button
+        (click)="onToggleClick()"
+        class="text-white hover:bg-white/20 p-2  transition"
+      >
+
+        <lucide-angular
+          [img]="icons.Menu"
+          class="w-5 h-5"
+        ></lucide-angular>
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-2">
+
+    <!-- DASHBOARD -->
+
+    <a
+      *ngIf="permissionService.hasPermission('Dashboard','read')"
+      routerLink="/admin/dashboard"
+      routerLinkActive="bg-blue-600 text-white shadow-md"
+      class="group flex items-center gap-3 px-4 py-3  text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+    >
+
+      <lucide-angular
+        [img]="icons.LayoutDashboard"
+        class="w-5 h-5"
+      ></lucide-angular>
+
+      <span class="font-medium">
+        Dashboard
+      </span>
+
+    </a>
+
+    <!-- ITEM MASTER -->
+    <div *ngIf="permissionService.hasPermission('Item Master','read')">
+
+      <button
+        (click)="toggle('items')"
+        class="w-full flex items-center justify-between px-4 py-3  text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+      >
+
+        <div class="flex items-center gap-3">
+
+          <lucide-angular
+            [img]="icons.Package"
+            class="w-5 h-5"
+          ></lucide-angular>
+
+          <span class="font-medium">
+            Item Master
+          </span>
+
+        </div>
+
+        <lucide-angular
+          [img]="openMenu === 'items'
+            ? icons.ChevronUp
+            : icons.ChevronDown"
+          class="w-4 h-4"
+        ></lucide-angular>
+
+      </button>
+
+      <!-- SUB MENU -->
+      <div
+        *ngIf="openMenu === 'items'"
+        class="ml-6 mt-2 space-y-1 border-l border-gray-200 pl-4"
+      >
+
+        <a
+        *ngIf="permissionService.hasPermission('Item Master','read')"
+          routerLink="/admin/item-master"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.ClipboardList"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Item List
+
+        </a>
+
+      </div>
+
+    </div>
+
+    <!-- SERVICE MASTER -->
+    <div *ngIf="permissionService.hasPermission('Service Master','read')">
+        <!-- *ngIf="permissionService.hasPermission('Service Master','Approve')" -->
+
+      <button
+        (click)="toggle('inventory-service')"
+        class="w-full flex items-center justify-between px-4 py-3  text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+      >
+
+        <div class="flex items-center gap-3">
+
+          <lucide-angular
+            [img]="icons.Wrench"
+            class="w-5 h-5"
+          ></lucide-angular>
+
+          <span class="font-medium">
+            Service Master
+          </span>
+
+        </div>
+
+        <lucide-angular
+          [img]="openMenu === 'inventory-service'
+            ? icons.ChevronUp
+            : icons.ChevronDown"
+          class="w-4 h-4"
+        ></lucide-angular>
+
+      </button>
+
+      <!-- SUB MENU -->
+      <div
+        *ngIf="openMenu === 'inventory-service'"
+        class="ml-6 mt-2 space-y-1 border-l border-gray-200 pl-4"
+      >
+
+        <a
+          routerLink="/admin/inventoryservice/service-item"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.ClipboardList"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Service Item
+
+        </a>
+
+      </div>
+
+    </div>
+
+    <!-- SETTINGS -->
+    <div *ngIf="permissionService.hasPermission('Settings','read')">
+        <!-- *ngIf="permissionService.hasPermission('Settings','Approve')" -->
+
+      <button
+        (click)="toggle('vendor')"
+        class="w-full flex items-center justify-between px-4 py-3  text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+      >
+
+        <div class="flex items-center gap-3">
+
+          <lucide-angular
+            [img]="icons.Handshake"
+            class="w-5 h-5"
+          ></lucide-angular>
+
+          <span class="font-medium">
+            Vendor
+          </span>
+
+        </div>
+
+        <lucide-angular
+          [img]="openMenu === 'vendor'
+            ? icons.ChevronUp
+            : icons.ChevronDown"
+          class="w-4 h-4"
+        ></lucide-angular>
+
+      </button>
+
+      <!-- SUB MENU -->
+      <div
+        *ngIf="openMenu === 'vendor'"
+        class="ml-6 mt-2 space-y-1 border-l border-gray-200 pl-4"
+      >
+
+        <!-- COMPANY -->
+        <a
+          routerLink="/admin/admin-control/vendorlist"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.Building2"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Registration
+
+        </a>
+
+        <!-- USER DETAILS -->
+        <a
+          routerLink="/admin/admin-control/userdetailslist"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.Users"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          User Details
+
+        </a>
+
+         <!-- USER DETAILS -->
+        <a
+          routerLink="/admin/admin-control/permission"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.Users"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Permission
+
+        </a>
+
+        <!-- CURRENCY -->
+        <a
+          routerLink="/admin/admin-control/currencylist"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.DollarSign"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Currency
+
+        </a>
+
+        <!-- DISCOUNT -->
+        <a
+          routerLink="/admin/admin-control/discountlist"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.BadgePercent"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Discount
+
+        </a>
+
+        <!-- TAX -->
+        <a
+          routerLink="/admin/admin-control/taxlist"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.Receipt"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Tax
+
+        </a>
+
+      </div>
+
+    </div>
+    
+
+     <div *ngIf="permissionService.hasPermission('Settings','read')">
+        <!-- *ngIf="permissionService.hasPermission('Settings','Approve')" -->
+
+      <button
+        (click)="toggle('setting')"
+        class="w-full flex items-center justify-between px-4 py-3  text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+      >
+
+        <div class="flex items-center gap-3">
+
+          <lucide-angular
+            [img]="icons.Settings"
+            class="w-5 h-5"
+          ></lucide-angular>
+
+          <span class="font-medium">
+            Settings
+          </span>
+
+        </div>
+
+        <lucide-angular
+          [img]="openMenu === 'setting'
+            ? icons.ChevronUp
+            : icons.ChevronDown"
+          class="w-4 h-4"
+        ></lucide-angular>
+
+      </button>
+
+      <!-- SUB MENU -->
+      <div
+        *ngIf="openMenu === 'setting'"
+        class="ml-6 mt-2 space-y-1 border-l border-gray-200 pl-4"
+      >  
+      
+
+        <!-- CURRENCY -->
+        <a
+          routerLink="/admin/admin-control/currencylist"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.Landmark"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Cost Center
+
+        </a>
+
+        <!-- DISCOUNT -->
+        <a
+          routerLink="/admin/admin-control/discountlist"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.BadgeDollarSign"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Cost Code
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+  <!-- FOOTER -->
+  <div class="border-t bg-gray-50 px-4 py-4">
+
+    <div class="flex items-center gap-3">
+
+      <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+
+        <lucide-angular
+          [img]="icons.User"
+          class="w-5 h-5 text-blue-600"
+        ></lucide-angular>
+
+      </div>
+
+      <div>
+
+        <p class="text-sm font-semibold text-gray-800">
+          Admin User
+        </p>
+
+        <p class="text-xs text-gray-500">
+          Super Admin
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

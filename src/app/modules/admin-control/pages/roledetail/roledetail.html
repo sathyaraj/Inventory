@@ -1,0 +1,399 @@
+<form [formGroup]="roleForm" class="p-2 bg-gray-100 min-h-screen">
+
+  <!-- PAGE HEADER -->
+  <div class="bg-white shadow-sm border border-gray-200 mb-6 overflow-hidden">
+
+    <div class="bg-gray-200 px-8 py-6">
+
+      <div class="flex items-center gap-4">
+
+        <!-- ICON -->
+        <div
+          class="w-5 h-5 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg"
+        >
+
+          <lucide-icon
+            [img]="Settings"
+            class="w-8 h-8 text-indigo-600"
+          >
+          </lucide-icon>
+
+        </div>
+
+        <!-- TEXT -->
+        <div>
+
+          <h1 class="text-[24px] font-bold text-black">
+            Create Role
+          </h1>
+
+          <p class=" mt-1 text-black">
+            Add new role and assign permissions
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+    <!-- LEFT SIDE -->
+    <div class="bg-white shadow-sm border border-gray-200 p-2 h-fit">
+
+      <!-- TITLE -->
+      <div class="flex items-center gap-3 mb-6">
+
+        <div class="w-12 h-12 bg-blue-100 flex items-center justify-center">
+
+          <lucide-icon
+            [img]="Shield"
+            class="w-6 h-6 text-blue-600"
+          >
+          </lucide-icon>
+
+        </div>
+
+        <div>
+
+          <h2 class="text-xl font-bold text-gray-800">
+            Role Details
+          </h2>
+
+          <p class="text-sm text-gray-500">
+            Basic role information
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- ROLE NAME -->
+      <div class="mb-5">
+
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
+          Role Name
+        </label>
+
+        <div class="relative">
+
+          <lucide-icon
+            [img]="UserCog"
+            class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2"
+          >
+          </lucide-icon>
+
+          <input
+            type="text"
+            formControlName="role_name"
+            placeholder="Enter role name"
+            class="w-full h-12 border border-gray-300 pl-12 pr-4 outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition"
+          >
+
+        </div>
+
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="mb-5">
+
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
+          Description
+        </label>
+
+        <textarea
+          rows="5"
+          formControlName="description"
+          placeholder="Enter role description..."
+          class="w-full border border-gray-300 px-4 py-3 outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition resize-none"
+        ></textarea>
+
+      </div>
+
+      <!-- STATUS -->
+      <div
+        class="flex items-center justify-between rounded-2xl bg-gray-50 border border-gray-200 px-4 py-4"
+      >
+
+        <div>
+
+          <h3 class="font-semibold text-gray-800">
+            Active Role
+          </h3>
+
+          <p class="text-sm text-gray-500">
+            Enable this role for users
+          </p>
+
+        </div>
+
+        <label class="relative inline-flex items-center cursor-pointer">
+
+          <input
+            type="checkbox"
+            formControlName="is_active"
+            class="sr-only peer"
+          >
+
+          <div
+            class="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition"
+          ></div>
+
+          <div
+            class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-6"
+          ></div>
+
+        </label>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="xl:col-span-2 bg-white shadow-sm border border-gray-200 overflow-hidden">
+
+      <!-- HEADER -->
+      <div
+        class="px-6 py-5 border-b border-gray-200 flex items-center justify-between bg-gray-50"
+      >
+
+        <div class="flex items-center gap-3">
+
+          <div class="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center">
+
+            <lucide-icon
+              [img]="LockKeyhole"
+              class="w-6 h-6 text-indigo-600"
+            >
+            </lucide-icon>
+
+          </div>
+
+          <div>
+
+            <h2 class="text-xl font-bold text-gray-800">
+              Assign Permissions
+            </h2>
+
+            <p class="text-sm text-gray-500">
+              Configure access permissions
+            </p>
+
+          </div>
+
+        </div>
+
+        <!-- SELECT ALL -->
+        <label
+          class="flex items-center gap-3 bg-white border border-gray-200 px-4 py-2 shadow-sm cursor-pointer"
+        >
+
+          <input
+            type="checkbox"
+            (change)="selectAll($event)"
+            class="w-4 h-4 accent-blue-600"
+          >
+
+          <span class="text-sm font-medium text-gray-700">
+            Select All
+          </span>
+
+        </label>
+
+      </div>
+
+      <!-- TABLE -->
+      <div class="overflow-x-auto">
+
+        <table class="w-full">
+
+          <thead class="bg-gray-100">
+
+            <tr>
+
+              <th class="text-left px-6 py-4 text-sm font-bold text-gray-700">
+                Module
+              </th>
+
+              <th class="px-4 py-4 text-sm font-bold text-gray-700">
+                Create
+              </th>
+
+              <th class="px-4 py-4 text-sm font-bold text-gray-700">
+                Read
+              </th>
+
+              <th class="px-4 py-4 text-sm font-bold text-gray-700">
+                Update
+              </th>
+
+              <th class="px-4 py-4 text-sm font-bold text-gray-700">
+                Delete
+              </th>
+
+              <th class="px-4 py-4 text-sm font-bold text-gray-700">
+                Approve
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr
+              *ngFor="let item of modules"
+              class="border-t hover:bg-blue-50/40 transition"
+            >
+
+              <!-- MODULE -->
+              <td class="px-6 py-5">
+
+                <div class="flex items-center gap-3">
+
+                  <div
+                    class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center"
+                  >
+
+                    <lucide-icon
+                      [img]="Package"
+                      class="w-5 h-5 text-blue-600"
+                    >
+                    </lucide-icon>
+
+                  </div>
+
+                  <div>
+
+                    <p class="font-semibold text-gray-800">
+                      {{ item.module }}
+                    </p>
+
+                    <p class="text-xs text-gray-500">
+                      Module Access
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+              <!-- CREATE -->
+              <td class="text-center">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="item.permissions.create"
+                  [ngModelOptions]="{standalone: true}"
+                  class="w-5 h-5 accent-blue-600"
+                >
+
+              </td>
+
+              <!-- READ -->
+              <td class="text-center">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="item.permissions.read"
+                  [ngModelOptions]="{standalone: true}"
+                  class="w-5 h-5 accent-green-600"
+                >
+
+              </td>
+
+              <!-- UPDATE -->
+              <td class="text-center">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="item.permissions.update"
+                  [ngModelOptions]="{standalone: true}"
+                  class="w-5 h-5 accent-yellow-500"
+                >
+
+              </td>
+
+              <!-- DELETE -->
+              <td class="text-center">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="item.permissions.delete"
+                  [ngModelOptions]="{standalone: true}"
+                  class="w-5 h-5 accent-red-500"
+                >
+
+              </td>
+
+              <!-- APPROVE -->
+              <td class="text-center">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="item.permissions.approve"
+                  [ngModelOptions]="{standalone: true}"
+                  class="w-5 h-5 accent-purple-600"
+                >
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div
+        class="px-6 py-5 border-t border-gray-200 bg-gray-50 flex items-center justify-between"
+      >
+
+        <div class="text-sm text-gray-500">
+          Configure permissions carefully for system security.
+        </div>
+
+        <div class="flex items-center gap-3">
+
+          <button
+           (click)="confirm()"
+            type="button"
+            class="px-5 py-3 border border-gray-300 bg-white hover:bg-gray-100 font-medium transition"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            (click)="saveRole()"
+            class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition"
+          >
+
+            Save Role
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</form>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showMessageBox"
+  (onConfirm)="confirm()"
+  (onCancel)="showMessageBox = false">
+</app-message-box>

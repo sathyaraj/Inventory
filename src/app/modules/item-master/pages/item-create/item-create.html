@@ -1,0 +1,1162 @@
+  <div  class=" bg-gray-300 text-black px-4 py-2 flex justify-between items-center">
+   
+  <lucide-icon [img]="chevronleft" (click)="goBackTab()" class="w-5 h-5 text-indigo-700 font-bold cursor-pointer absolute top-[13px] left-32"></lucide-icon>
+
+    <h2 class="text-sm font-semibold"><span class="text-indigo-700" *ngIf="itemlastId">{{ itemlastId }}</span></h2>
+
+    <div class="flex items-center gap-4 text-[12px]">
+      <!-- <span class="cursor-pointer hover:underline">Go To</span>
+      <span class="cursor-pointer hover:underline">Reports</span>
+      <span class="cursor-pointer hover:underline">Start Center</span> -->
+      <!-- <span class="cursor-pointer hover:underline">Profile</span>
+      <span class="cursor-pointer hover:underline">Sign Out</span> -->
+    </div>
+    <h2 class="text-sm font-semibold"><span class="text-indigo-700" *ngIf="itemlastId">{{ itemstatus }}</span></h2>
+  </div>
+<form [formGroup]="itemForm" class="w-full bg-gray-200 text-sm">
+
+  <!-- ================= TOOLBAR ================= -->
+  <div class="bg-gray-100 border-b border-gray-300 px-3 py-2 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+    <!-- Your Find / Action can go here later -->
+  </div>
+
+    <div class="flex gap-3 ml-6 text-lg text-gray-600 ">
+      
+      <button 
+  type="button"
+  (click)="submitItem()"
+  class="p-2 border border-indigo-700 px-2 py-1 bg-white text-indigo-700 text-[14px] hover:bg-indigo-700 hover:text-white flex items-center gap-1">
+  <lucide-icon [img]="save" class="w-4 h-4"></lucide-icon>  {{ selectedId ? 'Update' : 'Save' }}
+</button> 
+
+<button 
+  *ngIf="selectedId"
+  (click)="deleteItem(selectedId)" 
+  type="button"
+  class="p-2 border border-indigo-700 px-2 py-1 bg-white text-indigo-700 text-[14px] hover:bg-indigo-700 hover:text-white flex items-center gap-1">
+  <lucide-icon [img]="squarex" class="w-4 h-4"></lucide-icon>  Delete
+</button>
+    </div>
+  </div>
+  <!-- ================= TABS ================= -->
+  <div class="bg-gray-100 flex text-sm">
+     <button
+      type="button"
+      (click)="itemlist()"
+      class="px-5 py-3 border-r border-gray-200  hover:bg-gray-200">
+      List
+    </button>
+
+    <button
+      type="button"
+      (click)="changeTab('general')"
+      [ngClass]="activeTab === 'general'
+        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 font-medium text-indigo-700'
+        : 'px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+      Item
+    </button>
+
+    <button
+      type="button"
+      (click)="changeTab('vendors')"
+      [ngClass]="activeTab === 'vendors'
+        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 font-semibold text-indigo-700'
+        : 'px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+      Storeroom
+    </button>
+
+     <button
+      type="button"
+      (click)="changeTab('vendorsitem')"
+      [ngClass]="activeTab === 'vendorsitem'
+        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
+        : 'px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+      Vendor
+    </button>
+
+    <button
+      type="button"
+      (click)="changeTab('spec')"
+      [ngClass]="activeTab === 'spec'
+        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
+        : 'px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+      Specifications
+    </button>
+
+    <button
+      type="button"
+      (click)="changeTab('org')"
+      [ngClass]="activeTab === 'org'
+        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
+        : 'px-5 py-3 hover:bg-gray-200'">
+      Assembly Structure
+    </button>
+
+     <button
+      type="button"
+      (click)="changeTab('documents')"
+      [ngClass]="activeTab === 'documents'
+        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
+        : 'px-5 py-3 hover:bg-gray-200'">
+      Documents
+    </button>
+  </div>
+
+  <!-- ================= CONTENT ================= -->
+  <div class="p-0 bg-white min-h-[400px]">
+      <ng-container *ngIf="activeTab === 'general'">
+        <app-general-tab [form]="generalForm" [itemId]="selectedId"></app-general-tab>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'vendors'">
+        <app-vendor-tab  [form]="vendorForm" [itemId]="selectedId"></app-vendor-tab>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'vendorsitem'">
+        <app-vendoritem-tab  [form]="vendoritemForm" [itemId]="selectedId"></app-vendoritem-tab>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'spec'">
+        <app-specification-tab [form]="specificationForm" [itemId]="selectedId"></app-specification-tab>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'org'">
+        <app-organization-tab [form]="organizationForm" [itemId]="selectedId" ></app-organization-tab>
+      </ng-container>   
+      
+      <ng-container *ngIf="activeTab === 'documents'">
+        <app-documents-tab [form]="documentsForm" [itemId]="selectedId"></app-documents-tab>
+      </ng-container>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+
+</form>
+
+
+
+<div *ngIf="showCommodity"
+     class="fixed inset-0 flex items-center justify-center bg-gray-400/30 z-50">
+
+  <div class="w-[650px] bg-gray-100 border border-gray-500 shadow-md">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-3 py-1 bg-gray-200 border-b border-gray-400">
+      <span class="text-sm font-semibold">Select Value</span>
+      <button (click)="closecommodity()" class="text-sm px-2 hover:bg-gray-300">✖</button>
+    </div>
+    <div class=" item-center border-1 m-1">
+      <div class="flex justify-between items-center px-3 py-2 bg-gray-200  text-xs">
+        <div class="px-2 font-semibold">Commodity Group</div>
+          <button class="flex justify-between px-2 text-xs">
+         <lucide-icon [img]="funnel" class="flex justify-center items-center w-5 h-5 text-black ml-1 cursor-pointer" (click)="toggleFilter(selectedAction)"></lucide-icon>
+         <p class="font-semibold pt-1">Filter</p>
+        </button>
+            <div class="font-medium text-[12px]">
+              Page {{ currentPage }} of {{ totalPages }}
+            </div>
+
+            <div class="flex gap-2">
+              <button (click)="prevPage()" class="border px-2">
+                <lucide-icon [img]="arrowbigleft" class="w-4 h-4"></lucide-icon>
+              </button>
+              <button (click)="nextPage()" class="border px-2">
+                <lucide-icon [img]="arrowbigright" class="w-4 h-4"></lucide-icon>
+              </button>
+            </div>
+
+            <button (click)="startAdd()" class="border px-2 text-xs">New Row</button>
+            <button *ngIf="isAdding" (click)="saveNewRow()" class="border px-2 text-xs bg-green-200">
+            Save
+          </button>
+
+          <button *ngIf="isAdding" (click)="cancelAdd()" class="border px-2 text-xs">
+            Cancel
+          </button>
+
+      </div>
+    <!-- BODY -->
+        <div class="bg-white p-3 min-h-[150px]">
+
+          <!-- Example Table (Maximo style) -->
+          <table class="w-full text-xs border border-gray-300">
+            
+            <!-- Header -->
+            <thead class="bg-gray-200">
+              <tr>
+                <th class="border px-2 text-left font-medium">Commodity Code</th>
+                <th class="border px-2 text-left font-medium">Description</th>
+                <th class="border px-2 text-left font-medium">Service?</th>
+              </tr>
+
+                <tr *ngIf="isAdding" class="bg-yellow-50">
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.name" class="w-full text-xs">
+                  </td>
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.description" class="w-full text-xs">
+                  </td>
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.commodity" class="w-full text-xs">
+                  </td>
+                </tr>
+
+              <!-- Filter Row -->
+              <tr *ngIf="showFilterRow" class="bg-gray-100">
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="filters.name"
+                        (input)="applyFilters()">
+                </th>
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="filters.description"
+                        (input)="applyFilters()">
+                </th>
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="filters.status"
+                        (input)="applyFilters()">
+                </th>
+              </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody>
+              <tr *ngFor="let item of paginatedItems"
+                  (click)="selectRow(item)"
+                  (dblclick)="doubleClickRow(item)"
+                  [class.bg-blue-100]="selectedRow === item"
+                  class="cursor-pointer hover:bg-gray-100">
+
+                <td class="border px-2">{{ item.name }}</td>
+                <td class="border px-2">{{ item.description }}</td>
+                <td class="border px-2">{{ item.commodity }}</td>
+              </tr>
+              <!-- Empty state -->
+              <tr *ngIf="cfilteredItems.length === 0">
+                <td colspan="3" class="text-center py-4 text-gray-500">
+                  There are no rows to display.
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+    </div>
+
+    <div class=" item-center border-1 m-1">
+      <div class="flex justify-between items-center px-3 py-2 bg-gray-200  text-xs">
+                <div class="px-2 font-semibold">Commodity codes</div>
+          <button class="flex justify-between px-2 text-xs">
+         <lucide-icon [img]="funnel" class="flex justify-center items-center w-5 h-5 text-black ml-1 cursor-pointer" (click)="codetoggleFilter()"></lucide-icon>
+        <p class="font-semibold pt-1">Filter</p>
+        </button>
+            <div class="font-medium text-[12px]">
+              Page {{ codecurrentPage }} of {{ codetotalPages }}
+            </div>
+
+            <div class="flex gap-2">
+              <button (click)="codeprevPage()" class="border px-2">
+                <lucide-icon [img]="arrowbigleft" class="w-5 h-5"></lucide-icon>
+              </button>
+              <button (click)="codenextPage()" class="border px-2">
+                <lucide-icon [img]="arrowbigright" class="w-5 h-5"></lucide-icon>
+              </button>
+            </div>
+
+            <button (click)="codestartAdd()" class="border px-2 text-xs">New Row</button>
+            <button *ngIf="codeisAdding" (click)="codesaveNewRow()" class="border px-2 text-xs bg-green-200">
+            Save
+          </button>
+
+          <button *ngIf="codeisAdding" (click)="codecancelAdd()" class="border px-2 text-xs">
+            Cancel
+          </button>
+
+      </div>
+    <!-- BODY -->
+        <div class="bg-white p-3 min-h-[150px]">
+
+          <!-- Example Table (Maximo style) -->
+          <table class="w-full text-xs border border-gray-300">
+            
+            <!-- Header -->
+            <thead class="bg-gray-200">
+              <tr>
+                <th class="border px-2 text-left font-medium">Commodity Code</th>
+                <th class="border px-2 text-left font-medium">Description</th>
+                <th class="border px-2 text-left font-medium">Service?</th>
+              </tr>
+
+                <tr *ngIf="isAdding" class="bg-yellow-50">
+                  <td class="border px-1">
+                    <input [(ngModel)]="codenewRow.name" class="w-full text-xs">
+                  </td>
+                  <td class="border px-1">
+                    <input [(ngModel)]="codenewRow.description" class="w-full text-xs">
+                  </td>
+                  <td class="border px-1">
+                    <input [(ngModel)]="codenewRow.commodity" class="w-full text-xs">
+                  </td>
+                </tr>
+
+              <!-- Filter Row -->
+              <tr *ngIf="codeshowFilterRow" class="bg-gray-100">
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="codefilters.name"
+                        (input)="codeapplyFilters()">
+                </th>
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="codefilters.description"
+                        (input)="codeapplyFilters()">
+                </th>
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="codefilters.commodity"
+                        (input)="codeapplyFilters()">
+                </th>
+              </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody>
+              <tr *ngFor="let item of codepaginatedItems"
+                  (click)="codeselectRow(item)"
+                  (dblclick)="codedoubleClickRow(item)"
+                  [class.bg-blue-100]="codeselectedRow === item"
+                  class="cursor-pointer hover:bg-gray-100">
+
+                <td class="border px-2">{{ item.name }}</td>
+                <td class="border px-2">{{ item.description }}</td>
+                <td class="border px-2">{{ item.commodity }}</td>
+
+              </tr>
+
+              <!-- Empty state -->
+              <tr *ngIf="codefilteredItems.length === 0">
+                <td colspan="3" class="text-center py-4 text-gray-500">
+                  There are no rows to display.
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+    </div>
+    <!-- FOOTER -->
+    <div class="flex justify-end gap-2 px-3 py-2 bg-gray-200 border-t border-gray-400">
+      <button (click)="codeinsertItem()"
+              class="px-3 py-1 border border-gray-500 bg-gray-100 hover:bg-gray-300 text-xs">
+        OK
+      </button>
+
+      <button (click)="codeclosecommodity()"
+              class="px-3 py-1 border border-gray-500 bg-gray-100 hover:bg-gray-300 text-xs">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+
+<div *ngIf="showStoreroom"
+     class="fixed inset-0 flex items-center justify-center bg-gray-400/30 z-50">
+  <div *ngIf="showaddStoreroom" class="w-[500px] bg-gray-100  shadow-md">
+  <!-- HEADER -->
+  <div class="flex justify-between items-center px-3 py-1 bg-gray-200">
+    <span class="text-sm font-semibold">Add Items to Storeroom</span>
+    <button (click)="closestoreroom()" class="text-sm px-2 hover:bg-gray-300">✖</button>
+  </div>
+
+  <!-- BODY -->
+  <div class="p-3 bg-gray-100">
+
+    <div [formGroup]="addstoreroomform" class="space-y-3">
+
+      <!-- SITE -->
+      <div class="grid grid-cols-[120px_1fr] items-center gap-2">
+        <label class="text-right text-sm">Site</label>
+        <input formControlName="site" class="h-6 border border-gray-300 px-2 bg-gray-50">
+      </div>
+
+      <!-- STOREROOM -->
+      <div class="grid grid-cols-[120px_1fr] items-center gap-2">
+        <label class="text-right text-sm">Storeroom</label>
+
+        <div class="flex items-center gap-1">
+          <input formControlName="storename" class="w-28 h-6 border border-gray-300 px-2 bg-gray-50">
+
+          <lucide-icon 
+            [img]="chevronsright" 
+            class="w-4 h-4 cursor-pointer">
+          </lucide-icon>
+
+          <input formControlName="storedescription" class="flex-1 h-6 border border-gray-300 px-2 bg-gray-50">
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="flex justify-end gap-2 pt-2">
+        <button (click)="addstoreroom()"
+          class="px-3 py-1 border bg-gray-100 hover:bg-gray-300 text-xs">
+          OK
+        </button>
+
+        <button (click)="codeclosecommodity()"
+          class="px-3 py-1 border bg-gray-100 hover:bg-gray-300 text-xs">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+  <div *ngIf="showdetailStoreroom" class="w-[75%] bg-gray-100 border shadow-md">
+
+  <!-- HEADER -->
+  <div class="flex justify-between items-center px-3 py-1 bg-gray-200 border-b">
+    <span class="text-sm font-semibold">Add Items to Storeroom</span>
+    <button (click)="closestoreroom()" class="text-sm px-2 hover:bg-gray-300">✖</button>
+  </div>
+
+  <div class="p-3">
+
+    <!-- TABLE HEADER -->
+    <div class="grid grid-cols-12 gap-2 bg-gray-200 border text-xs px-2 py-1">
+      <div></div>
+      <div>Item</div>
+      <div>Issue Cost Type</div>
+      <div>Unit Cost</div>
+      <div>Default Bin</div>
+      <div>Current Balance</div>
+      <div>Lot</div>
+      <div>Issue Unit</div>
+      <div>Order Unit</div>
+      <div>Site</div>
+      <div class="text-center">Del</div>
+    </div>
+
+    <!-- TABLE ROW -->
+    <div [formGroup]="itemForm" class="grid grid-cols-12 gap-2 border px-2 py-2 bg-white items-center">
+
+      <!-- Toggle -->
+      <div class="text-xs cursor-pointer" (click)="toggleDetails()">
+        {{ showDetails ? '▼' : '▶' }}
+      </div>
+
+      <!-- Item -->
+      <div class="flex items-center gap-1">
+        <input formControlName="itemname" class="w-full h-6 border px-1 bg-yellow-50">
+        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+      </div>
+
+      <!-- Issue Cost -->
+      <div class="flex items-center gap-1">
+        <input formControlName="issuecost" class="w-full h-6 border px-1 bg-yellow-50">
+        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+      </div>
+
+      <!-- Unit Cost -->
+      <input formControlName="unitcost" class="h-6 border px-1 text-right">
+
+      <!-- Default Bin -->
+      <input formControlName="defaultbin" class="h-6 border px-1">
+
+      <!-- Current Balance -->
+      <input formControlName="currentbalance" class="h-6 border px-1">
+
+      <!-- Lot -->
+      <div class="flex items-center gap-1">
+        <input formControlName="lot" class="w-full h-6 border px-1">
+        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+      </div>
+
+      <!-- Issue Unit -->
+      <div class="flex items-center gap-1">
+        <input formControlName="issueunit" class="w-full h-6 border px-1 bg-yellow-50">
+        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+      </div>
+
+      <!-- Order Unit -->
+      <div class="flex items-center gap-1">
+        <input formControlName="orderunit" class="w-full h-6 border px-1">
+        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+      </div>
+
+      <!-- Site -->
+      <input formControlName="site" class="h-6 border px-1 bg-gray-200">
+
+      <!-- Delete -->
+      <div class="flex justify-center">
+        <lucide-icon [img]="trash" class="w-4 h-4 text-red-500 cursor-pointer" (click)="deleteRow()"></lucide-icon>
+      </div>
+
+    </div>
+
+    <!-- DETAILS -->
+    <div *ngIf="showDetails" class="mt-3 border bg-gray-200 p-3">
+
+      <div class="text-sm font-semibold mb-2">Details</div>
+
+      <div class="grid grid-cols-2 gap-6">
+
+        <!-- LEFT -->
+        <div class="space-y-2" [formGroup]="itemForm">
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">* Item</label>
+            <input formControlName="item" class="flex-1 h-6 border px-2 bg-yellow-50">
+            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">Condition Code</label>
+            <input class="flex-1 h-6 border px-2">
+            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">Lot</label>
+            <input formControlName="lot" class="flex-1 h-6 border px-2">
+            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">* Issue Cost Type</label>
+            <input formControlName="issuecost" class="flex-1 h-6 border px-2 bg-yellow-50">
+            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">Unit Cost</label>
+            <input formControlName="unitcost" class="flex-1 h-6 border px-2 text-right">
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">Defualt Bin</label>
+            <input formControlName="defualtbin" class="flex-1 h-6 border px-2 text-right">
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">Current Balance</label>
+            <input formControlName="currentbalance" class="flex-1 h-6 border px-2 text-right">
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="space-y-2" [formGroup]="itemForm">
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">Site</label>
+            <input formControlName="site" class="flex-1 h-6 border px-2 bg-gray-200">
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">* Issue Unit</label>
+            <input formControlName="issueunit" class="flex-1 h-6 border px-2 bg-yellow-50">
+            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">Order Unit</label>
+            <input formControlName="orderunit" class="flex-1 h-6 border px-2">
+            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="w-32 text-sm">Consignment?</label>
+            <input type="checkbox">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="flex justify-end gap-2 mt-3">
+      <button (click)="submit()" class="px-4 py-1 border bg-gray-200 hover:bg-gray-300 text-sm">OK</button>
+      <button (click)="storeclose()" class="px-4 py-1 border bg-gray-200 hover:bg-gray-300 text-sm">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+
+</div>
+
+<div *ngIf="showStoreroomlist"
+     class="fixed inset-0 bg-opacity-30 flex items-center justify-center z-50">
+
+  <div class="w-[650px] bg-gray-100 border border-gray-500 shadow-md">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-3 py-1 bg-gray-200 border-b border-gray-400">
+      <span class="text-sm font-semibold">Select Value</span>
+      <button (click)="closestoreroomlist()" class="text-sm px-2 hover:bg-gray-300">✖</button>
+    </div>
+    <div class=" item-center border-1 m-1">
+      <div class="flex justify-between items-center px-3 py-2 bg-gray-200  text-xs">
+        <div class="px-2 font-semibold">{{ selectedAction }}</div>
+          <button class="flex justify-between px-2 text-xs">
+         <lucide-icon [img]="funnel" class="flex justify-center items-center w-5 h-5 text-black ml-1 cursor-pointer" (click)="toggleFilter(selectedAction)"></lucide-icon>
+         <p class="font-semibold pt-1">Filter</p>
+        </button>
+            <div class="font-medium text-[12px]">
+              Page {{ currentPage }} of {{ totalPages }}
+            </div>
+
+            <div class="flex gap-2">
+              <button (click)="prevPage()" class="border px-2">
+                <lucide-icon [img]="arrowbigleft" class="w-4 h-4"></lucide-icon>
+              </button>
+              <button (click)="nextPage()" class="border px-2">
+                <lucide-icon [img]="arrowbigright" class="w-4 h-4"></lucide-icon>
+              </button>
+            </div>
+
+      </div>
+    <!-- BODY -->
+        <div class="bg-white p-3 min-h-[150px]">
+
+          <!-- Example Table (Maximo style) -->
+              <table  class="w-full text-xs border border-gray-300">
+                
+                <!-- Header -->
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="border px-2 text-left font-medium">Location</th>
+                    <th class="border px-2 text-left font-medium">Description</th>
+                    <th class="border px-2 text-left font-medium">Type</th>
+                    <th class="border px-2 text-left font-medium">Site</th>
+                  </tr>                    
+                  <!-- Filter Row -->
+                </thead>
+                <!-- Body -->
+                <tbody>
+                  <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="border px-2">PKG</td>
+                    <td class="border px-2">Packaging Dept.. Store</td>
+                    <td class="border px-2">StoreRoom</td>
+                    <td class="border px-2">BEDFORD</td>
+                  </tr>
+                  <!-- Empty state -->
+                  <tr *ngIf="paginatedItems.length === 0">
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      There are no rows to display.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="flex justify-end gap-2 px-3 py-2 bg-gray-200 border-t border-gray-400">
+        <button (click)="closestoreroomlist()"
+              class="px-3 py-1 border border-gray-500 bg-gray-100 hover:bg-gray-300 text-xs">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+ 
+</div>
+
+<div *ngIf="showCommonpopup"
+     class="fixed inset-0 flex items-center justify-center bg-gray-400/30 z-50">
+
+  <div [ngClass]="selectedAction === 'AlItem' ? 'w-[650px]' : 'w-[450px]'" 
+  class="bg-gray-100  shadow-md">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-3 py-1 bg-gray-200 border-b border-gray-400">
+      <span class="text-sm font-semibold">Select Value</span>
+      <button (click)="closecommodity()" class="text-sm px-2 hover:bg-gray-300">✖</button>
+    </div>
+    <div class=" item-center border border-gray-300">
+      <div class="flex justify-between items-center px-3 py-2 bg-gray-200 text-xs">
+
+  <!-- LEFT SIDE: Filter + Search + Pagination -->
+  <div class="flex items-center gap-3">
+
+    <!-- Search -->
+    <button class="flex items-center gap-1">
+      <lucide-icon [img]="search"
+        class="w-4 h-4 cursor-pointer"
+        (click)="toggleSearch(selectedAction)">
+      </lucide-icon>
+    </button>
+
+    <!-- Filter -->
+    <button class="flex items-center gap-1">
+      <lucide-icon [img]="funnel"
+        class="w-4 h-4 cursor-pointer"
+        (click)="toggleFilter(selectedAction)">
+      </lucide-icon>
+    </button>
+
+    <div class="flex flex-col items-center gap-1 font-medium text-[14px]">
+
+  <!-- Page Info -->
+  <span>Page <button (click)="prevPage()" class="px-1 text-indigo-700 cursor-pointer">{{ currentPage }}</button> of  <button (click)="nextPage()" class="cursor-pointer text-indigo-700">{{ totalPages }}</button></span>
+
+
+</div>
+  </div>
+
+  <!-- RIGHT SIDE: Actions -->
+  <div class="flex items-center gap-2">
+    
+
+    <button (click)="startAdd()" class="border px-2 text-xs bg-blue-100">
+      New
+    </button>
+
+    <button *ngIf="isAdding"
+      (click)="MultiNewRow(selectedAction)"
+      class="border px-2 text-xs bg-green-200">
+      Save
+    </button>
+
+    <button *ngIf="isAdding"
+      (click)="cancelAdd()"
+      class="border px-2 text-xs bg-red-100">
+      Cancel
+    </button>
+
+  </div>
+
+
+
+</div>
+    <!-- BODY -->
+        <div class="bg-white p-3 min-h-[150px]">
+
+          <!-- Example Table (Maximo style) -->
+           <div *ngIf="selectedAction === 'CommodityGroup'">
+
+
+              <table  class="w-full text-xs border border-gray-300">
+                
+                <!-- Header -->
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="border px-2 text-left font-medium">Commodity Group</th>
+                    <th class="border px-2 text-left font-medium">Commodity Code</th>
+                  </tr>
+                    
+                  <!-- Filter Row -->
+                  
+                </thead>
+
+                <!-- Body -->
+                <tbody>
+                <tr class="bg-yellow-50" *ngIf="isAdding">
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.name" placeholder="Commodity Group" class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.description" placeholder="Commodity Code"  class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                </tr>
+                  <tr *ngIf="showFilterRow" class="bg-gray-100">
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="filters.name"
+                        (input)="applyFilters()">
+                </th>
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="filters.description"
+                        (input)="applyFilters()">
+                </th>
+              </tr>
+                  <tr *ngFor="let item of paginatedItems"
+                      (click)="selectItem(item)" [ngClass]="{ 'bg-blue-100': item.id === selectedRowId }"
+                      class="cursor-pointer hover:bg-gray-100">
+
+                    <td class="border px-2">{{ item.name }}</td>
+                    <td class="border px-2">{{ item.description }}</td>
+
+                  </tr>
+
+                  <!-- Empty state -->
+                  <tr *ngIf="paginatedItems.length === 0">
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      There are no rows to display.
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>          
+            <div *ngIf="selectedAction === 'meterGroup'">
+
+                <div *ngIf="showSearchRow" class="mb-2">
+                        <input
+                          type="text"
+                          placeholder="Search items..."
+                          class="w-full px-2 py-1 text-xs border border-gray-300 rounded outline-none focus:ring-1 focus:ring-blue-400"
+                          [(ngModel)]="filters.search"
+                          (input)="applySearchsitem()"
+                        />
+                      </div>
+
+              <table  class="w-full text-xs border border-gray-300">
+                
+                <!-- Header -->
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="border px-2 text-left font-medium">Meter Group</th>
+                    <th class="border px-2 text-left font-medium">Meter</th>
+                  </tr>
+
+                    
+                  <!-- Filter Row -->
+                  
+                </thead>
+
+                <!-- Body -->
+                <tbody>
+                   <tr  class="bg-yellow-50" *ngIf="isAdding">
+                  <td class="border px-1" >
+                    <input [(ngModel)]="newRow.name" placeholder="Meter Group" class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.description" placeholder="Meter"  class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                </tr>
+                   <tr *ngIf="showFilterRow" class="bg-gray-100">
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="filters.name"
+                        (input)="applyFilters()">
+                </th>
+                <th class="border">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="filters.description"
+                        (input)="applyFilters()">
+                </th>
+              </tr>
+                  <tr *ngFor="let item of paginatedItems"
+                      (click)="selectItem(item)"
+                      class="cursor-pointer hover:bg-gray-100">
+
+                    <td class="border px-2">{{ item.name }}</td>
+                    <td class="border px-2">{{ item.description }}</td>
+
+                  </tr>
+
+                  <!-- Empty state -->
+                  <tr *ngIf="paginatedItems.length === 0">
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      There are no rows to display.
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+           
+            <div *ngIf="selectedAction === 'Issueunit'">
+               <table *ngIf="isAdding" class="w-full text-xs border border-gray-300 mb-3">
+                
+                <!-- Header -->
+
+                <!-- Body -->
+                <tbody>
+                  <tr  class="bg-yellow-50">
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.name" placeholder="Name" class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                  <td class="border px-1">  
+                    <input [(ngModel)]="newRow.description" placeholder="Description"  class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                </tr>
+                </tbody>
+                </table>
+              <table  class="w-full text-xs border border-gray-300">
+                
+                <!-- Header -->
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="border px-2 text-left font-medium">Unit of Measure</th>
+                    <th class="border px-2 text-left font-medium">Appraviation</th>
+                  </tr>
+                  <!-- Filter Row -->
+                  
+                </thead>
+
+                <!-- Body -->
+                <tbody>
+                  <tr *ngFor="let item of paginatedItems"
+                      (click)="selectItem(item)"
+                      class="cursor-pointer hover:bg-gray-100">
+
+                    <td class="border px-2">{{ item.name }}</td>
+                    <td class="border px-2">{{ item.description }}</td>                    
+
+                  </tr>
+
+                  <!-- Empty state -->
+                  <tr *ngIf="paginatedItems.length === 0">
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      There are no rows to display.
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+
+            <div *ngIf="selectedAction === 'Orderunit'">
+               <table *ngIf="isAdding" class="w-full text-xs border border-gray-300 mb-3">
+                
+                <!-- Header -->
+
+                <!-- Body -->
+                <tbody>
+                  <tr  class="bg-yellow-50">
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.name" placeholder="Order Unit" class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.description" placeholder="Issue unit"  class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                </tr>
+                </tbody>
+                </table>
+              <table  class="w-full text-xs border border-gray-300">
+                
+                <!-- Header -->
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="border px-2 text-left font-medium">Order Unit</th>
+                    <th class="border px-2 text-left font-medium">Issue Unit</th>
+                  </tr>                    
+                  <!-- Filter Row -->
+                </thead>
+                <!-- Body -->
+                <tbody>
+                  <tr *ngFor="let item of paginatedItems"
+                      (click)="selectItem(item)"
+                      class="cursor-pointer hover:bg-gray-100">
+
+                    <td class="border px-2">{{ item.name }}</td>
+                    <td class="border px-2">{{ item.description }}</td>                    
+
+                  </tr>
+
+                  <!-- Empty state -->
+                  <tr *ngIf="paginatedItems.length === 0">
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      There are no rows to display.
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+
+
+          <div *ngIf="selectedAction === 'Item'">
+            <div *ngIf="showSearchRow" class="mb-2">
+                        <input
+                          type="text"
+                          placeholder="Search items..."
+                          class="w-full px-2 py-1 text-xs border border-gray-300 rounded outline-none focus:ring-1 focus:ring-blue-400"
+                          [(ngModel)]="filtersitem.search"
+                          (input)="applySearchsitem()"
+                        />
+                      </div>
+                <table class="w-full text-xs">
+                  <!-- Header -->
+                  <thead class="bg-gray-200 sticky top-0">
+                    <tr>
+                      <th class="border border-gray-200 px-2 text-left font-medium">Item</th>
+                      <th class="border border-gray-200 px-2 text-left font-medium">Description</th>
+                    </tr>
+                  </thead>
+                  <!-- Body -->
+                  <tbody>
+                      <tr class="bg-yellow-50" *ngIf="isAdding">
+                  <td class="border border-gray-200 px-1">
+                    <input [(ngModel)]="newItemRow.itemCode" placeholder="Item Code" class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                  <td class="border border-gray-200 px-1">
+                    <input [(ngModel)]="newItemRow.itemName" placeholder="Item Name"  class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                </tr>
+                    <tr *ngIf="showFilterRow" class="bg-gray-100">
+                <th class="border border-gray-200">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="filtersitem.itemCode"
+                        (input)="applyFiltersitem()">
+                </th>
+                <th class="border border-gray-200">
+                  <input class="w-full px-1 text-xs border-none outline-none"
+                        [(ngModel)]="filtersitem.itemName"
+                        (input)="applyFiltersitem()">
+                </th>
+              </tr>
+                    <tr *ngFor="let item of paginatedItems" 
+                        class="cursor-pointer hover:bg-gray-100" 
+                        (click)="selectItem(item)">
+                      <td class="border border-gray-200 px-2 text-blue-600 underline">{{ item.itemCode }}</td>
+                      <td class="border border-gray-200 px-2">{{ item.itemName }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+
+          <div *ngIf="[
+          'vendor',
+  'vendorItem',
+  'Vendor',
+  'spec',
+  'documents'
+].includes(selectedAction)">
+
+  <!-- Search -->
+  <div *ngIf="showSearchRow" class="mb-2">
+    <input
+      type="text"
+      placeholder="Search items..."
+      class="w-full px-2 py-1 text-xs border border-gray-300 rounded outline-none focus:ring-1 focus:ring-blue-400"
+      [(ngModel)]="filtersitem.search"
+      (input)="applySearchsitem()"
+    />
+  </div>
+
+  <!-- Table -->
+  <table class="w-full text-xs">
+
+    <!-- Header -->
+    <thead class="bg-gray-200 sticky top-0">
+      <tr>
+        <th class="border border-gray-200 px-2 text-left font-medium">
+          Item
+        </th>
+
+        <th class="border border-gray-200 px-2 text-left font-medium">
+          Description
+        </th>
+      </tr>
+    </thead>
+
+    <!-- Body -->
+    <tbody>
+
+      <!-- Add Row -->
+      <tr class="bg-yellow-50" *ngIf="isAdding">
+
+        <td class="border border-gray-200 px-1">
+          <input
+            [(ngModel)]="newItemRow.itemCode"
+            placeholder="Item Code"
+            class="w-full text-xs px-2 py-[4px]"
+          >
+        </td>
+
+        <td class="border border-gray-200 px-1">
+          <input
+            [(ngModel)]="newItemRow.itemName"
+            placeholder="Item Name"
+            class="w-full text-xs px-2 py-[4px]"
+          >
+        </td>
+
+      </tr>
+
+      <!-- Filter Row -->
+      <tr *ngIf="showFilterRow" class="bg-gray-100">
+
+        <th class="border border-gray-200">
+          <input
+            class="w-full px-1 text-xs border-none outline-none"
+            [(ngModel)]="filtersitem.itemCode"
+            (input)="applyFiltersitem()"
+          >
+        </th>
+
+        <th class="border border-gray-200">
+          <input
+            class="w-full px-1 text-xs border-none outline-none"
+            [(ngModel)]="filtersitem.itemName"
+            (input)="applyFiltersitem()"
+          >
+        </th>
+
+      </tr>
+
+      <!-- Data -->
+      <tr
+        *ngFor="let item of paginatedItems"
+        class="cursor-pointer hover:bg-gray-100"
+        (click)="selectgroup(item, selectedAction)"
+      >
+
+        <td class="border border-gray-200 px-2 text-blue-600 underline">
+          {{ item.itemCode }}
+        </td>
+
+        <td class="border border-gray-200 px-2">
+          {{ item.itemName }}
+        </td>
+
+      </tr>
+
+      <!-- Empty -->
+      <tr *ngIf="paginatedItems.length === 0">
+        <td colspan="2" class="text-center py-4 text-gray-500">
+          There are no rows to display.
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="flex justify-end gap-2 px-3 py-2 bg-gray-200 border-t border-gray-400">
+          <!-- <div *ngIf="showSuccess" class="w-full px-4 py-2 text-green-500 rounded shadow" >
+      Save Successfully
+      </div> -->
+
+      <button (click)="closecommodity()"
+              class="px-3 py-1 border border-gray-500 bg-gray-100 hover:bg-gray-300 text-xs">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showMessageBox"
+  (onConfirm)="confirmSuccess(selectedId)"
+  (onCancel)="showMessageBox = false">
+</app-message-box>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="deleteMessageBox"
+  (onConfirm)="confirmDelete()"
+  (onCancel)="showMessageBox = false">
+</app-message-box>
+
+

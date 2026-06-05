@@ -1,0 +1,349 @@
+<div class="h-screen overflow-hidden bg-white p-2">
+
+  <div class=" bg-white shadow-lg flex flex-col overflow-hidden">
+
+   
+     <!-- HEADER -->
+    <div class="flex items-center bg-gray-100 px-6 py-4 text-black">
+        <div
+          class="w-8 h-8 
+                 bg-gradient-to-br from-blue-500 to-indigo-600
+                 flex items-center justify-center shadow-lg "
+        >
+
+          <lucide-icon
+            [img]="user"
+            class="w-8 h-8 text-white"
+          >
+          </lucide-icon>
+
+        </div>
+
+      <div class="px-3">
+      <h1 class="text-[20px] font-bold">
+        User Registration
+      </h1>
+
+      <p class="text-sm  mt-1">
+        Create and manage your enterprise profile
+      </p>
+      </div>
+
+    </div>
+
+      <!-- STEPPER -->
+    <div class="px-6 py-3 bg-gray-50">
+
+      <div class="flex items-center justify-between">
+
+        <div
+          *ngFor="let step of steps; let i = index"
+          class="flex items-center flex-1"
+        >
+
+          <!-- STEP -->
+          <div class="flex flex-col items-center">
+
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all"
+              [ngClass]="
+                currentStep >= step.id
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-300 text-gray-700'
+              "
+            >
+              {{ step.id }}
+            </div>
+
+            <span
+              class="mt-2 text-xs font-medium"
+              [ngClass]="
+                currentStep >= step.id
+                ? 'text-blue-600'
+                : 'text-gray-500'
+              "
+            >
+              {{ step.label }}
+            </span>
+
+          </div>
+
+          <!-- LINE -->
+          <div
+            *ngIf="i < steps.length - 1"
+            class="flex-1 h-1 mx-2 rounded-full"
+            [ngClass]="
+              currentStep > step.id
+              ? 'bg-blue-600'
+              : 'bg-gray-300'
+            "
+          ></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    
+    <!-- BODY -->
+    <div class="flex-1 overflow-y-auto p-6">
+
+      <!-- STEP 1 -->
+      <div *ngIf="currentStep === 1">
+
+          <app-dynamic-form
+        [form]="form"
+        [fields]="personalFields"
+      ></app-dynamic-form>
+
+      </div>
+<div *ngIf="currentStep === 2">
+
+   <app-dynamic-form
+        [form]="form"
+        [fields]="contactFields"
+      ></app-dynamic-form>
+
+</div>
+
+<!-- <div *ngIf="currentStep === 3">
+
+     <app-dynamic-form
+        [form]="form"
+        [fields]="roleFields"
+      ></app-dynamic-form>
+
+</div> -->
+
+<div *ngIf="currentStep === 3">
+
+   <app-dynamic-form
+        [form]="form"
+[fields]="fields" ></app-dynamic-form>
+
+</div>
+
+<div *ngIf="currentStep === 4">
+
+<!-- STEP 5 : REVIEW -->
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+    <!-- PERSONAL DETAILS -->
+    <div class="bg-white border shadow-sm p-4 rounded-xl">
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <div
+          class="w-10 h-10 rounded-full bg-blue-100
+                 flex items-center justify-center"
+        >
+
+          <!-- USER ICON -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 text-blue-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5.121 17.804A9 9 0 1118.88 17.804"
+            />
+          </svg>
+
+        </div>
+
+        <h3 class="text-lg font-bold text-gray-800">
+          Personal Details
+        </h3>
+
+      </div>
+
+      <div class="space-y-4">
+
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500">First Name</span>
+          <span class="font-medium">
+            {{ form.value.FirstName }}
+          </span>
+        </div>
+
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500">Last Name</span>
+          <span class="font-medium">
+            {{ form.value.last_name }}
+          </span>
+        </div>
+
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500">Employee ID</span>
+          <span class="font-medium">
+            {{ form.value.Employeeid }}
+          </span>
+        </div>
+
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500">Gender</span>
+          <span class="font-medium">
+            {{ form.value.Gender }}
+          </span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-500">Date of Birth</span>
+          <span class="font-medium">
+            {{ form.value.dob }}
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CONTACT DETAILS -->
+    <div class="bg-white border shadow-sm p-4 rounded-xl">
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <div
+          class="w-10 h-10 rounded-full bg-green-100
+                 flex items-center justify-center"
+        >
+
+          <!-- CONTACT ICON -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 text-green-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"
+            />
+          </svg>
+
+        </div>
+
+        <h3 class="text-lg font-bold text-gray-800">
+          Contact Details
+        </h3>
+
+      </div>
+
+      <div class="space-y-4">
+
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500">Email</span>
+          <span class="font-medium">
+            {{ form.value.email }}
+          </span>
+        </div>
+
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500">Phone</span>
+          <span class="font-medium">
+            {{ form.value.phone }}
+          </span>
+        </div>
+
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500">Alternate Phone</span>
+          <span class="font-medium">
+            {{ form.value.alternate_phone }}
+          </span>
+        </div>
+
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-gray-500">Country</span>
+          <span class="font-medium">
+            {{ form.value.country }}
+          </span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-500">City</span>
+          <span class="font-medium">
+            {{ form.value.city }}
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ROLE & SECURITY -->
+
+
+  </div>
+
+
+
+</div>
+
+ </div>
+
+    <!-- FOOTER -->
+    <div class=" bg-gray-50 px-6 py-3 flex justify-between">
+
+      <button
+        type="button"
+        (click)="prevStep()"
+        class="px-5 py-2 border  hover:bg-gray-100"
+      >
+        Previous
+      </button>
+
+      <div class="flex gap-3">
+
+        <!-- <button
+          type="button"
+          class="px-5 py-2 bg-gray-200  hover:bg-gray-300"
+        >
+          Save Draft
+        </button> -->
+
+        <button
+          *ngIf="currentStep < steps.length"
+          type="button"
+          (click)="nextStep()"
+          class="px-6 py-2 bg-blue-600 text-white  hover:bg-blue-700"
+        >
+          Next
+        </button>
+
+        <button
+          *ngIf="currentStep === steps.length"
+          type="button"
+          (click)="submit()"
+          class="px-6 py-2 bg-green-600 text-white  hover:bg-green-700"
+        >
+          Submit
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showMessageBox"
+  (onConfirm)="confirm()"
+  (onCancel)="showMessageBox = false">
+</app-message-box>
+    
+
+

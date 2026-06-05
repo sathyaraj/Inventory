@@ -1,0 +1,134 @@
+<div [formGroup]="form" class="text-sm min-h-screen">
+
+  <!-- MAIN CARD -->
+  <div class="bg-white">
+    <!-- FORM BODY -->
+    <div class="p-4 ">
+
+          <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+                <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Currency Code:</label>
+          <input formControlName="currencycode" class="w-75 border border-gray-300 px-2 py-[4px]">
+        </div>
+         <div
+            *ngIf="
+              form.get('currencycode')?.touched &&
+              form.get('currencycode')?.invalid
+            "
+            class="text-red-500 text-xs mt-1 text-center">
+
+            Currency Code is required
+
+          </div>
+        </div>
+                        <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Currency Name:</label>
+          <input formControlName="currencyname"   class="w-75 border border-gray-300 px-2 py-[4px]" placeholder="Currency">
+                </div>  <div
+          *ngIf="
+            form.get('currencyname')?.touched &&
+            form.get('currencyname')?.invalid
+          "
+          class="text-red-500 text-xs mt-1 text-center">
+
+          Currency Name is required
+
+        </div>
+        
+        </div>
+        </div>
+
+        
+          <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+                <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Symbol:</label>
+          <input formControlName="symbol" class="w-75 border border-gray-300 px-2 py-[4px]">
+                    </div>  <div
+              *ngIf="
+                form.get('symbol')?.touched &&
+                form.get('symbol')?.invalid
+              "
+              class="text-red-500 text-xs mt-1 text-center">
+
+              Symbol is required
+
+            </div>
+        </div>
+                        <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Exchange Rate:</label>
+          <input formControlName="exchangerate"   class="w-75 border border-gray-300 px-2 py-[4px]" placeholder="Discount">
+              </div>    <div
+          *ngIf="
+            form.get('exchangerate')?.touched &&
+            form.get('exchangerate')?.invalid
+          "
+          class="text-red-500  text-xs mt-1 text-center">
+
+          Exchange Rate is required
+
+        </div>
+        </div>
+        </div>
+
+         <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+
+                <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Decimal Places:</label>
+          <input formControlName="decimaiplaces" class="w-75 border border-gray-300 px-2 py-[4px]">
+                    <!-- <div
+            *ngIf="
+              form.get('decimalplaces')?.touched &&
+              form.get('decimalplaces')?.invalid
+            "
+            class="text-red-500 text-xs mt-1 text-center">
+
+            Decimal Places is required
+
+          </div> -->
+        </div>
+        </div>
+                        <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-40 text-[14px]">Status:</label>
+             <select 
+              formControlName="status" 
+              class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
+              <option value="Active" selected>Active</option>
+              <option value="InActive" >InActive</option>
+            </select>       
+           </div>
+        </div>
+        </div>
+
+      <!-- BUTTONS -->
+      <div class="flex justify-center gap-3 mt-6">
+
+        <button
+          type="button"
+            (click)="save()"
+          class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Save
+        </button>
+
+        <button
+          type="button"
+          class="px-5 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+        >
+          Reset
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

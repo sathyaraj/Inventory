@@ -1,0 +1,103 @@
+<div class="p-6 bg-white rounded shadow">
+
+<form [formGroup]="form">
+
+<!-- Header -->
+
+<div class="grid grid-cols-3 gap-4 mb-6">
+
+<select formControlName="storeroom" class="border p-2 rounded">
+<option>Select Storeroom</option>
+<option>Main Store</option>
+<option>Maintenance Store</option>
+</select>
+
+<input type="date" formControlName="date" class="border p-2 rounded">
+
+</div>
+
+<!-- Item Table -->
+
+<table class="w-full border">
+
+<thead class="bg-gray-100">
+
+<tr>
+<th class="p-2">Item Code</th>
+<th class="p-2">Item Name</th>
+<th class="p-2">Qty</th>
+<th class="p-2">Unit</th>
+<th class="p-2">Cost</th>
+<th class="p-2">Action</th>
+</tr>
+
+</thead>
+
+<tbody formArrayName="items">
+
+<tr *ngFor="let item of items.controls; let i=index" [formGroupName]="i">
+
+<td>
+<input formControlName="code" class="border p-2 w-full">
+</td>
+
+<td>
+<input formControlName="name" class="border p-2 w-full">
+</td>
+
+<td>
+<input type="number" formControlName="qty" class="border p-2 w-full">
+</td>
+
+<td>
+<input formControlName="unit" class="border p-2 w-full">
+</td>
+
+<td>
+<input type="number" formControlName="cost" class="border p-2 w-full">
+</td>
+
+<td>
+<button
+type="button"
+class="text-red-600"
+(click)="removeRow(i)">
+Delete
+</button>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<!-- Add Button -->
+
+<button
+type="button"
+class="mt-4 bg-green-600 text-white px-4 py-2 rounded"
+(click)="addRow()">
+
++ Add Item
+
+</button>
+
+<!-- Save -->
+
+<div class="mt-6 flex justify-end">
+
+<button
+type="button"
+class="bg-indigo-600 text-white px-4 py-2 rounded"
+(click)="save()">
+
+Save
+
+</button>
+
+</div>
+
+</form>
+
+</div>

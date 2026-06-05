@@ -1,0 +1,131 @@
+<form [formGroup]="form" class="p-6 bg-white rounded shadow">
+
+<!-- Header -->
+
+<div class="grid grid-cols-3 gap-4 mb-6">
+
+<div>
+
+<select formControlName="fromStore" class="border p-2 w-full">
+<option value="">From Storeroom</option>
+<option>Main Store</option>
+<option>Electrical Store</option>
+</select>
+
+<div class="text-red-500 text-sm"
+*ngIf="form.get('fromStore')?.touched && form.get('fromStore')?.invalid">
+Required
+</div>
+
+</div>
+
+<div>
+
+<select formControlName="toStore" class="border p-2 w-full">
+<option value="">To Storeroom</option>
+<option>Maintenance Store</option>
+<option>Workshop Store</option>
+</select>
+
+<div class="text-red-500 text-sm"
+*ngIf="form.get('toStore')?.touched && form.get('toStore')?.invalid">
+Required
+</div>
+
+</div>
+
+<div>
+
+<input
+type="date"
+formControlName="date"
+class="border p-2 w-full">
+
+</div>
+
+</div>
+
+<!-- Item Table -->
+
+<table class="w-full border">
+
+<thead class="bg-gray-100">
+
+<tr>
+<th class="p-2">Item Code</th>
+<th class="p-2">Item Name</th>
+<th class="p-2">Available</th>
+<th class="p-2">Transfer Qty</th>
+<th class="p-2">Unit</th>
+<th class="p-2">Action</th>
+</tr>
+
+</thead>
+
+<tbody formArrayName="items">
+
+<tr *ngFor="let item of items.controls; let i=index"
+[formGroupName]="i">
+
+<td>
+<input formControlName="code" class="border p-2 w-full">
+</td>
+
+<td>
+<input formControlName="name" class="border p-2 w-full">
+</td>
+
+<td>
+<input formControlName="available" class="border p-2 w-full">
+</td>
+
+<td>
+<input type="number"
+formControlName="qty"
+class="border p-2 w-full">
+</td>
+
+<td>
+<input formControlName="unit" class="border p-2 w-full">
+</td>
+
+<td>
+
+<button
+type="button"
+class="text-red-600"
+(click)="removeRow(i)">
+Delete
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<button
+type="button"
+class="mt-4 bg-green-600 text-white px-4 py-2 rounded"
+(click)="addRow()">
+
++ Add Item
+
+</button>
+
+<div class="mt-6 text-right">
+
+<button
+type="button"
+class="bg-indigo-600 text-white px-6 py-2 rounded"
+(click)="submit()">
+
+Transfer
+
+</button>
+
+</div>
+
+</form>

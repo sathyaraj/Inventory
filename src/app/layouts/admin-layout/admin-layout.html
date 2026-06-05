@@ -1,0 +1,69 @@
+<div class="flex h-screen overflow-y-auto bg-gray-100" >
+
+  <!-- Sidebar -->
+  <!-- <app-sidebar></app-sidebar> -->
+  <app-sidebar 
+  [isOpen]="isSidebarOpen"
+  (sidebarToggle)="toggleSidebar()">
+</app-sidebar>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- Header -->
+   <header class="bg-white shadow px-6 py-3 flex items-center justify-between">
+
+  <div class="flex items-center gap-4">
+    <!-- <button [class.hidden]="isSidebarOpen" (click)="toggleSidebar()" class="p-2 rounded hover:bg-gray-200">
+      <lucide-icon [img]="Menu" class="w-6 h-6 text-gray-700"></lucide-icon>
+      
+    </button> -->
+
+    <!-- <h1 class="text-2xl font-semibold text-gray-700">
+     <lucide-icon [img]="chevronleft" class="w-4 h-4"></lucide-icon> Inventory Management System
+    </h1> -->
+    <h1 class="flex items-center gap-2 text-2xl font-semibold text-gray-700">
+  <!-- <lucide-icon [img]="chevronleft" (click)="goBack()" class="w-4 h-4"></lucide-icon> -->
+  Inventory Management System
+</h1>
+  </div>
+  
+
+
+  <div class="flex items-center gap-3">
+
+  <button
+    (click)="logout()"
+    class="flex items-center gap-2 px-2 py-2 cursor-pointer text-red-600 text-sm">
+
+    <lucide-icon
+      [img]="lgout"
+      class="w-4 h-4">
+    </lucide-icon>
+
+    <span>Logout</span>
+
+  </button>
+
+</div>
+
+  
+
+</header>
+
+
+    <!-- Page Content -->
+    <main #scrollContainer class="flex-1 overflow-y-auto p-2 bg-white" (scroll)="onScroll($event)">
+        
+  
+      <router-outlet></router-outlet>
+    </main> 
+  </div>
+</div>
+<button
+*ngIf="showTopButton"
+  (click)="scrollToTop()"
+  class="fixed bottom-40 right-5 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg z-50"
+>
+  ↑
+</button>
