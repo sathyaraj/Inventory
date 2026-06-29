@@ -1,0 +1,340 @@
+
+ <div class="bg-gray-100 px-3 border-b border-gray-300 py-2 flex items-center gap-3">
+
+    <!-- Find -->
+   <div
+          class="w-8 h-8 
+                 bg-gradient-to-br from-blue-500 to-indigo-600
+                 flex items-center justify-center shadow-lg"
+        >
+
+          <lucide-icon
+            [img]="Settings"
+            class="w-8 h-8 text-white"
+          >
+          </lucide-icon>
+
+        </div>
+
+        <!-- TEXT -->
+        <div>
+
+          <h1 class="text-[20px] font-bold text-gray-800">
+            Admin Settings
+          </h1>
+
+          <p class="text-gray-500 mt-1">
+            Manage and configure your system settings
+          </p>
+
+        </div>
+
+<!-- Icons -->
+
+
+  </div>
+<div class="p-6 bg-white min-h-screen">
+   
+
+    <!-- Header Section -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-800">
+        CommodityGroup List
+      </h1>
+    </div>
+
+    <button
+          (click)="createcommodity()"
+      class=" border border-indigo-700 text-indigo-700 hover:bg-indigo-700 hover:text-white px-4 py-2 rounded shadow">
+      + CommodityGroup
+    </button>
+  </div>
+  
+
+
+  <!-- HEADER -->
+  <!-- <div class="flex justify-between items-center px-4 py-3 border-b bg-gray-50">
+    </div> -->
+
+     <div class="bg-white overflow-x-auto max-h-[700px] relative">
+
+
+    <table class="w-full text-sm">
+
+      <thead class="bg-gray-100">
+
+        <tr>
+
+          <th
+            *ngFor="let col of columns"
+            [hidden]="!col.visible"
+            class="px-4 py-1 border border-gray-300">
+
+            <div class="flex items-center gap-1">
+              <span>{{ col.title }}</span>
+  <span>
+
+            <div class="flex flex-col leading-none">
+
+  <!-- ASC -->
+  <lucide-icon
+    [img]="
+      sortColumn === col.field &&
+      sortDirection === 'asc'
+        ? moveup
+        : movedown
+    "
+    class="w-3 h-3"
+     [ngClass]="
+      sortColumn === col.field && sortDirection === 'desc'
+        ? 'text-gray-400'
+        : 'text-blue-600'
+    "
+    >
+  </lucide-icon>
+
+</div>          </span>
+</div>
+
+          </th>
+
+          <th class="px-4 py-1 border border-gray-300 text-center ">
+            Action
+          </th>
+
+        </tr>
+
+</thead>
+
+      <tbody>
+
+<ng-container *ngFor="let item of paginatedItems">
+
+<tr class="cursor-pointer hover:bg-blue-50" (click)="toggleExpand(item)">
+
+  <td *ngFor="let col of columns" [hidden]="!col.visible" class="px-4 py-1 border border-gray-300">
+
+    <ng-container *ngIf="col.field === 'commoditygroup'">
+
+      <div class="flex items-center gap-2">
+
+        <span>
+
+          <lucide-icon
+  [img]="item.expanded ? ChevronDown : ChevronUp"
+  class="flex w-4 h-4 mt-[1px] text-indigo-700">
+</lucide-icon>
+
+        </span>
+
+        {{ item[col.field] }}
+
+      </div>
+
+    </ng-container>
+
+    <ng-container
+      *ngIf="col.field !== 'commoditygroup'">
+
+      {{ item[col.field] }}
+
+    </ng-container>
+
+  </td>
+
+  <td class="border border-gray-300 px-4 py-1">
+
+          <div class="flex items-center justify-center gap-2 px-2">
+
+    <button type="button"
+      (click)="editCommodity(item); $event.stopPropagation()" class=" flex rounded hover:bg-green-100">
+
+       <lucide-icon
+    [img]="pencil"
+    class="flex w-4 h-4 mt-[1px] text-green-600">
+  </lucide-icon>
+
+    </button>
+
+    <button
+          type="button"
+          class="p-1 rounded
+                 hover:bg-red-100"
+          (click)="deleteItem(item.id); $event.stopPropagation()"
+        >
+
+       <lucide-icon
+    [img]="trash"
+    class="flex w-4 h-4 mt-[1px] text-red-600">
+  </lucide-icon>
+
+    </button>
+    </div>
+  </td>
+
+</tr>
+<tr *ngIf="item.expanded">
+
+  <td
+    [attr.colspan]="columns.length + 1"
+    class="bg-slate-50 p-0">
+
+    <div class="border-l-4 border-gray-100">
+
+      <!-- Header -->
+      <div
+        class="flex justify-between items-center
+               px-4 py-0 bg-indigo-50 border-indigo-100">
+
+        <h2 class="font-semibold text-indigo-700 text-[12px]">
+          Commodity Codes
+        </h2>
+
+        <span
+          class="text-xs px-3 py-1 rounded-full
+                 bg-indigo-100 text-indigo-700">
+
+          {{ item.commodityCodes?.length || 0 }} Records
+
+        </span>
+
+      </div>
+
+      <!-- Child Table -->
+      <table class="w-full text-sm ml-10">
+
+        <thead class="bg-gray-100">
+
+          <tr>
+
+            <th class="px-4 py-[2px] border border-gray-100 text-left text-[12px]">
+              Code
+            </th>
+
+            <th class="px-4 py-[2px] border border-gray-100 text-left text-[12px]">
+              Description
+            </th>
+
+            <th class="px-4 py-[2px] border border-gray-100 text-center text-[12px]">
+              Status
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let code of item.commodityCodes; let i=index"
+            class="hover:bg-blue-50"
+            [class.bg-gray-50]="i % 2 === 0">
+
+            <td class="px-4 py-[2px] border border-gray-200">
+              {{ code.code }}
+            </td>
+
+            <td class="px-4 py-[2px] border border-gray-200">
+              {{ code.description }}
+            </td>
+
+            <td class="px-4 py-[2px] border border-gray-200 text-center">
+ 
+              <span
+                class="px-2 py-1 rounded-full text-xs font-medium"
+                [ngClass]="
+                  code.status
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-red-100 text-red-700'
+                ">
+
+                {{ code.status ? 'Active' : 'Inactive' }}
+
+              </span>
+
+            </td>
+
+          </tr>
+
+          <tr *ngIf="!item.commodityCodes?.length">
+
+            <td
+              colspan="3"
+              class="text-center text-gray-500 py-4">
+
+              No Commodity Codes Available
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </td>
+
+</tr>
+
+</ng-container>
+
+</tbody>
+
+    </table>
+
+
+  
+
+</div>
+
+  <div class="flex justify-center items-center gap-2 mt-4 flex-wrap">
+
+  <!-- Prev -->
+  <button
+    (click)="prevPage()"
+    [disabled]="currentPage === 1"
+    class="px-3 py-1 border rounded bg-gray-200 disabled:opacity-50">
+    Prev
+  </button>
+
+  <!-- Page Numbers -->
+  <button
+    *ngFor="let page of pages"
+    (click)="goToPage(page)"
+    [class.bg-indigo-600]="currentPage === page"
+    [class.text-white]="currentPage === page"
+    class="px-3 py-1 border rounded hover:bg-indigo-500 hover:text-white">
+    {{ page }}
+  </button>
+
+  <!-- Next -->
+  <button
+    (click)="nextPage()"
+    [disabled]="currentPage === totalPages"
+    class="px-3 py-1 border rounded bg-gray-200 disabled:opacity-50">
+    Next
+  </button>
+
+</div>
+
+  <!-- PAGINATION -->
+</div>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showConfirmBox"
+  (onConfirm)="confirmDelete()"
+  (onCancel)="showConfirmBox = false">
+</app-message-box>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showMessageBox"
+  (onConfirm)="showMessageBox = false"
+  (onCancel)="showMessageBox = false">
+</app-message-box>

@@ -1,6 +1,8 @@
 import {
   Component,
-  Input
+  EventEmitter,
+  Input,
+  Output
 } from '@angular/core';
 
 import {
@@ -21,6 +23,8 @@ import {
   DatePickerComponent
 } from '../components/date-picker/date-picker';
 
+import { NgSelectModule } from '@ng-select/ng-select';
+
 @Component({
   selector: 'app-dynamic-form',
   standalone: true,
@@ -30,11 +34,14 @@ import {
     ReactiveFormsModule,
     LucideAngularModule,
     DatePickerComponent,
+    NgSelectModule
   ],
 
   templateUrl: './dynamic-form.html'
 })
 export class DynamicForm {
+
+  @Output() fieldAction = new EventEmitter<any>();
 
     requiredValidator = Validators.required;
 
@@ -55,5 +62,15 @@ export class DynamicForm {
     }
 
   }
+
+handleChange(field: any, value: any) {
+
+  this.fieldAction.emit({
+    action: field.onChange,
+    controlName: field.controlName,
+    value: value.value
+  });
+
+}
 
 }

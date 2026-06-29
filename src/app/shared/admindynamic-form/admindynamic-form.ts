@@ -35,6 +35,8 @@ import { ServiceCreate } from '../../modules/inventory-service/pages/service-cre
 })
 export class AdmindynamicForm {
 
+  activeControl: string = '';
+
    requiredValidator = Validators.required;
 
   @Input() form!: FormGroup;
@@ -70,65 +72,60 @@ filteredGroups: any[] = [];
 
 
 
-onGroupFocus() {
-  
-  this.filteredGroups = [...this.groups];
-  this.showGroupDropdown = true;
+onGroupFocus(controlName: string) {
+  this.activeControl = controlName;
 
+  if (controlName === 'commodityGroup') {
+    this.id = 1;
+  } else if (controlName === 'orderunit') {
+    this.id = 3;
+  }
+
+  this.adminMaster.getMastersById(this.id).subscribe((res: any) => {
+    this.groups = res;
+    this.filteredGroups = res;
+    this.showGroupDropdown = true;
+  });
 }
 
  id: number = 0;
 
-filterGroups(event: Event, type: string) {
+filterGroups(event: Event, controlName: string) {
+  this.activeControl = controlName;
 
   const value = (event.target as HTMLInputElement).value.toLowerCase();
 
-  if (type === 'commodityGroup') {
-    this.id = 1;
-  } else if (type === 'orderunit') {
-    this.id = 3;
-  }
+  const id = controlName === 'commodityGroup' ? 1 : 3;
 
-    console.log(this.id)
-
-
-  this.adminMaster.getMastersById(this.id).subscribe((res: any) => {
-
+  this.adminMaster.getMastersById(id).subscribe((res: any) => {
     this.groups = res;
 
-    this.filteredGroups = this.groups.filter((group: any) =>
-      (group.name || '').toLowerCase().includes(value)
+    this.filteredGroups = res.filter((g: any) =>
+      (g.name || '').toLowerCase().includes(value)
     );
 
     this.showGroupDropdown = true;
   });
 }
 
-// selectGroup(group: any) {
 
-//   this.form.patchValue({
 
-//     commodityGroup: group.name,
+selectedControl = '';
 
-//     commodityCode: group.code
 
-//   });
+selectGroup(group: any,type:string) {
 
-//   this.showGroupDropdown = false;
+  const control = type;
 
-// }
+  if (control === 'commodityGroup' || control === 'orderunit') {
+     this.form.get('serviceitem')?.patchValue({
+    commodityGroup: group.name,
+    commodityCode: group.description,
+  });
+  }
 
-selectGroup(group:any){
-
-  this.servicetab.selectGroup(group)
   this.showGroupDropdown = false;
-
 }
-
-// openCommodityHandler(type: string) {
-//   this.ItemCreate.openCommodityHandler(type)
-//   //this.ItemCreate.opencommodity(type)
-// }
 
 
 closeDropdown() {

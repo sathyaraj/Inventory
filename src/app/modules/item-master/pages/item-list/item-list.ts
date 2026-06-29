@@ -5,10 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Master } from '../../../../core/services/master';
 import { MessageBox } from '../../../../shared/message-box/message-box';
 import { LucideAngularModule   } from 'lucide-angular';
+import { Code,Trash,SquarePen,Info,MoveDown,MoveUp,ArrowDownNarrowWide,ArrowUpNarrowWide,Calendars,Download,Upload,FileUp,Boxes} from 'lucide-angular';
 
-import { Code,Trash,SquarePen,Info,MoveDown,MoveUp,ArrowDownNarrowWide,ArrowUpNarrowWide  } from 'lucide-angular';
-
-
+ 
 @Component({
   selector: 'app-item-list',
   standalone: true,
@@ -17,7 +16,7 @@ import { Code,Trash,SquarePen,Info,MoveDown,MoveUp,ArrowDownNarrowWide,ArrowUpNa
 })
 export class ItemList {
 
-  sortColumn: string = '';
+sortColumn: string = '';
 
 sortDirection: 'asc' | 'desc' = 'asc';
 
@@ -27,7 +26,10 @@ showdatenDropdown = false;
 
 showrowDropdown =false;
 
+selectedItemGroup: string = '';
+showItemGroups = false;
 
+boxes =Boxes
   trash = Trash;
   pencil = SquarePen ;
   info=Info;
@@ -35,6 +37,9 @@ showrowDropdown =false;
   chevronsupdown = MoveUp;
   movedown=ArrowDownNarrowWide;
   moveup=ArrowUpNarrowWide;
+  calendars = Calendars;
+  download = Download;
+  upload = FileUp;
 
 @Input() showMessageBox = false;
 @Input() messageTitle = '';
@@ -257,10 +262,8 @@ confirmDelete() {
 
 }
 
-
 openItem(id: number) {
   this.router.navigate(['/admin/item-master/create', id]);
-
 }
 
 stockFilter:any = '';
@@ -270,16 +273,61 @@ selectedCode: string = '';
 selectedManufacturer: string = '';
 
 applyFilter() {
- this.filteredItems = this.items.filter(item => {
+
+  this.filteredItems = this.items.filter(item => {
 
     const groupMatch =
-      !this.selectedGroup ||
+      !this.selectedItemGroup ||
       item.commodityGroup?.toLowerCase().trim() ===
-      this.selectedGroup.toLowerCase().trim();
+      this.selectedItemGroup.toLowerCase().trim();
 
     return groupMatch;
+
   });
+
+  this.currentPage = 1;
 }
+
+
+itemType = '';
+
+allItems: any[] = [];
+
+filteredserviceItem: any[] = [];
+
+filterServiceItem() {
+
+  this.filteredItems = this.items.filter(item => {
+
+  if (this.itemType === 'item') {
+      return item.serviceItem === false;
+    }
+
+    if (this.itemType === 'service') {
+      return item.serviceItem === true;
+    }
+
+    return true; // All
+  });
+
+  this.currentPage = 1;
+
+}
+
+
+
+
+// applyFilter() {
+//  this.filteredItems = this.items.filter(item => {
+
+//     const groupMatch =
+//       !this.selectedGroup ||
+//       item.commodityGroup?.toLowerCase().trim() ===
+//       this.selectedGroup.toLowerCase().trim();
+
+//     return groupMatch;
+//   });
+// }
 
 // downloadItems() {
 //   this.masterService.exportItems().subscribe((res: Blob) => {

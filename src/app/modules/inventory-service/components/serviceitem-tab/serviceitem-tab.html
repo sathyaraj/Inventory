@@ -13,17 +13,48 @@
       <div class="space-y-1">
 
         <!-- Item -->
-        <div class="flex items-center">
+         <div class="flex items-center">
+    <label class="w-43 text-[14px] font-medium text-gray-700">
+        Service
+    </label>
+
+    <input
+        formControlName="serviceCode"
+        placeholder="code"
+        maxlength="10"
+        class="w-20 border border-gray-300 px-2 py-[4px] bg-white"
+    >
+
+    <div class="relative">
+        <input
+            formControlName="serviceName"
+            placeholder="Service Item Name"
+            class="w-52 border border-gray-300 px-2 py-[4px] pr-10"
+        >
+
+        <button
+            type="button"
+            class="absolute right-0 top-1/2 -translate-y-1/2 p-1 bg-gray-200"
+            (click)="openCommodityHandler('serviceItem')"
+        >
+            <lucide-icon
+                [img]="search"
+                class="w-4 h-4 text-black cursor-pointer">
+            </lucide-icon>
+        </button>
+    </div>
+</div>
+        <!-- <div class="flex items-center">
            <label class="w-43 text-[14px] font-medium text-gray-700">Service</label>
           <input formControlName="serviceCode" placeholder="code"  maxlength="10"  class="w-20 border border-gray-300 px-2 py-[4px] bg-white"> 
-          <input formControlName="serviceName" placeholder="Item Description" class="w-52 border border-gray-300 px-2 py-[4px]">
+          <input formControlName="serviceName" placeholder="Service Item Name" class="w-45 border border-gray-300 px-2 py-[4px]">
           
           <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
               <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('serviceItem')"></lucide-icon>
           </button>
          
           
-        </div>
+        </div> -->
          <!-- <div *ngIf="isInvalid('itemCode')" class="text-red-500 text-xs ml-40">
             Item Code is required
           </div> -->

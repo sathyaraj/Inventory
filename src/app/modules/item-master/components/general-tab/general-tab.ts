@@ -11,6 +11,7 @@ import { Inject, PLATFORM_ID } from '@angular/core';
 import { MessageBox } from '../../../../shared/message-box/message-box';
 import { AuthService } from '../../../../core/services/auth';
 import { Adminmaster } from '../../../../core/services/adminmaster';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 
 
@@ -62,7 +63,7 @@ search = Search;
 id!: number;
   //Statuses = ['Active', 'InActive']
 
-  constructor(private fb: FormBuilder,private masterService: Master, private cd : ChangeDetectorRef,private ItemCreate: ItemCreate, private route:ActivatedRoute,@Inject(PLATFORM_ID) private platformId: object, private authService: AuthService,private router: Router,private adminMaster: Adminmaster) {}
+  constructor(private fb: FormBuilder,private masterService: Master, private cd : ChangeDetectorRef,private ItemCreate: ItemCreate, private route:ActivatedRoute,@Inject(PLATFORM_ID) private platformId: object, private authService: AuthService,private router: Router,private adminMaster: Adminmaster,private unsavedService: UnsavedChangesService) {}
 itemSetValue:any =""
   //commodityGroups: any[] = [];
 commodityCodes: any[] = [];
@@ -102,8 +103,6 @@ ngOnInit(): void {
     this.form.addControl('WarEndDate', this.fb.control(''));
     this.form.addControl('orderUnit', this.fb.control(''));
     this.form.addControl('issueUnit', this.fb.control(''));
-    //this.form.addControl('msds', this.fb.control(''));
-    //this.form.addControl('image', this.fb.control(''));
     this.form.addControl('conditionEnabled', this.fb.control(''));
     this.form.addControl('kit', this.fb.control(''));
     this.form.addControl('capitalized', this.fb.control(''));
@@ -111,6 +110,8 @@ ngOnInit(): void {
     this.form.addControl('sparePart', this.fb.control(''));
     this.form.addControl('attachToAsset', this.fb.control(''));
     this.form.addControl('taxExempt', this.fb.control(''));
+    this.form.addControl('serviceitem', this.fb.control(''));
+
 
     this.form.addControl('minimumStock', this.fb.control(''));
     this.form.addControl('maximumStock', this.fb.control(''));
@@ -195,6 +196,11 @@ this.form.addControl('returnreason',this.fb.control(''));
       //this.openitemlistgroup();
 
 this.opencommoditygroup();
+
+   this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
+
 }
 
 get alternates(): FormArray {
@@ -619,7 +625,8 @@ ngOnChanges(changes: SimpleChanges) {
 
 
 loadItem(id: any) {
-  this.masterService.getItemById(id).subscribe((res: any) => {  
+  this.masterService.getItemById(id).subscribe((res: any) => {
+    console.log(res)  
    this.qty=res.qty,
     this.form.patchValue({
       itemCode: res.itemCode,
@@ -660,6 +667,7 @@ loadItem(id: any) {
       sparePart:res.isSparePart,
       attachToAsset:res.attachToAsset,
       taxExempt:res.taxExempt,
+      serviceitem:res.serviceItem,
       minimumStock: res.minimumStock,
       maximumStock: res.maximumStock,
       reorderLevel: res.reorderLevel,
@@ -718,17 +726,17 @@ allowOnlyNumbers(event: KeyboardEvent) {
 
 commodityGroups: any[] = [];
 opencommoditygroup() {
-  this.id = 1
-  this.masterService.getMastersById(this.id).subscribe(res => {
+  console.log("test")
+  //this.id = 1
+  this.masterService.getMasterscommodityById().subscribe(res => {
     this.commodityGroups = res as any[];
-    console.log(this.commodityGroups)
     this.cd.detectChanges(); 
   });
 }
 
 showGroupDropdown = false;
 showmeterDropdown = false;
-meterCodes: any[] = [];
+manufacturerCodes: any[] = [];
 
 filteredGroups: any[] = [];
 filteredmeter: any[] = [];
@@ -748,24 +756,51 @@ filterGroups(event: any) {
   const value = event.target.value.toLowerCase();
 
   this.filteredGroups = this.commodityGroups.filter((g: any) =>
-    g.name.toLowerCase().includes(value) || g.description.toLowerCase().includes(value)
+    g.commoditygroup.toLowerCase().includes(value) || g.description.toLowerCase().includes(value)
   );
 }
 
-// 🔍 Select Group
-selectGroup(group: any) {
-  this.form.patchValue({ commodityGroup: group.name,commodityCode: group.description
- });
-  this.selectedGroupName = group.name;
-  this.showGroupDropdown = false;
+//Select Group
+// selectGroup(group: any) {
+//   this.form.patchValue({ commodityGroup: group.commoditygroup,commodityCode: group.description
+//  });
+//   this.selectedGroupName = group.commoditygroup;
+//   this.showGroupDropdown = false;
+// }
 
+selectGroup(group: any) {
+
+  this.selectedGroupName = group.commoditygroup;
+
+  this.form.patchValue({
+    commodityGroup: String(group.commoditygroup)
+  });
+
+  // Commodity Codes array store
+  this.commodityCodes = group.commodityCodes || [];
+
+  // First code auto fill
+  if (this.commodityCodes.length > 0) {
+
+    this.form.patchValue({
+      commodityCode: this.commodityCodes[0].code
+    });
+
+  } else {
+
+    this.form.patchValue({
+      commodityCode: ''
+    });
+
+  }
+
+  this.showGroupDropdown = false;
 }
 
-// 🔍 Filter Code
+//Filter Code
 filterMeter(event: any) {
   const value = event.target.value.toLowerCase();
-
-  this.filteredmeter = this.meterCodes.filter((c: any) =>
+  this.filteredmeter = this.manufacturerCodes.filter((c: any) =>
     c.name.toLowerCase().includes(value)
   );
 }
@@ -793,16 +828,16 @@ loadCommodityCodes(groupId: number) {
 }
 
 loadCommodityGroups() {
-  this.masterService.getMastersById(1).subscribe((res: any) => {
+  this.masterService.getMasterscommodityById().subscribe((res: any) => {
     this.commodityGroups = res.data || res || [];
     this.filteredGroups = [...this.commodityGroups];
   });
 }
 
 loadMeterGroups() {
-  this.masterService.getMastersById(6).subscribe((res: any) => {
-    this.meterCodes = res.data || res || [];
-    this.filteredmeter = [...this.meterCodes];
+  this.masterService.getMastersById(5).subscribe((res: any) => {
+    this.manufacturerCodes = res.data || res || [];
+    this.filteredmeter = [...this.manufacturerCodes];
   });
 }
 

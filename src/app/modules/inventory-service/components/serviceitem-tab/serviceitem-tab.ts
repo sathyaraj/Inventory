@@ -1,4 +1,4 @@
-import { Component, HostListener, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LucideAngularModule, Search, Save, Plus} from 'lucide-angular';
@@ -28,12 +28,21 @@ export class ServiceitemTab {
 
 commodityCodes: any[] = [];
 commodityGroups: any[] = [];
+costcodename: any[] = [];
 
   @Input() form!: FormGroup;
 
   search = Search;
   saveIcon = Save;
   plus = Plus;
+
+    private _itemId: any;
+
+  @Input() set serviceitemId(value: any) {
+
+  this._itemId = value;
+
+  }
 
   expandedIndex: number | null = null;
 
@@ -42,9 +51,15 @@ commodityGroups: any[] = [];
   configfields = configurationFields;
   controlfields = servicecontrolFields;
 
-  constructor(private fb: FormBuilder,private serviceCreate : ServiceCreate,private adminMaster:Adminmaster, private masterService: Master,@Inject(PLATFORM_ID) private platformId: object) {}
+  
+
+constructor(private fb: FormBuilder,private serviceCreate : ServiceCreate,private adminMaster:Adminmaster, private masterService: Master,private chr: ChangeDetectorRef ,@Inject(PLATFORM_ID) private platformId: object) {}
 
  ngOnInit(): void {
+
+  this.loadcostcode()
+
+  this.loadDropdowns()
 
   this.setitemlastid()
 
@@ -148,8 +163,66 @@ loadCommodityGroups() {
   });
 }
 
-itemlastId: number = 0;
+loadcostcode(){
+  this.adminMaster.getcostcodelist().subscribe((res:any) => {
+    console.log(res)
+    this.costcodename = res.data || res || []
+  })
+}
 
+loadDropdowns() {
+
+  this.adminMaster.gettaxlist().subscribe((res: any) => {
+
+    console.log(res);
+
+    const taxField = this.taxfields.find(
+      f => f.controlName === 'taxCode'
+    );
+
+    if (taxField) {
+
+      const data = res.data || res;
+
+      taxField.options = data.map((x: any) => ({
+        value: x.id,
+        label: `${x.taxName} (${x.taxPercentage}%)`
+      }));
+
+      this.taxfields = [...this.taxfields];
+
+      this.chr.detectChanges();
+    }
+  });
+
+
+   // Cost Center
+  this.adminMaster.getcostcodelist().subscribe((res: any) => {
+
+    const costField = this.taxfields.find(
+      f => f.controlName === 'costCenter'
+    );
+
+    if (costField) {
+
+      const data = res.data || res;
+
+      costField.options = data
+      .filter((x: any) => x.isActive === 'Active')
+      .map((x: any) => ({
+        value: x.id,
+        label: x.costCodeName
+      }));
+    }
+
+    this.taxfields = [...this.taxfields];
+    this.chr.detectChanges();
+  });
+
+
+}
+
+itemlastId: number = 0;
 
 setitemlastid() {
 
@@ -177,7 +250,55 @@ setitemlastid() {
   });
 }
 
+ngOnChanges(changes: SimpleChanges): void {
 
+  if (
+    changes['serviceitemId'] &&
+    changes['serviceitemId'].currentValue
+  ) {
+
+    const id = changes['serviceitemId'].currentValue;
+
+    this.loadServiceItem(id);
+  }
+}
+
+loadServiceItem(id: any) {
+  this.adminMaster.getServiceItemById(id).subscribe((res: any) => {
+    this.form.patchValue({
+      serviceCode: res.serviceCode,
+      serviceName: res.serviceName,
+      serviceSet: res.serviceSet,
+
+      status: res.status,
+
+      commodityGroup: res.commodityGroup,
+      commodityCode: res.commodityCode,
+
+      description: res.description,
+
+      receiptTolerance: res.receiptTolerance,
+
+      orderunit: res.orderUnit,
+      issueunit: res.issueUnit,
+      taxcode:res.Taxcode,
+      costCenter: res.costCenter,
+      taxExempt: res.taxExempt,
+      minimumServiceCost: res.minimumServiceCost,
+      maximumServiceCost: res.maximumServiceCost,
+
+      leadTimeDays: res.leadTimeDays,
+
+      activeForPurchase: res.activeForPurchase,
+      activeForWorkOrder: res.activeForWorkOrder,
+
+      prorate: res.prorate,
+
+      inspectionRequired: res.inspectionRequired
+    });
+
+  });
+}
 
 
 

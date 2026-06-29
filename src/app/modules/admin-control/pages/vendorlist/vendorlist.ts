@@ -138,7 +138,7 @@ confirmDelete() {
   // close confirmation popup
   this.showMessageBox = false;
 
-  this.adminMaster.deleteuserlistItem(this.deleteId).subscribe({
+  this.adminMaster.deletecompany(this.deleteId).subscribe({
 
     next: (res) => {
 

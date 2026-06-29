@@ -5,39 +5,8 @@
     <div class="flex p-3 items-center ">
       <span class="text-[14px] w-28">Service Item:</span>
       <input formControlName="docuitemCode" readonly class="border border-gray-300 px-2 py-1 w-40" />
-      <!-- <input formControlName="docuitemName" class="border border-gray-300 px-2 py-1 w-72" /> -->
+      <input formControlName="docuitemName" class="border border-gray-300 px-2 py-1 w-72" />
 
-      <div class="relative w-75 dropdown-wrapper">
-
-              <!-- Input -->
-              <input
-                type="text"
-                formControlName="docuitemName"
-                [value]="selectedGroupName"
-                (focus)="showGroupDropdown = true"
-                (blur)="closeDropdown()"
-                (input)="filterGroups($event)"
-                placeholder="Item Name"
-                class="flex-1 w-75 h-6 border border-gray-300 px-2 py-[4px] text-[12px] bg-white" />
-
-              <!-- Dropdown -->
-              <div *ngIf="showGroupDropdown"
-                  class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
-
-                <div *ngFor="let group of filteredGroups"
-                    (click)="selectGroup(group)"
-                    class="px-2 py-1 hover:bg-gray-100 cursor-pointer text-left">
-                  {{ group.itemCode}}-{{group.itemName}}
-
-                </div>
-
-                <div *ngIf="filteredGroups.length === 0" class="px-2 py-1 text-gray-400">
-                  No results
-                </div>
-
-              </div>
-
-            </div>
 
       <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
               <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" ></lucide-icon>
@@ -123,7 +92,7 @@
             </tr>
 
             <!-- FILTER -->
-            <tr>
+            <tr *ngIf="documentdetail && documentdetail.length > 0">
               <th class="border border-gray-200 px-2 py-1">
 
                 <input
@@ -180,8 +149,10 @@
               <!-- Lead Time -->
               <td class="border border-gray-200 px-2 py-1">
                           <span *ngIf="expandedIndex !== i">
-                                {{ getFileName(row.get('existingFile')?.value) }}
-                    
+                                              {{
+                      row.get('document')?.value?.name ||
+                      getFileName(row.get('existingFile')?.value)
+                    }}
                   </span>
 
                     <input
@@ -214,7 +185,7 @@
 
                           <button
                             class="text-red-600"
-                            (click)="deleteVendor(row.get('id')?.value)"
+                            (click)="deleteVendor(row.get('id')?.value,i)"
                           >
                             Delete
                           </button>
@@ -226,6 +197,7 @@
 
                           <button
                             class="text-green-600 mr-2"
+                            (click)="submit(i)"
                           >
                             Save
                           </button>
@@ -284,7 +256,23 @@
 <app-message-box
   [title]="messageTitle"
   [message]="messageText"
-  [visible]="showMessageBox"
+  [visible]="showConfirmBox"
   (onConfirm)="confirmDeleteVendor()"
-  (onCancel)="showMessageBox = false">
+  (onCancel)="showConfirmBox = false">
+</app-message-box>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showSuccessBox"
+  (onConfirm)="showSuccessBox = false"
+  (onCancel)="showSuccessBox = false">
+</app-message-box>
+
+<app-message-box
+  [title]="successTitle"
+  [message]="successMessage"
+  [visible]="showSuccessBox"
+  (onConfirm)="showSuccessBox = false"
+  (onCancel)="showSuccessBox = false">
 </app-message-box>

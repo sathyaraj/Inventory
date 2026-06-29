@@ -110,14 +110,15 @@
                  -translate-y-1/2
                  w-4 h-4 text-gray-400 z-10"
         >
-        </lucide-icon>
+      
+      </lucide-icon>
 
         <input
           type="file"
           class="w-full border border-gray-300
                  pl-10 pr-3 py-1
                  bg-white"
-          (change)="onFileChange($event, field.controlName)"
+          (change)="handleChange(field, $event)"
         />
 
       </div>
@@ -147,8 +148,28 @@
                  focus:ring-blue-300"
         >
         </textarea>
+        
 
       </div>
+
+
+      <div
+  *ngIf="field.type === 'ng-select'"
+  class="relative"
+>
+
+  <ng-select
+  [items]="field.options"
+  bindLabel="label"
+  bindValue="value"
+  [placeholder]="field.placeholder || ('Select ' + field.label)"
+  [searchable]="true"
+  [clearable]="true"
+  [formControlName]="field.controlName"
+  (change)="handleChange(field, $event)">
+</ng-select>
+
+</div>
 
       <!-- ERROR -->
       <div

@@ -1,15 +1,28 @@
 
-  <div class=" bg-gray-300 text-black px-4 py-2 flex justify-between items-center">
-    <h2 class="text-sm font-semibold">Item Master <span class="text-indigo-700"></span></h2>
+  <div class="bg-gray-300 text-black px-4 py-2 border-l-4 border-indigo-700 flex justify-between items-center">
 
-    <div class="flex items-center gap-4 text-[12px]">
-      <!-- <span class="cursor-pointer hover:underline">Go To</span>
-      <span class="cursor-pointer hover:underline">Reports</span>
-      <span class="cursor-pointer hover:underline">Start Center</span> -->
-      <!-- <span class="cursor-pointer hover:underline">Profile</span>
-      <span class="cursor-pointer hover:underline">Sign Out</span> -->
+  <!-- Left Section -->
+  <div class="flex items-center gap-3">
+
+    <div class="flex items-center gap-2" >
+
+      <lucide-icon
+        [img]="boxes"
+        class="w-4 h-4 text-black">
+      </lucide-icon>
+
+      <span class="text-indigo-700 font-semibold">
+        Inventory
+      </span>
+
+
     </div>
+
   </div>
+
+
+
+</div>
 <div class="p-6 bg-white min-h-screen">
    
 
@@ -41,25 +54,62 @@
       placeholder="Search itemSet..."
       [(ngModel)]="searchText"
       (input)="applyFilters()"
-      class="border border-gray-200 rounded px-3 py-2 w-100"
+      class="border border-gray-200 rounded px-3 py-2 w-90"
     />
 
-    <!-- <input
-      type="text"
-      placeholder="Search Item name.."
-      [(ngModel)]="filters.itemCode"
-      (input)="applyFilters()"
-      class="border rounded px-3 py-2 w-40"
-    /> -->
+    <div class="relative w-35">
+      <select
+  [(ngModel)]="itemType"
+  (change)="filterServiceItem()"
+  class="w-full border border-gray-300 rounded-md px-3 py-2 bg-white flex justify-between items-center">
 
-    <select
-      [(ngModel)]="selectedGroup"
-      (change)="applyFilter()"
-      class="border border-gray-200 rounded px-3 py-2 w-40 z-50
-           max-h-80 overflow-y-auto"  style="max-height:200px;">
-      <option value="">All Groups</option>
-      <option *ngFor="let g of groups" [value]="g.name">{{ g.name }}</option>
-    </select>
+  <option value="">All</option>
+  <option value="item">Item</option>
+  <option value="service">Service Item</option>
+
+</select>
+
+
+</div>
+
+<div class="relative w-35">
+  <button
+    type="button"
+    (click)="showItemGroups = !showItemGroups"
+    class="w-full border border-gray-300 rounded-md px-3 py-2 bg-white flex justify-between items-center">
+    <span>{{ selectedItemGroup || 'All Groups' }}</span>
+
+    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+      viewBox="0 0 24 24">
+      <path stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7">
+      </path>
+    </svg>
+  </button>
+
+  <div
+    *ngIf="showItemGroups"
+    class="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-40 overflow-y-auto z-50">
+
+    <div
+      class="px-3 py-2 hover:bg-blue-500 hover:text-white cursor-pointer"
+      (click)="selectedItemGroup=''; applyFilter(); showItemGroups=false">
+      All Groups
+    </div>
+
+    <div
+      *ngFor="let g of groups"
+      class="px-3 py-2 hover:bg-blue-500 hover:text-white cursor-pointer"
+      (click)="selectedItemGroup=g.name; applyFilter(); showItemGroups=false">
+
+      {{ g.name }}
+
+    </div>
+
+  </div>
+</div>
 <div class="flex flex-wrap gap-3 items-center ">
 
   <!-- Stock Type -->
@@ -89,10 +139,6 @@
   </select>
 
 </div>
-
-
-    <!-- PUSH BUTTONS TO RIGHT -->
-    <div class="flex gap-2 ml-auto">
 <div class="relative inline-block">
 
   <button
@@ -124,6 +170,11 @@
 
 </div>
 
+
+    <!-- PUSH BUTTONS TO RIGHT -->
+<div class="flex gap-5 ml-auto">
+
+
   <div class="flex gap-2 ml-auto">
 <!-- FILTER + ACTIONS -->
 <div class="flex flex-wrap items-center gap-3">
@@ -132,24 +183,36 @@
   <div class="flex gap-2 ml-auto">
 
     <!-- COLUMN DROPDOWN -->
-    <div class="relative inline-block">
- <button (click)="showdatenDropdown = !showdatenDropdown" class="border border-indigo-700 text-indigo-700 px-4 py-2 hover:bg-blue-500 hover:text-white rounded text-sm">
+    <div class="relative inline-block group">
+         <lucide-icon
+            (click)="showdatenDropdown = !showdatenDropdown"
+            [img]="calendars"
+            class="w-5 h-5 text-indigo-700 cursor-pointer">
+          </lucide-icon>
+           <span
+    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+           px-2 py-1 text-xs text-white bg-indigo-700 rounded
+           opacity-0 group-hover:opacity-100
+           whitespace-nowrap pointer-events-none transition">
+    Date Filter
+  </span>
+ <!-- <button (click)="showdatenDropdown = !showdatenDropdown" class="border border-indigo-700 text-indigo-700 px-4 py-2 hover:bg-blue-500 hover:text-white rounded text-sm">
         Date
-      </button>
+      </button> -->
 
-        <div *ngIf="showdatenDropdown" class="absolute right-1 mt-2 bg-white border shadow rounded p-3 w-125 z-50 max-h-80 overflow-y-auto">
+        <div *ngIf="showdatenDropdown" class="absolute right-1 mt-2 bg-white border border-gray-200 shadow rounded p-3 w-125 z-50 max-h-80 overflow-y-auto">
     <!-- From Date -->
   <input
     type="date"
     [(ngModel)]="fromDate"
-    class="border rounded px-3 py-2 m-2 text-sm"
+    class="border border-gray-200 rounded px-3 py-2 m-2 text-sm"
   />
 
   <!-- To Date -->
   <input
     type="date"
     [(ngModel)]="toDate"
-    class="border rounded px-3 py-2 m-2 text-sm"
+    class="border border-gray-200 rounded px-3 py-2 m-2 text-sm"
   />
 
   <!-- Search -->
@@ -163,7 +226,7 @@
        (click)="clearFilter()"
     class="bg-indigo-700 text-white px-4 py-2 rounded text-sm border hover:border-indigo-700 hover:text-indigo-700 hover:bg-white"
   >
-    Clear
+    Cancel
   </button>
 </div>
 
@@ -176,14 +239,31 @@
 </div>
 
 
+<div class="relative inline-block group">
+
+  <lucide-icon
+    (click)="downloadItems()"
+    [img]="download"
+    class="w-5 h-5 text-indigo-700 cursor-pointer">
+  </lucide-icon>
+
+  <span
+    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+           px-2 py-1 text-xs text-white bg-indigo-700 rounded
+           opacity-0 group-hover:opacity-100
+           whitespace-nowrap pointer-events-none transition">
+    Export Items
+  </span>
+
+</div>
 
 
-      <button
+      <!-- <button
         (click)="downloadItems()"
         class="border border-indigo-700 text-indigo-700 px-4 py-2 hover:bg-blue-500 hover:text-white rounded text-sm"
       >
         Export
-      </button>
+      </button> -->
 
       <input
   type="file"
@@ -193,6 +273,41 @@
 />
 
 
+
+      <input
+  type="file"
+  #fileInput
+  (change)="onFileChange($event)"
+   accept="
+    .xls,
+    .xlsx,
+    application/vnd.ms-excel,
+    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+  "
+  hidden
+/>
+
+<div class="relative inline-block group">
+<button (click)="handleClick(fileInput)"
+  [disabled]="isUploading"
+>
+  <!-- {{ buttonText }} -->
+   <lucide-icon [img]="upload" class="w-5 h-5 text-indigo-700 cursor-pointer"></lucide-icon>
+</button>
+ <span
+    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+           px-2 py-1 text-xs text-white bg-indigo-700 rounded
+           opacity-0 group-hover:opacity-100
+           whitespace-nowrap transition">
+    Import Excel
+  </span>
+  </div>
+
+<div *ngIf="errors.length > 0">
+  <p *ngFor="let err of errors" style="color:red">
+    {{ err }}
+  </p>
+</div>
 
 <!-- <button (click)="fileInput.click()">Choose File</button>
 
@@ -212,26 +327,6 @@
         Import
       </button> -->
 
-      <input
-  type="file"
-  #fileInput
-  (change)="onFileChange($event)"
-   accept="
-    .xls,
-    .xlsx,
-    application/vnd.ms-excel,
-    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-  "
-  hidden
-/>
-
-<button (click)="handleClick(fileInput)"
-[ngClass]="buttonClass"
-  [disabled]="isUploading"
->
-  {{ buttonText }}
-</button>
-
 <!-- <button
   (click)="handleClick(fileInput)"
   [ngClass]="buttonClass"
@@ -240,11 +335,7 @@
   {{ buttonText }}
 </button> -->
 
-<div *ngIf="errors.length > 0">
-  <p *ngFor="let err of errors" style="color:red">
-    {{ err }}
-  </p>
-</div>
+
 
 
     </div>

@@ -97,12 +97,13 @@ export const routes: Routes = [
             .then(m => m.INVENTORYSERVICE_ROUTES)
       },
 
-      // {
-      //   path: 'master',
-      //   loadChildren: () =>
-      //     import('./modules/master/unitofmeasure/unit-routes')
-      //       .then(m => m.UNIT_ROUTES)
-      // }
+      {
+        path: 'master',
+        loadChildren: () =>
+          import('./modules/master/unitofmeasure/unit-routes')
+            .then(m => m.UNIT_ROUTES)
+      }
+      
 
     ]
   },

@@ -21,8 +21,12 @@ import {
   User,
   Handshake,
   Landmark,
-  BadgeDollarSign
+  BadgeDollarSign,
+  FolderOpen,
+  UserKey,
+  Warehouse
 } from 'lucide-angular';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -72,7 +76,10 @@ export class SidebarComponent {
     User,
     Handshake,
     Landmark,
-    BadgeDollarSign
+    BadgeDollarSign,
+    FolderOpen,
+    UserKey,
+    Warehouse
   };
 
   

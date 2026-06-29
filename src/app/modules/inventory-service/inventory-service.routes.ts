@@ -13,4 +13,11 @@ export const INVENTORYSERVICE_ROUTES: Routes = [
       import('./pages/service-create/service-create')
         .then(m => m.ServiceCreate)
   },
+
+  {
+    path: 'service-create/:id',
+    loadComponent: () =>
+      import('./pages/service-create/service-create')
+        .then(m => m.ServiceCreate)
+  },
 ];

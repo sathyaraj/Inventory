@@ -19,9 +19,9 @@ export const getCostCodeFields = (): FieldConfig[] => [
 
   {
     type: 'text',
-    label: 'Cost Code Name',
+    label: 'Cost Center Name',
     controlName: 'costCodeName',
-    placeholder: 'Enter cost code name',
+    placeholder: 'Enter cost center name',
     icon: BadgeInfo
   },
 
@@ -34,10 +34,27 @@ export const getCostCodeFields = (): FieldConfig[] => [
   },
 
   {
-    type: 'checkbox',
-    label: 'Active',
+    type: 'select',
+    label: 'Status',
     controlName: 'isActive',
-    icon: CircleCheck
+    icon: CircleCheck,
+    options: [
+      {
+        label: 'Select Status',
+        value: ''
+      },
+      {
+        label: 'Active',
+        value: 'Active'
+      },
+      {
+        label: 'Inactive',
+        value: 'Inactive'
+      }
+    ]
   }
+
+
+
 
 ];

@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { LucideAngularModule } from 'lucide-angular';
 import { Save, RotateCcw } from 'lucide-angular';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 
 @Component({
@@ -31,7 +32,8 @@ editId = 0;
   RotateCcw = RotateCcw;
 
   fields = currencyFields;
-  constructor(private fb: FormBuilder, private adminMaster: Adminmaster, private route: ActivatedRoute,private router : Router) {}
+  
+  constructor(private fb: FormBuilder, private adminMaster: Adminmaster, private route: ActivatedRoute,private router : Router, private unsavedService:UnsavedChangesService) {}
 
   ngOnInit() {
   const group: any = {};
@@ -52,6 +54,10 @@ editId = 0;
     this.getById(this.editId);
 
   }
+
+   this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
 }
 
   save() {

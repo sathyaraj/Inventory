@@ -69,7 +69,7 @@ export class AuthService {
 
   const token = localStorage.getItem('token');
 
-   console.log('TOKEN CHECK', token);
+   //console.log('TOKEN CHECK', token);
 
   return token !== null && token !== '';
 }

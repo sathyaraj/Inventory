@@ -3,12 +3,12 @@
   <!-- HEADER -->
   <div class="flex justify-between items-center p-3 px-3 py-2 bg-white">
     <div class="flex p-3 items-center ">
-      <span class="text-[14px] w-28">Item:</span>
+      <span class="text-[14px] w-28">Service Item:</span>
       <input formControlName="venitemCode" readonly class="border border-gray-300 px-2 py-1 w-40" />
       <input formControlName="venitemName" class="border border-gray-300 px-2 py-1 w-72" />
        
       <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
-              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]"></lucide-icon>
+              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('vendorItem')"></lucide-icon>
           </button>
     </div>
   </div>
@@ -125,7 +125,7 @@
 
                 <div class="flex items-center gap-1">
 
-                  <span>Lead Time Daly</span>
+                  <span>Lead Time Delay</span>
 
                   <lucide-icon
                     [img]="
@@ -180,7 +180,7 @@
             </tr>
 
             <!-- FILTER -->
-            <tr>
+            <tr  *ngIf="supplierdetails.length > 0">
               <th class="border border-gray-200 px-2 py-1">
 
                 <input
@@ -255,90 +255,90 @@
   *ngIf="supplierdetails.length > 0">
 
   <tr
-    *ngFor="
-      let row of supplierdetails.controls
-      | slice:(currentPage - 1) * pageSize : currentPage * pageSize;
-      let i = index
-    "
-    [formGroupName]="(currentPage - 1) * pageSize + i">
+  *ngFor="
+    let row of supplierdetails.controls
+    | slice:(currentPage - 1) * pageSize : currentPage * pageSize;
+    let i = index
+  "
+  [formGroupName]="(currentPage - 1) * pageSize + i">
 
-    <td class="border px-2 py-1">
+    <td class="border border-gray-200 px-2 py-1">
 
-      <span *ngIf="expandedIndex !== i">
+      <span *ngIf="expandedIndex !== ((currentPage - 1) * pageSize + i)">
         {{ row.get('pono')?.value }}
       </span>
 
       <input
-        *ngIf="expandedIndex === i"
+        *ngIf="expandedIndex === ((currentPage - 1) * pageSize + i)"
         formControlName="pono"
-        class="border px-2 py-1 w-full">
+        class="border border-gray-200 px-2 py-1 w-full">
     </td>
 
-    <td class="border px-2 py-1">
+    <td class="border border-gray-200 px-2 py-1">
 
-      <span *ngIf="expandedIndex !== i">
+      <span *ngIf="expandedIndex !== ((currentPage - 1) * pageSize + i)">
         {{ row.get('companyName')?.value }}
       </span>
 
       <input
-        *ngIf="expandedIndex === i"
+        *ngIf="expandedIndex === ((currentPage - 1) * pageSize + i)"
         formControlName="companyName"
-        class="border px-2 py-1 w-full">
+        class="border border-gray-200 px-2 py-1 w-full">
     </td>
 
-    <td class="border px-2 py-1">
+    <td class="border border-gray-200 px-2 py-1">
 
-      <span *ngIf="expandedIndex !== i">
+      <span *ngIf="expandedIndex !== ((currentPage - 1) * pageSize + i)">
         {{ row.get('invoiceno')?.value }}
       </span>
 
       <input
-        *ngIf="expandedIndex === i"
+        *ngIf="expandedIndex === ((currentPage - 1) * pageSize + i)"
         formControlName="invoiceno"
-        class="border px-2 py-1 w-full">
+        class="border border-gray-200 px-2 py-1 w-full">
     </td>
 
-    <td class="border px-2 py-1">
+    <td class="border border-gray-200 px-2 py-1">
 
-      <span *ngIf="expandedIndex !== i">
+      <span *ngIf="expandedIndex !== ((currentPage - 1) * pageSize + i)">
         {{ row.get('leadtimedelay')?.value }}
       </span>
 
       <input
-        *ngIf="expandedIndex === i"
+        *ngIf="expandedIndex === ((currentPage - 1) * pageSize + i)"
         formControlName="leadtimedelay"
-        class="border px-2 py-1 w-full">
+        class="border border-gray-200 px-2 py-1 w-full">
     </td>
 
-    <td class="border px-2 py-1 text-center">
+    <td class="border border-gray-200 px-2 py-1 text-center">
 
-      <span *ngIf="expandedIndex !== i">
+      <span *ngIf="expandedIndex !== ((currentPage - 1) * pageSize + i)">
         {{ row.get('taxexempt')?.value ? 'Yes' : 'No' }}
       </span>
 
       <input
-        *ngIf="expandedIndex === i"
+        *ngIf="expandedIndex === ((currentPage - 1) * pageSize + i)"
         type="checkbox"
         formControlName="taxexempt">
     </td>
 
-    <td class="border px-2 py-1">
+    <td class="border border-gray-200 px-2 py-1">
 
-      <div *ngIf="expandedIndex !== i">
+      <div *ngIf="expandedIndex !== ((currentPage - 1) * pageSize + i)">
 
         <button
           type="button"
           class="text-blue-600 mr-2"
-          (click)="expandedIndex = i">
+          (click)="expandedIndex = (currentPage - 1) * pageSize + i">
 
           Edit
 
         </button>
 
         <button
-          type="button"
-          class="text-red-600"
-          (click)="deleteVendor((currentPage - 1) * pageSize + i)">
+  type="button"
+  class="text-red-600"
+   *ngIf="row.get('id')?.value"(click)="deleteVendor(row.get('id')?.value,(currentPage - 1) * pageSize + i)">
 
           Delete
 
@@ -415,3 +415,19 @@
   (onConfirm)="confirmDeleteVendor()"
   (onCancel)="showMessageBox = false">
 </app-message-box> -->
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showConfirmBox"
+  (onConfirm)="confirmDelete()"
+  (onCancel)="showConfirmBox = false">
+</app-message-box>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showMessageBox"
+  (onConfirm)="showMessageBox = false"
+  (onCancel)="showMessageBox = false">
+</app-message-box>

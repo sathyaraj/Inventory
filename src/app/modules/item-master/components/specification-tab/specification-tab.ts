@@ -7,6 +7,7 @@ import { LucideAngularModule,
 import { Master } from '../../../../core/services/master';
 import { ItemCreate } from '../../pages/item-create/item-create';
 import { MessageBox } from '../../../../shared/message-box/message-box';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 interface specific {
        attribute: string;
@@ -56,7 +57,7 @@ sortDirection: 'asc' | 'desc' = 'asc';
 
   //@Output() specificationChange = new EventEmitter<any>();
 
-constructor(private fb: FormBuilder, private MasterService: Master,private ItemCreate: ItemCreate,private chr: ChangeDetectorRef) {}
+constructor(private fb: FormBuilder, private MasterService: Master,private ItemCreate: ItemCreate,private chr: ChangeDetectorRef, private unsavedService:UnsavedChangesService) {}
 
 ngOnInit(): void {
 
@@ -95,6 +96,10 @@ if(this._itemId)
   }
 
       this.openitemlistgroup();
+
+         this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
 
 }
 

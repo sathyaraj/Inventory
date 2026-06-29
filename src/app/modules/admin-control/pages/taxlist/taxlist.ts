@@ -19,7 +19,7 @@ export class Taxlist {
 sortDirection: 'asc' | 'desc' = 'asc';
 
 
-   trash = Trash;
+  trash = Trash;
   pencil = SquarePen ;
   info=Info;
   Settings = Settings;

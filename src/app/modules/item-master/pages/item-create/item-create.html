@@ -1,19 +1,42 @@
-  <div  class=" bg-gray-300 text-black px-4 py-2 flex justify-between items-center">
-   
-  <lucide-icon [img]="chevronleft" (click)="goBackTab()" class="w-5 h-5 text-indigo-700 font-bold cursor-pointer absolute top-[13px] left-32"></lucide-icon>
+<div class="bg-gray-300 text-black px-4 py-2 border-l-4 border-indigo-700 flex justify-between items-center">
 
-    <h2 class="text-sm font-semibold"><span class="text-indigo-700" *ngIf="itemlastId">{{ itemlastId }}</span></h2>
+  <!-- Left Section -->
+  <div class="flex items-center gap-3">
 
-    <div class="flex items-center gap-4 text-[12px]">
-      <!-- <span class="cursor-pointer hover:underline">Go To</span>
-      <span class="cursor-pointer hover:underline">Reports</span>
-      <span class="cursor-pointer hover:underline">Start Center</span> -->
-      <!-- <span class="cursor-pointer hover:underline">Profile</span>
-      <span class="cursor-pointer hover:underline">Sign Out</span> -->
+    <lucide-icon
+      [img]="chevronleft"
+      (click)="goBackTab()"
+      class="w-5 h-5 text-indigo-700 cursor-pointer">
+    </lucide-icon>
+
+    <div class="flex items-center gap-2" *ngIf="itemlastId">
+
+      <lucide-icon
+        [img]="box"
+        class="w-4 h-4 text-black">
+      </lucide-icon>
+
+      <span class="text-indigo-700 font-semibold">
+        {{ itemlastId }}
+      </span>
+
+      <span class="bg-blue-50 text-indigo-700 border border-gray-200 px-3 py-1 rounded" *ngIf="itemname">
+        {{ itemname }}
+      </span>
+
     </div>
-    <h2 class="text-sm font-semibold"><span class="text-indigo-700" *ngIf="itemlastId">{{ itemstatus }}</span></h2>
+
   </div>
-<form [formGroup]="itemForm" class="w-full bg-gray-200 text-sm">
+
+  <!-- Right Section -->
+  <div *ngIf="itemlastId">
+    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium" *ngIf="itemstatus">
+      {{ itemstatus }}
+    </span>
+  </div>
+
+</div>
+<form [formGroup]="itemForm" class="w-full bg-gray-200 text-sm overflow-x-hidden">
 
   <!-- ================= TOOLBAR ================= -->
   <div class="bg-gray-100 border-b border-gray-300 px-3 py-2 flex items-center justify-between">
@@ -30,13 +53,13 @@
   <lucide-icon [img]="save" class="w-4 h-4"></lucide-icon>  {{ selectedId ? 'Update' : 'Save' }}
 </button> 
 
-<button 
+<!-- <button 
   *ngIf="selectedId"
   (click)="deleteItem(selectedId)" 
   type="button"
   class="p-2 border border-indigo-700 px-2 py-1 bg-white text-indigo-700 text-[14px] hover:bg-indigo-700 hover:text-white flex items-center gap-1">
   <lucide-icon [img]="squarex" class="w-4 h-4"></lucide-icon>  Delete
-</button>
+</button> -->
     </div>
   </div>
   <!-- ================= TABS ================= -->
@@ -44,7 +67,8 @@
      <button
       type="button"
       (click)="itemlist()"
-      class="px-5 py-3 border-r border-gray-200  hover:bg-gray-200">
+      class="flex item-center gap-2 px-5 py-3 border-r border-gray-200  hover:bg-gray-200">
+      <lucide-icon [img]="listIcon" class="w-4 h-4"></lucide-icon>
       List
     </button>
 
@@ -52,8 +76,9 @@
       type="button"
       (click)="changeTab('general')"
       [ngClass]="activeTab === 'general'
-        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 font-medium text-indigo-700'
-        : 'px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+        ? 'flex item-center gap-2 px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 font-medium text-indigo-700'
+        : 'flex item-center gap-2 px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+         <lucide-icon [img]="itemIcon" class="w-4 h-4"></lucide-icon>
       Item
     </button>
 
@@ -61,8 +86,9 @@
       type="button"
       (click)="changeTab('vendors')"
       [ngClass]="activeTab === 'vendors'
-        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 font-semibold text-indigo-700'
-        : 'px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+        ? 'flex item-center gap-2 px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 font-semibold text-indigo-700'
+        : 'flex item-center gap-2 px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+            <lucide-icon [img]="storeroomIcon" class="w-4 h-4"></lucide-icon>
       Storeroom
     </button>
 
@@ -70,8 +96,9 @@
       type="button"
       (click)="changeTab('vendorsitem')"
       [ngClass]="activeTab === 'vendorsitem'
-        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
-        : 'px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+        ? 'flex item-center gap-2 px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
+        : 'flex item-center gap-2 px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+         <lucide-icon [img]="vendorIcon" class="w-4 h-4"></lucide-icon>
       Vendor
     </button>
 
@@ -79,8 +106,9 @@
       type="button"
       (click)="changeTab('spec')"
       [ngClass]="activeTab === 'spec'
-        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
-        : 'px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+        ? 'flex item-center gap-2 px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
+        : 'flex item-center gap-2 px-5 py-3 border-r border-gray-200  hover:bg-gray-200'">
+            <lucide-icon [img]="specIcon" class="w-4 h-4"></lucide-icon>
       Specifications
     </button>
 
@@ -88,8 +116,9 @@
       type="button"
       (click)="changeTab('org')"
       [ngClass]="activeTab === 'org'
-        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
-        : 'px-5 py-3 hover:bg-gray-200'">
+        ? 'flex item-center gap-2 px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
+        : 'flex item-center gap-2 px-5 py-3 hover:bg-gray-200'">
+        <lucide-icon [img]="assemblyIcon" class="w-4 h-4"></lucide-icon>
       Assembly Structure
     </button>
 
@@ -97,12 +126,59 @@
       type="button"
       (click)="changeTab('documents')"
       [ngClass]="activeTab === 'documents'
-        ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
-        : 'px-5 py-3 hover:bg-gray-200'">
+        ? 'flex item-center gap-2 px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
+        : 'flex item-center gap-2 px-5 py-3 hover:bg-gray-200'">
+        <lucide-icon [img]="documentIcon" class="w-4 h-4"></lucide-icon>
       Documents
     </button>
   </div>
+<!-- <div class="bg-gray-100 flex text-sm">
 
+  <button type="button" (click)="itemlist()"
+    class="px-5 py-3 border-r border-gray-200 hover:bg-gray-200 flex items-center gap-2">
+    <lucide-icon [img]="listIcon" class="w-4 h-4"></lucide-icon>
+    List
+  </button>
+
+  <button type="button" (click)="changeTab('general')"
+    [ngClass]="activeTab === 'general'
+      ? 'px-5 py-3 bg-white border border-indigo-700 font-medium text-indigo-700 flex items-center gap-2'
+      : 'px-5 py-3 border-r border-gray-200 hover:bg-gray-200 flex items-center gap-2'">
+    <lucide-icon [img]="itemIcon" class="w-4 h-4"></lucide-icon>
+    Item
+  </button>
+
+  <button type="button" (click)="changeTab('vendors')"
+    class="flex items-center gap-2 px-5 py-3">
+    <lucide-icon [img]="storeroomIcon" class="w-4 h-4"></lucide-icon>
+    Storeroom
+  </button>
+
+  <button type="button" (click)="changeTab('vendorsitem')"
+    class="flex items-center gap-2 px-5 py-3">
+    <lucide-icon [img]="vendorIcon" class="w-4 h-4"></lucide-icon>
+    Vendor
+  </button>
+
+  <button type="button" (click)="changeTab('spec')"
+    class="flex items-center gap-2 px-5 py-3">
+    <lucide-icon [img]="specIcon" class="w-4 h-4"></lucide-icon>
+    Specifications
+  </button>
+
+  <button type="button" (click)="changeTab('org')"
+    class="flex items-center gap-2 px-5 py-3">
+    <lucide-icon [img]="assemblyIcon" class="w-4 h-4"></lucide-icon>
+    Assembly Structure
+  </button>
+
+  <button type="button" (click)="changeTab('documents')"
+    class="flex items-center gap-2 px-5 py-3">
+    <lucide-icon [img]="documentIcon" class="w-4 h-4"></lucide-icon>
+    Documents
+  </button>
+
+</div> -->
   <!-- ================= CONTENT ================= -->
   <div class="p-0 bg-white min-h-[400px]">
       <ng-container *ngIf="activeTab === 'general'">
@@ -684,10 +760,15 @@
     <div class=" item-center border border-gray-300">
       <div class="flex justify-between items-center px-3 py-2 bg-gray-200 text-xs">
 
-  <!-- LEFT SIDE: Filter + Search + Pagination -->
   <div class="flex items-center gap-3">
 
-    <!-- Search -->
+     <button class="flex items-center gap-1">
+      <lucide-icon [img]="download"
+        class="w-4 h-4 cursor-pointer"
+        (click)="downloadExcel(selectedAction)">
+      </lucide-icon>
+    </button>
+
     <button class="flex items-center gap-1">
       <lucide-icon [img]="search"
         class="w-4 h-4 cursor-pointer"
@@ -695,7 +776,6 @@
       </lucide-icon>
     </button>
 
-    <!-- Filter -->
     <button class="flex items-center gap-1">
       <lucide-icon [img]="funnel"
         class="w-4 h-4 cursor-pointer"
@@ -705,30 +785,21 @@
 
     <div class="flex flex-col items-center gap-1 font-medium text-[14px]">
 
-  <!-- Page Info -->
   <span>Page <button (click)="prevPage()" class="px-1 text-indigo-700 cursor-pointer">{{ currentPage }}</button> of  <button (click)="nextPage()" class="cursor-pointer text-indigo-700">{{ totalPages }}</button></span>
-
-
-</div>
+  </div>
   </div>
 
-  <!-- RIGHT SIDE: Actions -->
   <div class="flex items-center gap-2">
-    
 
     <button (click)="startAdd()" class="border px-2 text-xs bg-blue-100">
       New
     </button>
 
-    <button *ngIf="isAdding"
-      (click)="MultiNewRow(selectedAction)"
-      class="border px-2 text-xs bg-green-200">
+    <button *ngIf="isAdding" (click)="MultiNewRow(selectedAction)" class="border px-2 text-xs bg-green-200">
       Save
     </button>
 
-    <button *ngIf="isAdding"
-      (click)="cancelAdd()"
-      class="border px-2 text-xs bg-red-100">
+    <button *ngIf="isAdding" (click)="cancelAdd()" class="border px-2 text-xs bg-red-100">
       Cancel
     </button>
 
@@ -966,6 +1037,55 @@
               </table>
             </div>
 
+             <div *ngIf="selectedAction === 'Manufacturer'">
+               <table *ngIf="isAdding" class="w-full text-xs border border-gray-300 mb-3">
+                
+                <!-- Header -->
+
+                <!-- Body -->
+                <tbody>
+                  <tr  class="bg-yellow-50">
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.name" placeholder="Manufacturer" class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                  <td class="border px-1">
+                    <input [(ngModel)]="newRow.description" placeholder="Description"  class="w-full text-xs px-2 py-[4px]">
+                  </td>
+                </tr>
+                </tbody>
+                </table>
+              <table  class="w-full text-xs border border-gray-300">
+                
+                <!-- Header -->
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="border px-2 text-left font-medium">Manufacturer</th>
+                    <th class="border px-2 text-left font-medium">Description</th>
+                  </tr>                    
+                  <!-- Filter Row -->
+                </thead>
+                <!-- Body -->
+                <tbody>
+                  <tr *ngFor="let item of paginatedItems"
+                      (click)="selectItem(item)"
+                      class="cursor-pointer hover:bg-gray-100">
+
+                    <td class="border px-2">{{ item.name }}</td>
+                    <td class="border px-2">{{ item.description }}</td>                    
+
+                  </tr>
+
+                  <!-- Empty state -->
+                  <tr *ngIf="paginatedItems.length === 0">
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                      There are no rows to display.
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+
 
           <div *ngIf="selectedAction === 'Item'">
             <div *ngIf="showSearchRow" class="mb-2">
@@ -1109,7 +1229,7 @@
         </td>
 
         <td class="border border-gray-200 px-2">
-          {{ item.itemName }}
+          {{ item.itemName ?? item.name }}
         </td>
 
       </tr>

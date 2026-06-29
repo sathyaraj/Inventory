@@ -29,11 +29,6 @@
   class="p-2 border border-indigo-700 px-2 py-1 bg-white text-indigo-700 text-[14px] hover:bg-indigo-700 hover:text-white flex items-center gap-1">
   <lucide-icon [img]="save" class="w-4 h-4"></lucide-icon>  {{ selectedId ? 'Update' : 'Save' }}
 </button> 
-<!-- <button 
-  type="button"
-  class="p-2 border border-indigo-700 px-2 py-1 bg-white text-indigo-700 text-[14px] hover:bg-indigo-700 hover:text-white flex items-center gap-1">
-  <lucide-icon [img]="save" class="w-4 h-4"></lucide-icon> Save
-</button>  -->
 
 <button 
   *ngIf="selectedId"
@@ -42,11 +37,6 @@
   class="p-2 border border-indigo-700 px-2 py-1 bg-white text-indigo-700 text-[14px] hover:bg-indigo-700 hover:text-white flex items-center gap-1">
   <lucide-icon [img]="squarex" class="w-4 h-4"></lucide-icon>  Delete
 </button>
-<!-- <button 
-  type="button"
-  class="p-2 border border-indigo-700 px-2 py-1 bg-white text-indigo-700 text-[14px] hover:bg-indigo-700 hover:text-white flex items-center gap-1">
-  <lucide-icon [img]="squarex" class="w-4 h-4"></lucide-icon>  Delete
-</button> -->
     </div>
   </div>
 
@@ -89,7 +79,7 @@
       [ngClass]="activeTab === 'supplierdetails'
           ? 'px-5 py-3 bg-white border-t border-l border-r border-b border-indigo-700 border-gray-200 font-semibold text-indigo-700'
         : 'px-5 py-3 border-r border-gray-200 hover:bg-gray-200'">
-      Supplier
+      Vendor
     </button>
 
     <button
@@ -102,7 +92,6 @@
     </button>
 
      
-
     <!-- <button
       type="button"
       (click)="changeTab('reorder')"
@@ -117,15 +106,15 @@
   <div class="p-0 bg-white min-h-[400px]">
 
       <ng-container *ngIf="activeTab === 'serviceitem'">
-        <app-serviceitem-tab [form]="serviceitemForm"></app-serviceitem-tab>
+        <app-serviceitem-tab [form]="serviceitemForm" [serviceitemId]="selectedId"></app-serviceitem-tab>
       </ng-container>
 
       <ng-container *ngIf="activeTab === 'documents'">
-        <app-documents-tab [form]="documentsForm"></app-documents-tab>
+        <app-documents-tab [form]="documentsForm" [serviceitemId]="selectedId"></app-documents-tab>
       </ng-container>
 
       <ng-container *ngIf="activeTab === 'supplierdetails'">
-        <app-supplier-tab [form]="supplierdetailsForm"></app-supplier-tab>
+        <app-supplier-tab [form]="supplierdetailsForm" [serviceitemId]="selectedId"></app-supplier-tab>
       </ng-container>
 
        <!--<ng-container *ngIf="activeTab === 'reorder'">
@@ -317,7 +306,7 @@
             </div>
 
 
-          <div *ngIf="selectedAction === 'Item'">
+          <div *ngIf="selectedAction === 'serviceItem'">
             <div *ngIf="showSearchRow" class="mb-2">
                         <input
                           type="text"
@@ -383,3 +372,19 @@
     </div>
   </div>
 </div>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showMessageBox"
+  (onConfirm)="confirmSuccess(selectedId)"
+  (onCancel)="showMessageBox = false">
+</app-message-box>
+
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="deleteMessageBox"
+  (onConfirm)="confirmDelete()"
+  (onCancel)="deleteMessageBox = false">
+</app-message-box>

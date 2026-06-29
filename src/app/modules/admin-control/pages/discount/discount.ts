@@ -7,6 +7,7 @@ import { DiscountTab } from '../../components/discount-tab/discount-tab';
 import { dateRangeValidator } from '../../validators/date-range.validators';
 import { LucideAngularModule } from 'lucide-angular';
 import {List,Coins,Settings} from 'lucide-angular';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 @Component({
   selector: 'app-discount',
@@ -18,7 +19,7 @@ export class Discount {
   list = List;
 Coins =Coins;
 Settings=Settings;
-  constructor(private fb: FormBuilder, private masterService: Master,private router: Router) {}
+  constructor(private fb: FormBuilder, private masterService: Master,private router: Router, private unsavedService:UnsavedChangesService) {}
 
  itemForm!: FormGroup;
   ngOnInit(): void {
@@ -41,6 +42,10 @@ this.itemForm = this.fb.group({
     ]
   })
 
+});
+
+    this.itemForm.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.itemForm.dirty);
 });
   
   }

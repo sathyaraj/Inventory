@@ -10,17 +10,18 @@ import { DocumentsTab } from '../../components/documents-tab/documents-tab';
 import { FormArray } from '@angular/forms'
 import { SupplierTab } from '../../components/supplier-tab/supplier-tab';
 import { Adminmaster } from '../../../../core/services/adminmaster';
+import { MessageBox } from '../../../../shared/message-box/message-box';
 
 
 @Component({
   selector: 'app-service-create',
-  imports: [CommonModule,ReactiveFormsModule,DocumentsTab,ServiceitemTab,SupplierTab,LucideAngularModule, FormsModule],
+  imports: [CommonModule,ReactiveFormsModule,DocumentsTab,ServiceitemTab,SupplierTab,LucideAngularModule, FormsModule, MessageBox],
   templateUrl: './service-create.html',
   styleUrl: './service-create.css',
 })
 export class ServiceCreate {
 
-  @Input() showMessageBox = false;
+@Input() showMessageBox = false;
 @Input() messageTitle = '';
 @Input() messageText = '';
 @Input() deleteMessageBox = false;
@@ -31,9 +32,9 @@ export class ServiceCreate {
   selectedId: any;
 
   @ViewChild(ServiceitemTab)
-serviceItemTab!: ServiceitemTab;
+  serviceItemTab!: ServiceitemTab;
 
-    funnel = Funnel; 
+  funnel = Funnel; 
   arrowbigleft = ArrowBigLeft;
   arrowbigright = ArrowBigRight;
   chevronsright = ChevronsRight;
@@ -65,19 +66,26 @@ constructor(private fb: FormBuilder,private adminMaster:Adminmaster, private mas
  itemForm!: FormGroup;
 
   ngOnInit(): void {
-       const id = this.route.snapshot.paramMap.get('id');
-       this.selectedId = Number(id);
+      const id = this.route.snapshot.paramMap.get('id');
+      this.selectedId = Number(id);
 
-  const isEdit = !!this.selectedId;
-    this.itemForm = this.fb.group({
-  serviceitem: this.fb.group({}),
-    documents: this.fb.group({
-    docuitemCode: [''],
-    docuitemName: [''],
-    documentdetail: this.fb.array([])
-  })
-});
-this.setitemlastid()
+      const isEdit = !!this.selectedId;
+        this.itemForm = this.fb.group({
+        serviceitem: this.fb.group({}),
+
+        supplierdetails: this.fb.group({
+        venitemCode: [''],
+        venitemName: [''],
+        supplierdetails: this.fb.array([])
+        }),
+
+        documents: this.fb.group({
+        docuitemCode: [''],
+        docuitemName: [''],
+        documentdetail: this.fb.array([])
+        })
+    });
+    this.setitemlastid()
   }
 
   serviceitemlist()
@@ -92,6 +100,10 @@ this.setitemlastid()
 get documentsForm(): FormGroup {
   return this.itemForm.get('documents') as FormGroup;
 }
+
+// get supplierdetailsForm(): FormGroup {
+//   return this.itemForm.get('supplierdetails') as FormGroup;
+// }
 
 get supplierdetailsForm(): FormGroup {
   return this.itemForm.get('supplierdetails') as FormGroup;
@@ -215,15 +227,14 @@ MultiNewRow(type: string) {
   this.isAdding = false;
 
   const masterMap: any = {
-    CommodityGroup: 1,
+    commodityGroup: 1,
     meterGroup: 2,
-    Orderunit: 3
+    orderunit: 3
   };
 
  
-    if (type === "Item")
+    if (type === "serviceItem")
     {
-
     this.masterService.getItempost(this.newItemRow).subscribe({
       
     next: (res: any) => {
@@ -266,6 +277,7 @@ MultiNewRow(type: string) {
    this.newRow.masterName = type;
   this.newRow.masterId = masterMap[type] ?? 0;
   this.newRow.groupId = 0;
+  console.log(this.newRow)
 
   this.masterService.createMaster(this.newRow).subscribe({
     next: (res: any) => {
@@ -534,6 +546,7 @@ codestartAdd() {
 
 
 selectItem(item: any) {
+  console.log(item)
   this.selectedRowId = item.id;
   //localStorage.setItem("groupid", item.id);
   if(item.masterId == 1)
@@ -563,6 +576,22 @@ selectItem(item: any) {
   this.showCommonpopup = false;
 }
 
+selectedControl = '';
+
+selectGroup(group: any,type:string) {
+
+  const control = type;
+
+  if (control === 'commodityGroup' || control === 'orderunit') {
+     this.itemForm.get('serviceitem')?.patchValue({
+    commodityGroup: group.name,
+    commodityCode: group.description,
+  });
+  }
+
+  //this.showGroupDropdown = false;
+}
+
 
 servicelastId:any = '';
 servicestatus:any ='';
@@ -577,7 +606,7 @@ setitemlastid() {
       const lastId = Number(res?.lastId ?? 0);
   
       const finalId = lastId + 1;
-      this.servicelastId = `ITEM-${String(finalId).padStart(5, '0')}`;    
+      this.servicelastId = `SERVICE-${String(finalId).padStart(5, '0')}`;    
 
   });
   this.cdr.detectChanges();
@@ -601,29 +630,30 @@ buildPayload() {
 
       return {
         Id: this.selectedId || 0, // ✅ dynamic
-        ServiceItemCode: g.get('serviceitemCode')?.value || '',
-        ServiceName: g.get('ServiceName')?.value || '',
-        ServiceSet: g.get('ServiceSet')?.value || '',
+        ServiceCode: g.get('serviceCode')?.value || '',
+        ServiceName: g.get('serviceName')?.value || '',
+        ServiceSet: g.get('serviceSet')?.value || '',
         Status: g.get('status')?.value || '',
         CommodityGroup: g.get('commodityGroup')?.value || '',
         CommodityCode: g.get('commodityCode')?.value || '',
+        Description: g.get('description')?.value || '',
         ReceiptTolerance: g.get('receiptTolerance')?.value ? Number(g.get('receiptTolerance')?.value) : null,
-        OrderUnit: g.get('orderUnit')?.value || '',
-        IssueUnit: g.get('issueUnit')?.value || '',
+        OrderUnit: g.get('orderunit')?.value || '',
+        IssueUnit: g.get('issueunit')?.value || '',
         InspectOnReceipt: !!g.get('inspectOnReceipt')?.value,
         TaxExempt: !!g.get('taxExempt')?.value,
-        Taxcode: !!g.get('taxcode')?.value,
-        CostCenter: !!g.get('costcenter')?.value,
+        Taxcode: g.get('taxCode')?.value?.toString() || '',
+        CostCenter: g.get('costCenter')?.value?.toString() || '',
         MinimumServiceCost: g.get('minimumServiceCost')?.value ? Number(g.get('minimumServiceCost')?.value) : null,
         MaximumServiceCost: g.get('maximumServiceCost')?.value ? Number(g.get('maximumServiceCost')?.value) : null,
         LeadTimeDays: g.get('leadTimeDays')?.value ? Number(g.get('leadTimeDays')?.value) : null,
-        ActiveForPurchase: g.get('ActiveForPurchase')?.value || '',
-        activeForWorkOrder: g.get('activeForWorkOrder')?.value || '',
-        Prorate: g.get('prorate')?.value || '',
-        InspectionRequired: g.get('inspectionRequired')?.value || '',
+        ActiveForPurchase: g.get('activeForPurchase')?.value === true,
+        ActiveForWorkOrder: g.get('activeForWorkOrder')?.value === true,
+        Prorate: g.get('prorate')?.value === true,
+        InspectionRequired: g.get('inspectionRequired')?.value === true,
       };
 
-    case 'supplier':
+    case 'supplierdetails':
 
            const supplierdetail = this.supplierdetailsForm.get('supplierdetail')?.value || [];
            const lastId = this.selectedId || Number(localStorage.getItem('lastItemId'));
@@ -646,13 +676,16 @@ buildPayload() {
 
 submitItem() {
 
+  console.log(this.serviceitemForm.value);
+console.log(this.serviceitemForm.value.taxCode);
+
       const isEdit = !!this.selectedId;
       let currentGroup: FormGroup | null = null;
-
+      console.log(this.activeTab)
       // ✅ Validate current tab
       if (this.activeTab === 'serviceitem') {
         currentGroup = this.serviceitemForm;
-      } else if (this.activeTab === 'supplier') {
+      } else if (this.activeTab === 'supplierdetails') {
         currentGroup = this.supplierdetailsForm;
       }else{
         currentGroup = this.documentsForm;
@@ -675,17 +708,18 @@ submitItem() {
           }
         });
 
-
         let apiCall;
 
         if (this.activeTab === 'serviceitem') {
           apiCall = isEdit
-            ? this.masterService.updateItem(this.selectedId, payload)
-            : this.masterService.saveTab(payload);
-        } else if (this.activeTab === 'supplier') {
-          apiCall = this.masterService.storeroomTab(this.selectedId, true);
+            ? this.adminMaster.updateItem(this.selectedId, payload)
+            : this.adminMaster.saveTab(payload);
+        } else if (this.activeTab === 'supplierdetails') {
+          console.log(this.activeTab)
+          apiCall = this.masterService.vendoritemTab(this.selectedId, true);
         }else if (this.activeTab === 'documents') {
-          apiCall = this.masterService.documentsTab(this.selectedId, true);
+          console.log(this.activeTab)
+          apiCall = this.masterService.documentsTab(this.selectedId, "serviceitem");
         }
 
         if (!apiCall) {
@@ -695,23 +729,24 @@ submitItem() {
 
           apiCall.subscribe({
             next: (res:any) => {
+              console.log(res.success)
+              if (!isEdit && this.activeTab === 'serviceitem') {
+                // const lastId = res.serviceitemId;
+                // this.selectedId = lastId; // 🔥 important
+                // localStorage.setItem('lastItemId', lastId.toString());
 
-               console.log('SUCCESS RESPONSE:', res);
-              
-              //console.log('showMessageBox:', this.showMessageBox);
-              this.showMessageBox = res.success;
+                const lastId = res.serviceitemId || res?.data?.id;
+                  if (lastId) {
+                    this.selectedId = lastId;
+                    localStorage.setItem('lastItemId', lastId.toString());
+                  }
 
-              // ✅ Save ID only for new item
-              if (!isEdit && this.activeTab === 'general') {
-                const lastId = res.itemId;
-                this.selectedId = lastId; // 🔥 important
-                localStorage.setItem('lastItemId', lastId.toString());
               }
-             
+
+              this.showMessageBox = res.success;
               this.messageTitle = isEdit ? 'Updated' : 'Saved';
               this.messageText = res.message;  
               this.cdr.detectChanges();
-
             },
 
             error: (err:any) => {
@@ -748,7 +783,7 @@ deleteItem(id: number) {
 confirmSuccess(id:number)
 {
   this.showMessageBox = false;
-    this.router.navigate(['/admin/item-master'])
+    this.router.navigate(['admin/inventoryservice/service-item'])
 }
 
 confirmDelete()
@@ -771,7 +806,7 @@ confirmDelete()
     }
   });
   this.showMessageBox = false;
-  this.router.navigate(['/admin/item-master'])
+  this.router.navigate(['admin/inventoryservice/service-item'])
 }
 
 

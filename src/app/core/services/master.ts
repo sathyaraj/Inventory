@@ -20,6 +20,10 @@ export class Master {
     return this.http.get(this.apiUrl);
   }
 
+   getMasterscommodityById() {
+   return this.http.get(`${this.baseUrl}/CommodityGroup`);
+}
+
 
  getMastersById(id: number) {
    return this.http.get(`${this.apiUrl}/${id}`);
@@ -106,8 +110,8 @@ getstoreroomItem(id:number){
       return this.http.get(`${this.baseUrl}/Storeroom/${id}`);
 }
 
-getvendorsItem(id:number){
-      return this.http.get(`${this.baseUrl}/Vendor/${id}`);
+getvendorsItem(id:number, type: string){
+      return this.http.get(`${this.baseUrl}/Vendor/${id}?type=${type}`);
 }
 
   specificationitemTab(tabName: string, data: any): Observable<any> {
@@ -164,10 +168,17 @@ exportItems(fromDate:any, toDate:any) {
 
 }
 
-documentsTab(itemId: number,status: boolean): Observable<any> {
-    return this.http.put(`${this.baseUrl}/ItemDocument/update-status/${itemId}`, status );
-    
-  }
+documentsTab(itemId: number, type: string): Observable<any> {
+  return this.http.put(
+    `${this.baseUrl}/ItemDocument/update-status/${itemId}`,
+    JSON.stringify(type),
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+}
 
  documentsdetails(formData: FormData): Observable<any> {
   return this.http.post(`${this.baseUrl}/ItemDocument/save`, formData);
@@ -179,7 +190,6 @@ documentsTab(itemId: number,status: boolean): Observable<any> {
 
 // vendoritemTab(itemId: number,status: boolean): Observable<any> {
 //     return this.http.put(`${this.baseUrl}/vendor/update-status/${itemId}`, status );
-    
 //   }
 
 vendoritemTab(itemId: number,status: boolean): Observable<any> {
@@ -193,23 +203,32 @@ vendoritemTab(itemId: number,status: boolean): Observable<any> {
 
 }
 
-  vendordetaildelete(id: number):Observable<any> {
+vendordetaildelete(id: number):Observable<any> {
   return this.http.delete(`${this.baseUrl}/vendor/${id}`);
   }
 
+// getDocuments(itemId: number,type:string) {
+//   return this.http.get<any[]>(`${this.baseUrl}/ItemDocument/by-item/${itemId}`,type);
+// }
 
 getDocuments(itemId: number) {
-  return this.http.get<any[]>(`${this.baseUrl}/ItemDocument/by-item/${itemId}`);
+  return this.http.get<any[]>(
+    `${this.baseUrl}/ItemDocument/by-item/${itemId}`
+  );
 }
 
-  documentDetailsdelete(id: number):Observable<any> {
+getDocumentsall(){
+  return this.http.get(`${this.baseUrl}/ItemDocument/`)
+}
+
+documentDetailsdelete(id: number):Observable<any> {
   return this.http.delete(`${this.baseUrl}/ItemDocument/delete/${id}`);
   }
 
 
- stockcancel(Data:any): Observable<any> {
+stockcancel(Data:any): Observable<any> {
   return this.http.post(`${this.baseUrl}/vendor`, Data);
-}
+ }
 
 getDashboard(): Observable<any> {
   return this.http.get(`${this.baseUrl}/dashboard`);
@@ -225,6 +244,15 @@ getBarChart(type:any) {
     `${this.baseUrl}/dashboard/bar-chart?type=${type}`
   );
 
+}
+
+downloadExcel(masterId: number) {
+  return this.http.get(
+    `${this.baseUrl}/Masterdetail/download-excel/${masterId}`,
+    {
+      responseType: 'blob'
+    }
+  );
 }
 
 
