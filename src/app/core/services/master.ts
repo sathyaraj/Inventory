@@ -1,32 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Master {
 
-    private apiUrl = 'https://localhost:7108/api/Masterdetail';
-    private baseUrl = 'https://localhost:7108/api';
+    //private apiUrl = 'https://localhost:7108/api/Masterdetail';
+    //private baseUrl = 'https://localhost:7108/api';
+
+private baseUrl = environment.apiUrl
+
 
   constructor(private http: HttpClient) {}
 
   createMaster(data: any) {
-    return this.http.post(this.apiUrl, data);
+    return this.http.post(`${this.baseUrl}/Masterdetail`, data);
   }
 
   getMasters() {
-    return this.http.get(this.apiUrl);
+    return this.http.get(`${this.baseUrl}/Masterdetail`);
   }
 
-   getMasterscommodityById() {
+getMasterscommodityById() {
    return this.http.get(`${this.baseUrl}/CommodityGroup`);
 }
 
 
  getMastersById(id: number) {
-   return this.http.get(`${this.apiUrl}/${id}`);
+   return this.http.get(`${this.baseUrl}/Masterdetail/${id}`);
   //return this.http.get(`${this.apiUrl}?masterId=${id}`);
 }
 

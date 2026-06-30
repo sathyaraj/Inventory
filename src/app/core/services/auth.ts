@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environment/environment';
 
 
 @Injectable({
@@ -12,7 +13,9 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private baseUrl = 'https://localhost:7108/api';
+  //private baseUrl = 'https://localhost:7108/api';
+
+  private baseUrl =  environment.apiUrl
 
   // LOGIN
   // login(data: any) {
