@@ -5,10 +5,12 @@ import { LucideAngularModule,Search, ChevronsRight,ArrowDownNarrowWide,ArrowUpNa
 import { ItemCreate } from '../../pages/item-create/item-create';
 import { Master } from '../../../../core/services/master';
 import { MessageBox } from '../../../../shared/message-box/message-box';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 interface documentdetail {
   name: string;
   documents: File | null; 
+  docuserviceitem:boolean;
 }
 @Component({
   selector: 'app-documents-tab',
@@ -20,16 +22,15 @@ interface documentdetail {
 export class DocumentsTab {
 
   @Input() form!: FormGroup;
-
-    @Input() showMessageBox = false;
-    @Input() messageTitle = '';
-   @Input() messageText = '';
+  @Input() showMessageBox = false;
+  @Input() messageTitle = '';
+  @Input() messageText = '';
 
 
   search = Search;
   chevronsright = ChevronsRight;
-      sortColumn: string = '';
-      movedown=ArrowDownNarrowWide;
+  sortColumn: string = '';
+  movedown=ArrowDownNarrowWide;
   moveup=ArrowUpNarrowWide;
 
 sortDirection: 'asc' | 'desc' = 'asc';
@@ -43,7 +44,7 @@ sortDirection: 'asc' | 'desc' = 'asc';
 }
   expandedIndex: number | null = null;
 
-  constructor(private fb: FormBuilder,private ItemCreate: ItemCreate,private masterservice: Master,private cdr: ChangeDetectorRef) {}
+  constructor(private fb: FormBuilder,private ItemCreate: ItemCreate,private masterservice: Master,private cdr: ChangeDetectorRef, private unsavedService:UnsavedChangesService) {}
   getFileName(path: string | null): string {
 
     if (!path) return '';
@@ -62,6 +63,9 @@ sortDirection: 'asc' | 'desc' = 'asc';
   
 
       this.openitemlistgroup();
+         this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
       }
 
   get documentdetail(): FormArray {
@@ -94,6 +98,8 @@ submit(index: number) {
 
   const formData = new FormData();
   formData.append('itemId', this._itemId);
+        formData.append('Type', 'Item');
+
   const documents = this.documentdetail.value;
   documents.forEach((doc: any) => {
     formData.append('names', doc.name);
@@ -117,7 +123,6 @@ submit(index: number) {
 }
 
 savedDocuments: any[] = [];
-
 loadDocuments() {
   const itemId = this._itemId;
   if (!itemId) return;
@@ -250,7 +255,8 @@ loadItem(id: any) {
     console.log("API RESPONSE:", res);
     this.form.patchValue({
       docuitemCode: res.itemCode,
-      docuitemName: res.name
+      docuitemName: res.name,
+      docuserviceitem: res.serviceItem
     });
   }); 
 }

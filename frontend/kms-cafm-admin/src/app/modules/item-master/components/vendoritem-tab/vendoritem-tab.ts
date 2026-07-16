@@ -5,6 +5,7 @@ import { LucideAngularModule, Search, ChevronsRight,ArrowDownNarrowWide,ArrowUpN
 import { ItemCreate } from '../../pages/item-create/item-create';
 import { Master } from '../../../../core/services/master';
 import { MessageBox } from '../../../../shared/message-box/message-box';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 interface vendorsdetail {
   name: string;
@@ -48,16 +49,20 @@ set itemId(value: any) {
 
   expandedIndex: number | null = null;
 
-  constructor(private fb: FormBuilder,private ItemCreate: ItemCreate,private masterservice: Master,private cdr: ChangeDetectorRef) {}
+  constructor(private fb: FormBuilder,private ItemCreate: ItemCreate,private masterservice: Master,private cdr: ChangeDetectorRef, private unsavedService:UnsavedChangesService) {}
 
   ngOnInit(): void {  
-    this.loadMasters(this._itemId)
+    this.loadMasters(this._itemId,"Items")
     
     // Add parent form controls
     this.form.addControl('venitemCode', this.fb.control('', Validators.required));
     this.form.addControl('venitemName', this.fb.control('', Validators.required));
     this.form.addControl('vendorsdetail', this.fb.array([]));
     this.openitemlistgroup();
+
+       this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
 
       }
 
@@ -95,7 +100,8 @@ set itemId(value: any) {
 
     const vendorData = {
   ...this.vendorsdetail.at(index).value,
-  itemId: this._itemId
+  itemId: this._itemId,
+  type : 'Items'
 };
   this.masterservice.vendordetails(vendorData).subscribe(res => {
     if(res.success === true)
@@ -207,11 +213,12 @@ loadItem(id: any) {
       venitemCode: res.itemCode,
       venitemName: res.name
     });
-  });
+  })
 }
 
-loadMasters(value: number) {
-  this.masterservice.getvendorsItem(value).subscribe((res: any) => {
+loadMasters(value: number,type:string) {
+  type ="Items"
+  this.masterservice.getvendorsItem(value,type).subscribe((res: any) => {
     console.log(res)
     const data = Array.isArray(res) ? res : [];
 

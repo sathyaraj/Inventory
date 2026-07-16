@@ -91,7 +91,7 @@
           ></lucide-angular>
 
           <span class="font-medium">
-            Item Master
+        Inventory
           </span>
 
         </div>
@@ -132,8 +132,7 @@
     </div>
 
     <!-- SERVICE MASTER -->
-    <div *ngIf="permissionService.hasPermission('Service Master','read')">
-        <!-- *ngIf="permissionService.hasPermission('Service Master','Approve')" -->
+    <!-- <div *ngIf="permissionService.hasPermission('Service Master','read')">
 
       <button
         (click)="toggle('inventory-service')"
@@ -162,7 +161,6 @@
 
       </button>
 
-      <!-- SUB MENU -->
       <div
         *ngIf="openMenu === 'inventory-service'"
         class="ml-6 mt-2 space-y-1 border-l border-gray-200 pl-4"
@@ -183,6 +181,66 @@
 
         </a>
 
+      </div>
+
+    </div> -->
+
+    <!-- SETTINGS -->
+    <div *ngIf="permissionService.hasPermission('Settings','read')">
+        <!-- *ngIf="permissionService.hasPermission('Settings','Approve')" -->
+
+      <button
+        (click)="toggle('storeroom')"
+        class="w-full flex items-center justify-between px-4 py-3  text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+      >
+
+        <div class="flex items-center gap-3">
+
+          <lucide-angular
+            [img]="icons.Warehouse"
+            class="w-5 h-5"
+          ></lucide-angular>
+
+          <span class="font-medium">
+            Storeroom
+          </span>
+
+        </div>
+
+        <lucide-angular
+          [img]="openMenu === 'storeroom'
+            ? icons.ChevronUp
+            : icons.ChevronDown"
+          class="w-4 h-4"
+        ></lucide-angular>
+
+      </button>
+
+      <!-- SUB MENU -->
+      <div
+        *ngIf="openMenu === 'storeroom'"
+        class="ml-6 mt-2 space-y-1 border-l border-gray-200 pl-4"
+      >
+
+        <!-- COMPANY -->
+        <a
+          routerLink="/admin/admin-control/storeroomlist"
+          routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.Building2"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+          Storeroom List
+
+        </a>
+
+        <!-- USER DETAILS -->
+        
+        
       </div>
 
     </div>
@@ -241,7 +299,49 @@
         </a>
 
         <!-- USER DETAILS -->
-        <a
+        
+        
+      </div>
+
+    </div>
+    
+
+     <div *ngIf="permissionService.hasPermission('Settings','read')">
+        <!-- *ngIf="permissionService.hasPermission('Settings','Approve')" -->
+
+      <button
+        (click)="toggle('setting')"
+        class="w-full flex items-center justify-between px-4 py-3  text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+      >
+
+        <div class="flex items-center gap-3">
+
+          <lucide-angular
+            [img]="icons.Settings"
+            class="w-5 h-5"
+          ></lucide-angular>
+
+          <span class="font-medium">
+            Settings
+          </span>
+
+        </div>
+
+        <lucide-angular
+          [img]="openMenu === 'setting'
+            ? icons.ChevronUp
+            : icons.ChevronDown"
+          class="w-4 h-4"
+        ></lucide-angular>
+
+      </button>
+
+      <!-- SUB MENU -->
+      <div
+        *ngIf="openMenu === 'setting'"
+        class="ml-6 mt-2 space-y-1 border-l border-gray-200 pl-4"
+      >  
+      <a
           routerLink="/admin/admin-control/userdetailslist"
           routerLinkActive="bg-blue-600 text-white"
           class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
@@ -264,7 +364,7 @@
         >
 
           <lucide-angular
-            [img]="icons.Users"
+            [img]="icons.UserKey"
             class="w-4 h-4"
           ></lucide-angular>
 
@@ -272,7 +372,8 @@
 
         </a>
 
-        <!-- CURRENCY -->
+
+      <!-- CURRENCY -->
         <a
           routerLink="/admin/admin-control/currencylist"
           routerLinkActive="bg-blue-600 text-white"
@@ -319,52 +420,11 @@
           Tax
 
         </a>
-
-      </div>
-
-    </div>
-    
-
-     <div *ngIf="permissionService.hasPermission('Settings','read')">
-        <!-- *ngIf="permissionService.hasPermission('Settings','Approve')" -->
-
-      <button
-        (click)="toggle('setting')"
-        class="w-full flex items-center justify-between px-4 py-3  text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-      >
-
-        <div class="flex items-center gap-3">
-
-          <lucide-angular
-            [img]="icons.Settings"
-            class="w-5 h-5"
-          ></lucide-angular>
-
-          <span class="font-medium">
-            Settings
-          </span>
-
-        </div>
-
-        <lucide-angular
-          [img]="openMenu === 'setting'
-            ? icons.ChevronUp
-            : icons.ChevronDown"
-          class="w-4 h-4"
-        ></lucide-angular>
-
-      </button>
-
-      <!-- SUB MENU -->
-      <div
-        *ngIf="openMenu === 'setting'"
-        class="ml-6 mt-2 space-y-1 border-l border-gray-200 pl-4"
-      >  
       
 
         <!-- CURRENCY -->
         <a
-          routerLink="/admin/admin-control/currencylist"
+          routerLink="/admin/admin-control/commoditygrouplist"
           routerLinkActive="bg-blue-600 text-white"
           class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
         >
@@ -374,14 +434,12 @@
             class="w-4 h-4"
           ></lucide-angular>
 
-          Cost Center
+          Commodity Group
 
         </a>
 
         <!-- DISCOUNT -->
-        <a
-          routerLink="/admin/admin-control/discountlist"
-          routerLinkActive="bg-blue-600 text-white"
+        <a routerLink="/admin/admin-control/costcodelist" routerLinkActive="bg-blue-600 text-white"
           class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
         >
 
@@ -390,8 +448,21 @@
             class="w-4 h-4"
           ></lucide-angular>
 
-          Cost Code
+                    Cost Center
 
+        </a>
+
+          <!-- DISCOUNT -->
+        <a routerLink="/admin/admin-control/documentslist" routerLinkActive="bg-blue-600 text-white"
+          class="flex items-center gap-2 px-3 py-2  text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition"
+        >
+
+          <lucide-angular
+            [img]="icons.FolderOpen"
+            class="w-4 h-4"
+          ></lucide-angular>
+
+                    Documents
         </a>
 
       </div>

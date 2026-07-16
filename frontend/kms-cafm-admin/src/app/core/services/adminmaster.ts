@@ -1,13 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environment/environment';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class Adminmaster {
 
-      private baseUrl = 'https://localhost:7108/api';
+      //private baseUrl = 'https://localhost:7108/api';
+
+      private baseUrl = environment.apiUrl;
 
         constructor(private http: HttpClient) {}
 
@@ -71,10 +75,6 @@ export class Adminmaster {
               }
             );
           }
-
-
-
-
 
        getcurrencylist() {
         return this.http.get(`${this.baseUrl}/currency`);
@@ -145,6 +145,10 @@ export class Adminmaster {
                 return this.http.get(`${this.baseUrl}/company`)
               }
 
+               deletecompany(id:number){
+                return this.http.delete(`${this.baseUrl}/company/${id}`)
+              }
+
               createUserDetail(data: any) {
                 return this.http.post(`${this.baseUrl}/UserDetail/register`, data);
               }
@@ -188,6 +192,10 @@ export class Adminmaster {
                   return this.http.post(`${this.baseUrl}/CostCode`, data);
                 }
 
+                 updateCostCode(id: number, data: any) {
+                return this.http.put(`${this.baseUrl}/CostCode/${id}`, data);
+              }
+
                 getCostCodeById(id: number) {
                   return this.http.get(`${this.baseUrl}/CostCode/${id}`);
                 }
@@ -199,4 +207,120 @@ export class Adminmaster {
                 getServiceItemById(id: number):Observable<any>  {
                   return this.http.get<any>(`${this.baseUrl}/serviceitem/${id}`);
                 }
+
+                saveTab(data: any):Observable<any> {
+                  return this.http.post(`${this.baseUrl}/serviceitem`,data)
+                }
+
+                  updateItem(id: number, payload: any) {
+                    console.log(payload)
+                  return this.http.put(`${this.baseUrl}/serviceitem/${id}`, payload);
+                }
+                getServiceitemList():Observable<any> {
+                  return this.http.get(`${this.baseUrl}/serviceitem`)
+                }
+
+                servicedeleteItem(id: number) {
+                    return this.http.delete(`${this.baseUrl}/serviceitem/${id}`);
+
+                  }
+
+                  exportItems(fromDate:any, toDate:any) {
+
+              console.log(fromDate +"---"+toDate)
+
+
+              const params:any = {};
+
+              if (fromDate) {
+                params.fromDate = fromDate;
+              }
+
+              if (toDate) {
+                params.toDate = toDate;
+              }
+
+              return this.http.get(`${this.baseUrl}/serviceitem/export-serviceitems`,
+                {
+                  params,
+                  responseType: 'blob'
+                }
+              );
+
+            }
+
+             getcostcodelist() {
+        return this.http.get(`${this.baseUrl}/costcode`);
+      }
+
+      costcodedelete(id:number){
+                return this.http.delete(`${this.baseUrl}/costcode/${id}`);
+      }
+
+      saveCommodityGroup(data:any){
+        return this.http.post(`${this.baseUrl}/CommodityGroup`,data)
+      }
+
+      getCommodityGroups() {
+        return this.http.get<any[]>(`${this.baseUrl}/CommodityGroup`
+         );
+        }
+
+         getCommodityGroupById(id: number) {
+
+  return this.http.get(
+    `${this.baseUrl}/CommodityGroup/${id}`
+  );
+
+}
+
+ deletecommoditygroup(id: number) {
+
+          return this.http.delete(
+            `${this.baseUrl}/commoditygroup/${id}`
+          );
+
+        }
+
+ // adminmaster.ts
+
+createStoreroom(data: any) {
+  return this.http.post(
+    `${this.baseUrl}/StoreroomCreate`,
+    data
+  );
+}
+
+updateStoreroom(id: number, data: any) {
+  return this.http.put(
+    `${this.baseUrl}/StoreroomCreate/${id}`,
+    data
+  );
+}
+
+getStoreroom(id: number) {
+  return this.http.get(
+    `${this.baseUrl}/StoreroomCreate/${id}`
+  );
+}
+
+getAllStoreroom() {
+  return this.http.get(
+    `${this.baseUrl}/StoreroomCreate`
+  );
+}
+
+deleteStoreroom(id: number) {
+  return this.http.delete(
+    `${this.baseUrl}/StoreroomCreate/${id}`
+  );
+}
+
+storeroomList() {
+  return this.http.get(
+    `${this.baseUrl}/StoreroomCreate`
+  );
+}
+
+                
 }

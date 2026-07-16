@@ -12,7 +12,8 @@ export interface FieldConfig {
     | 'textarea'
     | 'file'
     | 'date'
-    | 'toggle';
+    | 'toggle'
+    | 'ng-select';
 
   label: string;
 
@@ -26,6 +27,8 @@ export interface FieldConfig {
     label: string;
     value: any;
   }[];
+
+  onChange?: string;
 
   required?: boolean;
 
@@ -50,30 +53,34 @@ export const addressFields: FieldConfig[] = [
     icon: Building2
   },
 
-  {
-    type: 'text',
-    label: 'Country',
-    controlName: 'country',
-    placeholder: 'Enter country',
-    icon: Globe
-  },
+ {
+  type: 'ng-select',
+  label: 'Country',
+  controlName: 'country',
+  placeholder: 'Select Country',
+  icon: Globe,
+  options: [],
+  onChange: 'loadStates'
+},
 
-  {
-    type: 'text',
-    label: 'State',
-    controlName: 'state',
-    placeholder: 'Enter state',
-    icon: Map
-  },
+{
+  type: 'ng-select',
+  label: 'State',
+  controlName: 'state',
+  placeholder: 'Select State',
+  icon: Map,
+  options: [],
+  onChange: 'loadCities'
+},
 
-  {
-    type: 'text',
-    label: 'City',
-    controlName: 'city',
-    placeholder: 'Enter city',
-    icon: Building2
-  },
-
+{
+  type: 'ng-select',
+  label: 'City',
+  controlName: 'city',
+  placeholder: 'Select City',
+  icon: Building2,
+  options: []
+},
   {
     type: 'text',
     label: 'Postal Code',

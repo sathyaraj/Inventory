@@ -50,8 +50,6 @@ activeTab: string = 'tax';
 
 changeTab(tab: string) {
   console.log("TAB:", tab);
-  
-
 this.activeTab = tab;
 }
 

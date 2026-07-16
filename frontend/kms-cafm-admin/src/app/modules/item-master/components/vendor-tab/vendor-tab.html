@@ -8,7 +8,6 @@
          <!-- <input formControlName="storeitemName" class="w-72 flex-1 border border-gray-300 px-2 py-[4px] bg-white"> -->
             <div class="relative w-75 dropdown-wrapper">
 
-              <!-- Input -->
               <input
                 type="text"
                 formControlName="storeitemName"
@@ -17,7 +16,14 @@
                 (blur)="closeDropdown()"
                 (input)="filterGroups($event)"
                 placeholder="Item Name"
-                class="w-75 flex-1 border border-gray-300 px-2 py-[4px] bg-white" />
+                class="w-full border border-gray-300 px-2 pr-10 py-[4px] bg-white" />
+
+              <!-- Search Icon Inside Input -->
+              <lucide-icon
+                [img]="search"
+                (click)="openCommodityHandler('vendor')"
+                class="absolute right-0 top-1/2 -translate-y-1/2 p-1 bg-gray-200 text-gray-500 cursor-pointer">
+              </lucide-icon>
 
               <!-- Dropdown -->
               <div *ngIf="showGroupDropdown"
@@ -25,12 +31,14 @@
 
                 <div *ngFor="let group of filteredGroups"
                     (click)="selectGroup(group)"
-                    class="px-2 py-1 hover:bg-gray-100 cursor-pointer text-left">
-                  {{ group.itemCode}}-{{group.itemName}}
+                    class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+
+                  {{ group.itemCode }} - {{ group.itemName }}
 
                 </div>
 
-                <div *ngIf="filteredGroups.length === 0" class="px-2 py-1 text-gray-400">
+                <div *ngIf="filteredGroups.length === 0"
+                    class="px-2 py-1 text-gray-400">
                   No results
                 </div>
 
@@ -38,11 +46,6 @@
 
             </div>
          
-
-
-         <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
-              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('vendor')"></lucide-icon>
-          </button>
         </div>
      <div  class="text-blue-600 cursor-pointer" (click)="addliststoreroom()">Add Item to Storeroom</div>    
 </div>
@@ -205,7 +208,7 @@
             </tr>
 
             <!-- FILTER -->
-            <tr>
+            <tr *ngIf="storerooms.length > 0">
               <th class="border border-gray-200">
 
                 <input
@@ -340,9 +343,40 @@
      class="fixed inset-0 flex items-center justify-center bg-gray-400/30 z-50">
   <div *ngIf="showaddStoreroom" class="w-[500px] bg-gray-100  shadow-md">
   <!-- HEADER -->
-  <div class="flex justify-between items-center px-3 py-1 bg-gray-200">
-    <span class="text-sm font-semibold">Add Items to Storeroom</span>
-    <button (click)="closestoreroom()" class="text-sm px-2 hover:bg-gray-300">✖</button>
+  <div class="flex items-center justify-between px-4 py-3
+             bg-gradient-to-r from-indigo-50 to-purple-50
+             border-b border-gray-300">
+    <!-- <span class="text-sm font-semibold">Add Items to Storeroom</span>
+    <button (click)="closestoreroom()" class="text-sm px-2 hover:bg-gray-300">✖</button> -->
+     <div class="flex items-center gap-2">
+
+        <div
+          class="w-7 h-7 bg-indigo-600 text-white
+                 flex items-center justify-center">
+
+          <lucide-icon
+            [img]="Building2"
+            class="w-4 h-4">
+          </lucide-icon>
+
+        </div>
+
+        <span class="text-base font-semibold text-gray-800">
+          Add Items to Storeroom
+        </span>
+
+      </div>
+      <button
+        (click)="closestoreroom()"
+        class="w-8 h-8 flex items-center justify-center
+               hover:bg-red-50 text-gray-500 hover:text-red-600">
+
+        <lucide-icon
+          [img]="X"
+          class="w-4 h-4">
+        </lucide-icon>
+
+      </button>
   </div>
 
   <!-- BODY -->
@@ -353,27 +387,48 @@
       <!-- SITE -->
       <div class="grid grid-cols-[120px_1fr] items-center gap-2">
         <label class="text-right text-sm">Site</label>
-        <input formControlName="site" class="h-6 border border-gray-300 px-2 bg-gray-50">
+        <!-- <input placeholder="Enter Site" formControlName="site" class="h-6 border border-gray-300 px-2 bg-gray-50"> -->
+
+      <ng-select
+        [items]="siteOptions"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select Site"
+        formControlName="site"
+        (change)="onSiteChange($event)">
+      </ng-select>
+
       </div>
       <div class="ml-[120px]" *ngIf="addStoreForm.get('site')?.touched && addStoreForm.get('site')?.invalid">
         <small class="text-red-500 text-xs">Site is required</small>
       </div>
-
-      <!-- STOREROOM -->
       <div class="grid grid-cols-[120px_1fr] items-center gap-2">
-        <label class="text-right text-sm">Storeroom</label>
+  <label class="text-right text-sm">Storeroom</label>
 
-        <div class="flex items-center gap-1">
-          <input formControlName="storename" class="w-28 h-6 border border-gray-300 px-2 bg-gray-50">
+  <div class="flex items-center gap-2">
 
-          <lucide-icon 
-            [img]="chevronsright" 
-            class="w-4 h-4 cursor-pointer">
-          </lucide-icon>
+    <ng-select
+  class="flex-1"
+  [items]="storeroomOptions"
+  bindLabel="label"
+  bindValue="value"
+  placeholder="Select Store"
+  formControlName="storename"
+   (change)="onStoreroomChange($event)"
+  >
+</ng-select>
 
-          <input formControlName="storedescription" class="flex-1 h-6 border border-gray-300 px-2 bg-gray-50">
-        </div>
-      </div>
+    <lucide-icon
+      [img]="chevronsright"
+      class="w-4 h-4 cursor-pointer">
+    </lucide-icon>
+
+    <input
+      formControlName="storedescription"
+      placeholder="Store Description"
+      class="flex-1 h-9 border border-gray-300 px-2 bg-gray-50">
+  </div>
+</div>
       <div class="ml-[120px]" *ngIf="addStoreForm.get('storename')?.touched && addStoreForm.get('storename')?.invalid">
 
   <small *ngIf="addStoreForm.get('storename')?.errors?.['required']"
@@ -390,15 +445,20 @@
 
       <!-- FOOTER -->
       <div class="flex justify-end gap-2 pt-2">
+        <button (click)="codeclosecommodity()"
+         
+          class="px-4 py-1.5 border border-gray-300
+               bg-white hover:bg-gray-100 text-sm">
+          Cancel
+        </button>
         <button (click)="addstoreroom()"
-          class="px-3 py-1 border bg-gray-100 hover:bg-gray-300 text-xs">
+          class="px-5 py-1.5 bg-indigo-600
+               text-white text-sm
+               hover:bg-indigo-700">
           OK
         </button>
 
-        <button (click)="codeclosecommodity()"
-          class="px-3 py-1 border bg-gray-100 hover:bg-gray-300 text-xs">
-          Cancel
-        </button>
+        
       </div>
 
     </div>
@@ -406,18 +466,26 @@
   </div>
 </div>
 
-  <div *ngIf="showdetailStoreroom" class="w-[75%] bg-gray-100 border shadow-md">
+  <div *ngIf="showdetailStoreroom"  class="w-[85%] bg-white shadow-2xl border border-gray-200">
 
   <!-- HEADER -->
-  <div class="flex justify-between items-center px-3 py-1 bg-gray-200 border-b">
-    <span class="text-sm font-semibold">Add Items to Storeroom</span>
-    <button (click)="closestoreroom()" class="text-sm px-2 hover:bg-gray-300">✖</button>
+  <div class="flex justify-between items-center px-2 py-0 bg-indigo-700 text-white">
+
+  <div class="flex items-center gap-2">
+    <lucide-icon [img]="warehouse" class="w-5 h-5"></lucide-icon>
+    <span class="font-semibold text-[14px]">
+      Add Items to Storeroom
+    </span>
   </div>
+
+  <button (click)="closestoreroom()" class="hover:bg-white/20 p-2">✕</button>
+
+</div>
 
   <div class="p-3">
 
     <!-- TABLE HEADER -->
-    <div class="grid grid-cols-12 gap-2 bg-gray-200 border text-xs px-2 py-1">
+    <div class="grid grid-cols-12 gap-2 bg-gray-200 border border-gray-200 text-xs px-2 py-1">
       <div></div>
       <div>Item</div>
       <div>Currency</div>
@@ -428,11 +496,11 @@
       <div>Issue Unit</div>
       <div>Order Unit</div>
       <div>Site</div>
-      <div class="text-center">Del</div>
+      <!-- <div class="text-center">Del</div> -->
     </div>
 
     <!-- TABLE ROW -->
-    <div [formGroup]="storeListForm" class="grid grid-cols-12 gap-2 border px-2 py-2 bg-white items-center">
+    <div [formGroup]="storeListForm" class="grid grid-cols-12 gap-2 border border-gray-200 px-2 py-2 bg-white items-center">
 
       <!-- Toggle -->
       <div class="text-xs cursor-pointer" (click)="toggleDetails()">
@@ -441,45 +509,40 @@
 
       <!-- Item -->
       <div class="flex items-center gap-1">
-        <input formControlName="itemname" class="w-full h-6 border px-1 bg-yellow-50">
-        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+        <input formControlName="itemname" class="w-full h-6 border border-gray-200 px-1 bg-yellow-50">
       </div>
 
       <!-- Issue Cost -->
       <div class="flex items-center gap-1">
-        <input formControlName="issuecost" class="w-full h-6 border px-1 bg-yellow-50">
-        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+        <input formControlName="issuecost" class="w-full h-6 border border-gray-200 px-1 bg-yellow-50">
       </div>
 
       <!-- Unit Cost -->
-      <input formControlName="unitcost" class="h-6 border px-1 text-right">
+      <input formControlName="unitcost" class="h-6 border border-gray-200 px-1 text-right">
 
       <!-- Default Bin -->
-      <input formControlName="defaultbin" class="h-6 border px-1">
+      <input formControlName="defaultbin" class="h-6 border border-gray-200 px-1">
 
       <!-- Current Balance -->
-      <input formControlName="currentbalance" class="h-6 border px-1">
+      <input formControlName="currentbalance" class="h-6 border border-gray-200 px-1">
 
       <!-- Lot -->
       <div class="flex items-center gap-1">
-        <input formControlName="lot" class="w-full h-6 border px-1">
-        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+        <input formControlName="lot" class="w-full h-6 border border-gray-200 px-1">
       </div>
 
       <!-- Issue Unit -->
       <div class="flex items-center gap-1">
-        <input formControlName="issueunit" class="w-full h-6 border px-1 bg-yellow-50">
-        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+        <input formControlName="issueunit" class="w-full h-6 border border-gray-200 px-1 bg-yellow-50">
       </div>
 
       <!-- Order Unit -->
       <div class="flex items-center gap-1">
-        <input formControlName="orderunit" class="w-full h-6 border px-1">
-        <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+        <input formControlName="orderunit" class="w-full h-6 border border-gray-200 px-1">
       </div>
 
       <!-- Site -->
-      <input formControlName="site" class="h-6 border px-1 bg-gray-200">
+      <input formControlName="site" class="h-6 border border-gray-200 px-1 bg-gray-200">
 
       <!-- Delete -->
       <div class="flex justify-center">
@@ -489,7 +552,7 @@
     </div>
 
     <!-- DETAILS -->
-    <div *ngIf="showDetails" [formGroup]="storeListForm" class="mt-3 border bg-gray-200 p-3">
+    <div *ngIf="showDetails" [formGroup]="storeListForm" class="mt-3 border border-gray-200 p-3">
 
       <div class="text-sm font-semibold mb-2">Details</div>
 
@@ -498,37 +561,33 @@
         <!-- LEFT -->
         <div class="space-y-2" >
           <div class="flex items-center gap-2">
-            <label class="w-32 text-sm">* Item</label>
-            <input formControlName="itemname" class="flex-1 h-6 border px-2 bg-yellow-50">
-            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
-
+            <label class="w-32 text-sm">Item <span class="text-red-500 ml-1 text-[18px]">*</span></label>
+            <input formControlName="itemname" class="flex-1 h-6 border border-gray-200 px-2 bg-yellow-50">
           </div>
 
 
           <div class="flex items-center gap-2">
             <label class="w-32 text-sm">Lot</label>
-            <input formControlName="lot" class="flex-1 h-6 border px-2">
-            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+            <input formControlName="lot" class="flex-1 h-6 border border-gray-200 px-2">
           </div>
 
           <div class="flex items-center gap-2">
-            <label class="w-32 text-sm">* Issue Cost Type</label>
-            <input formControlName="issuecost" class="flex-1 h-6 border px-2 bg-yellow-50">
-            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+            <label class="w-32 text-sm">Issue Cost Type <span class="text-red-500 ml-1 text-[18px]">*</span></label>
+            <input formControlName="issuecost" class="flex-1 h-6 border border-gray-200 px-2 bg-yellow-50">
           </div>
 
           <div class="flex items-center gap-2">
             <label class="w-32 text-sm">Unit Cost</label>
-            <input formControlName="unitcost" class="flex-1 h-6 border px-2 text-right">
+            <input formControlName="unitcost" class="flex-1 h-6 border border-gray-200 px-2 text-right">
           </div>
 
           <div class="flex items-center gap-2">
             <label class="w-32 text-sm">Defualt Bin</label>
-            <input formControlName="defaultbin" class="flex-1 h-6 border px-2 text-right">
+            <input formControlName="defaultbin" class="flex-1 h-6 border border-gray-200 px-2 text-right">
           </div>
           <div class="flex items-center gap-2">
             <label class="w-32 text-sm">Current Balance</label>
-            <input formControlName="currentbalance" class="flex-1 h-6 border px-2 text-right">
+            <input formControlName="currentbalance" class="flex-1 h-6 border border-gray-200 px-2 text-right">
           </div>
         </div>
 
@@ -536,25 +595,23 @@
         <div class="space-y-2">
           <div class="flex items-center gap-2">
             <label class="w-32 text-sm">Site</label>
-            <input formControlName="site" class="flex-1 h-6 border px-2 bg-gray-200">
+            <input formControlName="site" class="flex-1 h-6 border border-gray-200 px-2 bg-gray-200">
           </div>
 
           <div class="flex items-center gap-2">
-            <label class="w-32 text-sm">* Issue Unit</label>
-            <input formControlName="issueunit" class="flex-1 h-6 border px-2 bg-yellow-50">
-            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+            <label class="w-32 text-sm">Issue Unit <span class="text-red-500 ml-1 text-[18px]">*</span></label>
+            <input formControlName="issueunit" class="flex-1 h-6 border border-gray-200 px-2 bg-yellow-50">
           </div>
 
           <div class="flex items-center gap-2">
             <label class="w-32 text-sm">Order Unit</label>
-            <input formControlName="orderunit" class="flex-1 h-6 border px-2">
-            <lucide-icon [img]="search" class="w-4 h-4 cursor-pointer"></lucide-icon>
+            <input formControlName="orderunit" class="flex-1 h-6 border border-gray-200 px-2">
           </div>
 
-          <div class="flex items-center gap-2">
+          <!-- <div class="flex items-center gap-2">
             <label class="w-32 text-sm">Consignment?</label>
             <input type="checkbox"  formControlName="status" value="true">
-          </div>
+          </div> -->
         </div>
 
       </div>
@@ -562,8 +619,9 @@
 
     <!-- FOOTER -->
     <div class="flex justify-end gap-2 mt-3">
-      <button (click)="submit()" class="px-4 py-1 border bg-gray-200 hover:bg-gray-300 text-sm">OK</button>
-      <button (click)="codeclosecommodity()" class="px-4 py-1 border bg-gray-200 hover:bg-gray-300 text-sm">Cancel</button>
+      <button (click)="codeclosecommodity()" class="px-5 py-2 border border-gray-300 bg-white hover:bg-gray-100">Cancel</button>
+      <button (click)="submit()" class="px-6 py-2 bg-indigo-600 text-white hover:bg-indigo-700">OK</button>
+
     </div>
 
   </div>

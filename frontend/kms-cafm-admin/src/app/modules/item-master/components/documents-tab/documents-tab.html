@@ -1,7 +1,8 @@
 <div [formGroup]="form" class=" text-xs">
-
   <!-- HEADER -->
   <div class="flex justify-between items-center p-3 px-3 py-2 bg-white">
+        <div class=" w-[50%] text-center p-3 grid grid-cols-1 gap-2"> 
+
     <div class="flex p-3 items-center ">
       <span class="text-[14px] w-28">Item:</span>
       <input formControlName="docuitemCode" readonly class="border border-gray-300 px-2 py-1 w-40" />
@@ -9,40 +10,51 @@
 
       <div class="relative w-75 dropdown-wrapper">
 
-              <!-- Input -->
-              <input
-                type="text"
-                formControlName="docuitemName"
-                [value]="selectedGroupName"
-                (focus)="showGroupDropdown = true"
-                (blur)="closeDropdown()"
-                (input)="filterGroups($event)"
-                placeholder="Item Name"
-                class="flex-1 w-75 h-6 border border-gray-300 px-2 py-[4px] text-[12px] bg-white" />
+                  <!-- Input -->
+                  <input
+                    type="text"
+                    formControlName="docuitemName"
+                    [value]="selectedGroupName"
+                    (focus)="showGroupDropdown = true"
+                    (blur)="closeDropdown()"
+                    (input)="filterGroups($event)"
+                    placeholder="Item Name"
+                    class="w-full h-6 border border-gray-300 px-2 pr-8 py-[4px] text-[12px] bg-white" />
 
-              <!-- Dropdown -->
-              <div *ngIf="showGroupDropdown"
-                  class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
+                  <!-- Search Icon Inside Input -->
+                  <lucide-icon
+                    [img]="search"
+                    (click)="openCommodityHandler('documents')"
+                    class="absolute right-0 top-1/2 -translate-y-1/2 p-1 bg-gray-200 text-gray-500 cursor-pointer">
+                  </lucide-icon>
 
-                <div *ngFor="let group of filteredGroups"
-                    (click)="selectGroup(group)"
-                    class="px-2 py-1 hover:bg-gray-100 cursor-pointer text-left">
-                  {{ group.itemCode}}-{{group.itemName}}
+                  <!-- Dropdown -->
+                  <div *ngIf="showGroupDropdown"
+                      class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
+
+                    <div *ngFor="let group of filteredGroups"
+                        (click)="selectGroup(group)"
+                        class="px-2 py-1 hover:bg-gray-100 cursor-pointer text-left">
+
+                      {{ group.itemCode }} - {{ group.itemName }}
+
+                    </div>
+
+                    <div *ngIf="filteredGroups.length === 0"
+                        class="px-2 py-1 text-gray-400">
+                      No results
+                    </div>
+
+                  </div>
 
                 </div>
 
-                <div *ngIf="filteredGroups.length === 0" class="px-2 py-1 text-gray-400">
-                  No results
-                </div>
-
-              </div>
-
-            </div>
-
-      <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
-              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('documents')"></lucide-icon>
-          </button>
     </div>
+    <div class="flex p-3 items-center ">
+      <span class="text-[14px] w-28">ServiceItem:</span>
+      <input formControlName="docuserviceitem" type="checkbox"/>
+      </div>
+  </div>
   </div>
 
   <!-- VENDORS HEADER -->
@@ -123,7 +135,7 @@
             </tr>
 
             <!-- FILTER -->
-            <tr>
+            <tr *ngIf="documentdetail && documentdetail.length > 0">
               <th class="border border-gray-200 px-2 py-1">
 
                 <input

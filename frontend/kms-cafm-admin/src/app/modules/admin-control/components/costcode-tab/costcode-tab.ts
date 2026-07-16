@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DynamicForm } from '../../../../shared/dynamic-form/dynamic-form';
 import { MessageBox } from '../../../../shared/message-box/message-box';
@@ -31,7 +31,7 @@ export class CostcodeTab {
 
   fields = getCostCodeFields();
 
-  constructor(private fb: FormBuilder, private adminMaster: Adminmaster, private route: ActivatedRoute,private router : Router) {}
+  constructor(private fb: FormBuilder, private adminMaster: Adminmaster, private route: ActivatedRoute,private router : Router, private chr:ChangeDetectorRef) {}
 ngOnInit() {
   const group: any = {};
 
@@ -61,50 +61,68 @@ save() {
   }
 
   const payload = {
-
-    id: this.editId || 0,
-
     costCodeNo: this.form.value.costCodeNo,
-
     costCodeName: this.form.value.costCodeName,
-
     description: this.form.value.description,
-
     isActive: this.form.value.isActive
-
   };
 
-  this.adminMaster.saveCostCode(payload).subscribe({
+  // UPDATE
+  if (this.editId && this.editId > 0) {
 
-    next: (res: any) => {
+    this.adminMaster.updateCostCode(this.editId, payload)
+      .subscribe({
 
-      if (payload.id > 0) {
+        next: () => {
 
-        this.messageTitle = 'Updated';
-        this.messageText = 'Updated Successfully';
+          this.messageTitle = 'Updated';
+          this.messageText = 'Updated Successfully';
+          this.showMessageBox = true;
 
-      } else {
+          this.chr.detectChanges();
+        },
 
-        this.messageTitle = 'Success';
-        this.messageText = 'Saved Successfully';
+        error: (err:any) => {
 
-      }
+          console.log(err);
 
-      this.showMessageBox = true;
+          this.messageTitle = 'Error';
+          this.messageText = 'Update Failed';
+          this.showMessageBox = true;
+        }
 
-    },
+      });
 
-    error: (err: any) => {
+  }
 
-      console.log(err);
+  // CREATE
+  else {
 
-      this.messageTitle = 'Error';
-      this.messageText = 'Save Failed';
-      this.showMessageBox = true;
+    this.adminMaster.saveCostCode(payload)
+      .subscribe({
 
-    }
+        next: () => {
 
-  });
+          this.messageTitle = 'Success';
+          this.messageText = 'Saved Successfully';
+          this.showMessageBox = true;
+
+          this.chr.detectChanges();
+        },
+
+        error: (err:any) => {
+
+          console.log(err);
+
+          this.messageTitle = 'Error';
+          this.messageText = 'Save Failed';
+          this.showMessageBox = true;
+        }
+
+      });
+
+  }
+
 }
 
 

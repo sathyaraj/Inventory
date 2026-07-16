@@ -35,6 +35,8 @@ import { ServiceCreate } from '../../modules/inventory-service/pages/service-cre
 })
 export class AdmindynamicForm {
 
+  activeControl: string = '';
+
    requiredValidator = Validators.required;
 
   @Input() form!: FormGroup;
@@ -70,97 +72,56 @@ filteredGroups: any[] = [];
 
 
 
-onGroupFocus(type: string) {
+onGroupFocus(controlName: string) {
+  this.activeControl = controlName;
 
-  if (type === 'commodityGroup') {
-     this.filteredGroups = [...this.groups];
-  this.showGroupDropdown = true;
-  } else if (type === 'orderunit') {
-     this.filteredGroups = [...this.groups];
-  this.showGroupDropdown = true;
+  if (controlName === 'commodityGroup') {
+    this.id = 1;
+  } else if (controlName === 'orderunit') {
+    this.id = 3;
   }
- 
 
+  this.adminMaster.getMastersById(this.id).subscribe((res: any) => {
+    this.groups = res;
+    this.filteredGroups = res;
+    this.showGroupDropdown = true;
+  });
 }
 
  id: number = 0;
 
-filterGroups(event: Event, type: string) {
-
-  console.log(type)
+filterGroups(event: Event, controlName: string) {
+  this.activeControl = controlName;
 
   const value = (event.target as HTMLInputElement).value.toLowerCase();
 
-  if (type === 'commodityGroup') {
-    console.log("true")
-    this.id = 1;
-      this.adminMaster.getMastersById(this.id).subscribe((res: any) => {
+  const id = controlName === 'commodityGroup' ? 1 : 3;
 
+  this.adminMaster.getMastersById(id).subscribe((res: any) => {
     this.groups = res;
 
-    this.filteredGroups = this.groups.filter((group: any) =>
-      (group.name || '').toLowerCase().includes(value)
+    this.filteredGroups = res.filter((g: any) =>
+      (g.name || '').toLowerCase().includes(value)
     );
 
     this.showGroupDropdown = true;
   });
-  } else if (type === 'orderunit') {
-        console.log("false")
-
-    this.id = 3;
-      this.adminMaster.getMastersById(this.id).subscribe((res: any) => {
-
-    this.groups = res;
-
-    this.filteredGroups = this.groups.filter((group: any) =>
-      (group.name || '').toLowerCase().includes(value)
-    );
-
-    this.showGroupDropdown = true;
-  });
-  }
-
-
-
 }
 
-// selectGroup(group: any) {
 
-//   this.form.patchValue({
-
-//     commodityGroup: group.name,
-
-//     commodityCode: group.code
-
-//   });
-
-//   this.showGroupDropdown = false;
-
-// }
-
-// selectGroup(group:any){
-
-//   this.servicetab.selectGroup(group)
-//   this.showGroupDropdown = false;
-
-// }
 
 selectedControl = '';
 
-selectGroup(group: any) {
 
-  if (this.selectedControl === 'commodityGroup') {
+selectGroup(group: any,type:string) {
 
-    this.form.patchValue({
-      commodityGroup: group.name
-    });
+  const control = type;
 
-  } else if (this.selectedControl === 'orderunit') {
-
-    this.form.patchValue({
-      orderunit: group.name
-    });
-
+  if (control === 'commodityGroup' || control === 'orderunit') {
+     this.form.get('serviceitem')?.patchValue({
+    commodityGroup: group.name,
+    commodityCode: group.description,
+  });
   }
 
   this.showGroupDropdown = false;

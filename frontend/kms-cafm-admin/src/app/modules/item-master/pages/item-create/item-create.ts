@@ -7,7 +7,11 @@ import { OrganizationTab } from '../../components/organization-tab/organization-
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { Master } from '../../../../core/services/master';
 import {  LucideAngularModule  } from 'lucide-angular';
-import { Funnel, ArrowBigLeft,ArrowBigRight,ChevronsRight,Trash,Search,SquareX,Save,ChevronLeft  } from 'lucide-angular';
+import { Funnel, ArrowBigLeft,ArrowBigRight,ChevronsRight,Trash,Search,SquareX,Save,ChevronLeft, Download,Box, List, Package,Warehouse,
+  Users,
+  FileText,
+  Workflow,
+  FolderOpen} from 'lucide-angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VendoritemTab } from '../../components/vendoritem-tab/vendoritem-tab';
 import { MessageBox } from '../../../../shared/message-box/message-box';
@@ -15,6 +19,7 @@ import { AssemblyTab } from '../../components/assembly-tab/assembly-tab';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { DocumentsTab } from '../../components/documents-tab/documents-tab';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 interface alternate {
   id: number;
@@ -74,6 +79,7 @@ interface Item {
   AttachToAsset: boolean;
   TaxExempt: boolean;
   OverallRemarks:boolean;
+  serviceitem:boolean;
 
    /* Inventory Control */
   minimumStock: number | null;
@@ -208,7 +214,7 @@ export class ItemCreate {
 @Input() showstockcancel = false;
 
 
-
+pItems: any[] = [];
 
   funnel = Funnel; 
   arrowbigleft = ArrowBigLeft;
@@ -218,8 +224,18 @@ export class ItemCreate {
   squarex = SquareX;
   save = Save;
   chevronleft =ChevronLeft;
+  download = Download;
+  box = Box;
 
-  constructor(private fb: FormBuilder, private masterService: Master,private router: Router, private cdr: ChangeDetectorRef,private route: ActivatedRoute,@Inject(PLATFORM_ID) private platformId: object) {}
+  listIcon = List;
+itemIcon = Package;
+storeroomIcon = Warehouse;
+vendorIcon = Users;
+specIcon = FileText;
+assemblyIcon = Workflow;
+documentIcon = FolderOpen;
+
+  constructor(private fb: FormBuilder, private masterService: Master,private router: Router, private cdr: ChangeDetectorRef,private route: ActivatedRoute,@Inject(PLATFORM_ID) private platformId: object,private unsavedService:UnsavedChangesService) {}
   
   itemForm!: FormGroup;
   
@@ -269,6 +285,7 @@ this.allItems = [...this.pItems];
       sparePart: [''],
       attachToAsset: [''],
       taxExempt: [''],
+      serviceitem:[''],
       overallremarks:[''],
           /* Inventory Control */
       minimumStock: [''],
@@ -351,7 +368,8 @@ this.allItems = [...this.pItems];
       documents: this.fb.group({
         docuitemCode: [''],
         docuitemName: [''],
-           documentdetail: this.fb.array([]),
+        docuserviceitem: [false], 
+        documentdetail: this.fb.array([]),
       }),
 
        itemCancel: this.fb.group({
@@ -364,6 +382,12 @@ this.allItems = [...this.pItems];
 
     });
 
+       this.itemForm.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.itemForm.dirty);
+});
+
+  this.activeTab = sessionStorage.getItem('activeTab') || 'general';
+
 
 }
   
@@ -373,41 +397,41 @@ this.allItems = [...this.pItems];
          this.router.navigate(['/admin/item-master']); 
   }
 
-  get generalForm(): FormGroup {
-  return this.itemForm.get('general') as FormGroup;
-}
+    get generalForm(): FormGroup {
+    return this.itemForm.get('general') as FormGroup;
+  }
 
-get vendorForm(): FormGroup {
-  return this.itemForm.get('vendor') as FormGroup;
-}
+    get vendorForm(): FormGroup {
+      return this.itemForm.get('vendor') as FormGroup;
+    }
 
-get vendoritemForm(): FormGroup {
-  return this.itemForm.get('vendoritem') as FormGroup;
-}
+    get vendoritemForm(): FormGroup {
+      return this.itemForm.get('vendoritem') as FormGroup;
+    }
 
-get specificationForm(): FormGroup {
-  return this.itemForm.get('specification') as FormGroup;
-}
+    get specificationForm(): FormGroup {
+      return this.itemForm.get('specification') as FormGroup;
+    }
 
-get organizationForm(): FormGroup {
-  return this.itemForm.get('organization') as FormGroup;
-}
+    get organizationForm(): FormGroup {
+      return this.itemForm.get('organization') as FormGroup;
+    }
 
-get documentsForm(): FormGroup {
-  return this.itemForm.get('documents') as FormGroup;
-}
+    get documentsForm(): FormGroup {
+      return this.itemForm.get('documents') as FormGroup;
+    }
 
-get addStoreForm() {
-  return this.itemForm.get('addstoreroomform') as FormGroup;
-}
+    get addStoreForm() {
+      return this.itemForm.get('addstoreroomform') as FormGroup;
+    }
 
-get storeListForm() {
-  return this.itemForm.get('addstoreroomlistform') as FormGroup;
-}
+    get storeListForm() {
+      return this.itemForm.get('addstoreroomlistform') as FormGroup;
+    }
 
-get itemCancel(): FormGroup {
-  return this.itemForm.get('itemCancel') as FormGroup;
-}
+    get itemCancel(): FormGroup {
+      return this.itemForm.get('itemCancel') as FormGroup;
+    }
   @Output() close = new EventEmitter<void>();  
 
    activeTab: string = 'general';
@@ -429,26 +453,27 @@ changeTab(tab: string) {
   
 
 this.activeTab = tab;
+sessionStorage.setItem('activeTab', tab);
 }
-  get alternates(): FormArray {
-  return this.itemForm.get('alternates') as FormArray;
-}
+    get alternates(): FormArray {
+    return this.itemForm.get('alternates') as FormArray;
+  }
 
-  get condition(): FormArray {
-  return this.itemForm.get('condition') as FormArray;
-}
+    get condition(): FormArray {
+    return this.itemForm.get('condition') as FormArray;
+  }
 
-get assemblydetails(): FormArray {
-  return this.itemForm.get('organization.assemblydetails') as FormArray;
-}
+  get assemblydetails(): FormArray {
+    return this.itemForm.get('organization.assemblydetails') as FormArray;
+  }
 
-get vendorsdetail(): FormArray {
-  return this.itemForm.get('vendorsdetail') as FormArray;
-}
+  get vendorsdetail(): FormArray {
+    return this.itemForm.get('vendorsdetail') as FormArray;
+  }
 
-get documentdetail(): FormArray {
-  return this.itemForm.get('documentdetail') as FormArray;
-}
+  get documentdetail(): FormArray {
+    return this.itemForm.get('documentdetail') as FormArray;
+  }
 
 deleteItemId: number | null = null;
 
@@ -506,6 +531,8 @@ buildPayload() {
       IsSparePart: !!g.get('sparePart')?.value,
       AttachToAsset: !!g.get('attachToAsset')?.value,
       TaxExempt: !!g.get('taxExempt')?.value,
+      ServiceItem: !!g.get('serviceitem')?.value,
+
 
       MinimumStock: g.get('minimumStock')?.value ? Number(g.get('minimumStock')?.value) : null,
       MaximumStock: g.get('maximumStock')?.value ? Number(g.get('maximumStock')?.value) : null,
@@ -688,7 +715,7 @@ submitItem() {
       //   }
 
           const payload = this.buildPayload();
-          console.log(payload)
+
           if (!payload) return;
 
           // ✅ Create FormData here (STEP 4 LOCATION)
@@ -721,7 +748,7 @@ submitItem() {
         }else if (this.activeTab === 'spec') {
           apiCall = this.masterService.specificationitemTab(this.selectedId, payload);
         }else if (this.activeTab === 'documents') {
-          apiCall = this.masterService.documentsTab(this.selectedId, true);
+          apiCall = this.masterService.documentsTab(this.selectedId, "Items");
         }else{
           apiCall = this.masterService.ItemAssemblyTab(this.selectedId, payload);
         }
@@ -1006,11 +1033,12 @@ MultiNewRow(type: string) {
   const masterMap: any = {
     CommodityGroup: 1,
     meterGroup: 2,
-    Orderunit: 3
+    Orderunit: 3,
+    Manufacturer: 5
   };
 
  
-    if (type === "Item")
+if (type === "Item")
     {
 
     this.masterService.getItempost(this.newItemRow).subscribe({
@@ -1050,25 +1078,20 @@ MultiNewRow(type: string) {
     }
   });
 }else{
-    if (!this.newRow.name) return;
-
-   this.newRow.masterName = type;
+  if(!this.newRow.name) return;
+  this.newRow.masterName = type;
   this.newRow.masterId = masterMap[type] ?? 0;
   this.newRow.groupId = 0;
 
   this.masterService.createMaster(this.newRow).subscribe({
     next: (res: any) => {
+          console.log(res)
 
       const newItem = res?.data ?? res;
-        
-      this.citems.unshift(newItem);   // ✅ single insert
-
+      this.citems.unshift(newItem);
         this.applyFilters();   
         this.cdr.detectChanges();
-
         this.showSuccess= true;
-
-           // ✅ refresh view properly
       this.currentPage = 1;
 
       this.selectedRowId = newItem.id || newItem.masterId;
@@ -1482,18 +1505,19 @@ addstoreroom()
   id: number = 0;
 
 openCommodityHandler(type: string) {
+  console.log(type)
   this.selectedAction = type;
   if (type === "CommodityGroup") this.id = 1;
   else if (type === "CommodityCode") this.id = 6;
   else if (type === "Orderunit") this.id = 3;
   else if (type === "Issueunit") this.id = 4;
-  else if (type === "meterGroup") this.id = 2;
+  else if (type === "Manufacturer") this.id = 5;
   else if (type === "Meter") this.id = 7;
 
   // ✅ OPEN POPUP IMMEDIATELY
   this.showCommonpopup = true;
 
-  if ((type === "CommodityGroup") || (type === "Orderunit") || (type === "meterGroup") ) {
+  if ((type === "CommodityGroup") || (type === "Orderunit") || (type === "Manufacturer") ) {
     
     this.masterService.getMastersById(this.id).subscribe(res => {
 
@@ -1504,15 +1528,24 @@ openCommodityHandler(type: string) {
 
     });
 
-  } else {
+  } else if(type === "Item") {
 
-       this.masterService.getItemList().subscribe(res => {
+      this.masterService.getItemList().subscribe(res => {
       this.citems = res as any[];
       console.log(this.citems)
       this.cfilteredItems = [...this.citems];
-      this.cdr.detectChanges(); // keep
+      this.cdr.detectChanges();
 
     });
+  }else{
+
+     this.masterService.getItemlist().subscribe(res => {
+      this.citems = res as any[];
+      console.log(this.citems)
+      this.cfilteredItems = [...this.citems];
+      this.cdr.detectChanges();
+       });
+
   }
 }
 
@@ -1523,57 +1556,7 @@ openCommodityHandleralter(type: string, rowIndex: number) {
   // this.loading = true;
   this.showCommonpopup = true;
 
-//   if (type === "CommodityGroup") {
-//     this.id = 2;
-//   } else if (type === "CommodityCode") {
-//     this.id = 3;
-//   } else if (type === "LotType") {
-//     this.id = 4;
-//   }
-
-//   console.log(type)
-
-// if (type !== "Item" && type !== "AlItem") 
-// {
-//   this.masterService.getMastersById(this.id).subscribe(res => {
-//     this.citems = res as any[];
-
-//     this.cfilteredItems = [...this.citems];
-
-//     // this.loading = false;
-//   });
-// }else{
-
-//   this.pItems;
-// }
-//this.pItems;
 }
-
-pItems = [
-  { item: 'MECH001', description: 'Steer Tire - Bridgestone', group: 'TIRE', code: '-', set: 'SET1' },
-  { item: 'MECH002', description: 'ENGINE SECONDARY FUEL FILTER ELEMENT', group: 'FILTERS', code: '-', set: 'SET1' },
-  { item: 'MECH003', description: 'GoodYear G362 11R22.5 tire', group: 'TIRE', code: '-', set: 'SET1' },
-  { item: 'MECH004', description: 'GoodYear G362 11R22.5 tire', group: 'TIRE', code: '-', set: 'SET1' },
-  { item: 'MECH005', description: 'GoodYear G362 11R22.5 tire', group: 'TIRE', code: '-', set: 'SET1' },
-
-  { item: 'ELEC001', description: 'Standard Laptop Computer', group: '-', code: '-', set: 'SET1' },
-  { item: 'MECH006', description: 'Pressure Pump', group: '-', code: '-', set: 'SET1' },
-  { item: 'ELEC002', description: 'Windows XP Operating System', group: '-', code: '-', set: 'SET1' },
-  { item: 'ELEC003', description: 'Microsoft Office XP Pro', group: '-', code: '-', set: 'SET1' },
-  { item: 'ELEC004', description: 'Laser printer (local)', group: '-', code: '-', set: 'SET1' },
-
-  { item: 'MECH007', description: 'Motor Controlled Valve', group: 'VALVE', code: '-', set: 'SET1' },
-  { item: 'MECH008', description: '24 Volt-DC Motor', group: 'MOTOR', code: '-', set: 'SET1' },
-  { item: 'MECH009', description: 'Precisionaire Disposable Air Filter', group: 'FILTERS', code: '-', set: 'SET1' },
-
-  { item: 'ELEC005', description: '5 ft. X 6 ft. window pane', group: '-', code: '-', set: 'SET1' },
-  { item: 'MECH010', description: 'Pipe Gaskets', group: '-', code: '-', set: 'SET1' },
-  { item: 'MECH011', description: 'Brake Parts', group: '-', code: '-', set: 'SET1' },
-
-  { item: 'MECH012', description: 'ENGINE FUEL INJECTOR NOZZLE', group: 'FUEL', code: '-', set: 'SET1' },
-  { item: 'MECH013', description: 'Pin, Split- E-43', group: 'MECH', code: '-', set: 'SET1' },
-  { item: 'MECH014', description: 'Oil- Air Cylinder', group: 'MECH', code: '-', set: 'SET1' }
-];
 
 
 
@@ -1609,8 +1592,10 @@ selectItem(item: any) {
     issueUnit: item.name
   });
  }else if(item.masterId == 5){
+  console.log(item.name)
+  console.log("selectItem")
   this.itemForm.get('general')?.patchValue({
-    lotType: item.name,
+    Manufacturer: item.name,
   });
  }else if(item.masterId == 2){
   this.itemForm.get('general')?.patchValue({
@@ -1638,8 +1623,19 @@ selectgroup(item:any,type:string)
 
  this.itemForm.get('vendor')?.patchValue({
     storeitemCode: item.itemCode,
-    storeitemName: item.itemName
+    storeitemName: item.name
   });
+    this.router.navigate(['/admin/item-master/create',item.id]);
+
+//     this.router.navigate(
+//   ['/admin/item-master/create',item.id],
+//   {
+//     queryParams: {
+//       tab: this.activeTab
+//     }
+//   }
+// );
+
   }else if(type === "vendorItem")
   {
  this.itemForm.get('vendoritem')?.patchValue({
@@ -1666,28 +1662,6 @@ selectgroup(item:any,type:string)
 }
 
 
-
-selectItemalter1(item: any) {
-  console.log(item)
-   const index = this.alternates.length - 1;
-
-if (index >= 0) {
-
-  this.alternates.at(index).patchValue({
-    al_item: item.item,
-    al_description: item.description,
-    al_commodityGroup: item.group,
-    al_commodityCode: item.code,
-    al_rotating: item.set
-  });
-
-  this.showCommodity = false;
-
-} else {
-  console.error('No rows available to patch');
-}
-}
-
 selectItemalter(item: any) {
   if (this.selectedRow != null && this.alternates.length > this.selectedRow) {
     const row = this.alternates.at(this.selectedRow);
@@ -1706,6 +1680,7 @@ selectItemalter(item: any) {
 
 itemlastId:any = '';
 itemstatus:any ='';
+itemname:any = '';
 
 setitemlastid() {
     const routeId = this.route.snapshot.paramMap.get('id');
@@ -1715,15 +1690,17 @@ setitemlastid() {
  if (isCreateMode) {
   this.masterService.getitemlastId().subscribe((res: any) => {
       const lastId = Number(res?.lastId ?? 0);
-  
       const finalId = lastId + 1;
       this.itemlastId = `ITEM-${String(finalId).padStart(5, '0')}`;    
 
   });
 }else{
     this.masterService.getItemById(this.selectedId).subscribe((res: any) => {
+    console.log("list"+res)
+
        this.itemlastId = res.itemSet,
-       this.itemstatus = res.status
+       this.itemstatus = res.status,
+       this.itemname = res.name
     })
 } 
 }
@@ -1756,4 +1733,38 @@ goBackTab() {
   }
 }
 
+downloadExcel(type: string) {
+
+   this.selectedAction = type;
+  if (type === "CommodityGroup") this.id = 1;
+  else if (type === "CommodityCode") this.id = 6;
+  else if (type === "Orderunit") this.id = 3;
+  else if (type === "Issueunit") this.id = 4;
+  else if (type === "Manufacturer") this.id = 5;
+  else if (type === "Meter") this.id = 7;
+
+  const masterId=this.id;
+
+  this.masterService.downloadExcel(masterId)
+.subscribe((response: Blob) => {
+
+      const blob = new Blob(
+        [response],
+        {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        }
+      );
+
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.download = `MasterDetails_${masterId}.xlsx`;
+
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+    });
+}
 }

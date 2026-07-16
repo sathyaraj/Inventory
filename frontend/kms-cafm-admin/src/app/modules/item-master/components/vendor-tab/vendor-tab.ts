@@ -8,12 +8,15 @@ import {
   ReactiveFormsModule,
   FormsModule
 } from '@angular/forms';
-import { LucideAngularModule, Search, ChevronsRight,ArrowDownNarrowWide,ArrowUpNarrowWide } from 'lucide-angular';
+import { LucideAngularModule, Search, ChevronsRight,ArrowDownNarrowWide,ArrowUpNarrowWide,Building2,X,Trash,Warehouse } from 'lucide-angular';
 import { ItemCreate } from '../../pages/item-create/item-create';
 import { Master } from '../../../../core/services/master';
 import { isActive } from '@angular/router';
 import { MessageBox } from '../../../../shared/message-box/message-box';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { Adminmaster } from '../../../../core/services/adminmaster';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 interface addstoreroomform{
  site: string,
@@ -36,7 +39,7 @@ interface addstoreroomlistform{
 @Component({
   selector: 'app-vendor-tab',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, MessageBox, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule, MessageBox, FormsModule,NgSelectModule],
   templateUrl: './vendor-tab.html',
   styleUrls: ['./vendor-tab.css'],
 })
@@ -57,6 +60,10 @@ sortDirection: 'asc' | 'desc' = 'asc';
   //@Input() itemId: any
   search = Search;
   chevronsright = ChevronsRight;
+  Building2 = Building2;
+  X=X;
+  trash=Trash;
+  warehouse=Warehouse;
 
   showStoreroom = false;
   showaddStoreroom = false;
@@ -72,12 +79,13 @@ set itemId(value: any) {
 
 }
 
-  constructor(private fb: FormBuilder,private ItemCreate:ItemCreate, private masterservice: Master,private cdr: ChangeDetectorRef) {}
+  constructor(private fb: FormBuilder,private ItemCreate:ItemCreate, private masterservice: Master,private adminMaster: Adminmaster,private cdr: ChangeDetectorRef, private unsavedService: UnsavedChangesService) {}
 
 ngOnInit(): void {
 
 
   this.loadMasters(this._itemId)
+  this.getStoreroomList()
 
   if (!this.form.get('storerooms')) {
   this.form.addControl('storerooms', this.fb.array([]));
@@ -104,7 +112,13 @@ ngOnInit(): void {
     site: ['']
   }));
     this.openitemlistgroup();   
+
+       this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
 }
+
+
 
 createStoreroom(data: any): FormGroup {
   return this.fb.group({
@@ -455,6 +469,7 @@ filterGroups(event: any) {
 
 // 🔍 Select Group
 selectGroup(group: any) {
+  console.log(group)
   this.form.patchValue({ 
      storeitemName: group.itemName,
        storeitemCode: group.itemCode
@@ -673,6 +688,76 @@ sortTable(field: string) {
   });
 
   this.currentPage = 1;
+}
+
+  siteOptions: any[] = [];
+  storeroomOptions: any[] = [];
+
+  titleItems: any[] = [];
+  items: any[] = [];
+
+getStoreroomList() {
+
+  this.adminMaster.storeroomList().subscribe(res => {
+
+    this.titleItems = (res as any[]) || [];
+
+    this.items = [...this.titleItems];
+
+    this.filteredItems = [...this.titleItems];
+
+    // Site Dropdown
+    this.siteOptions = [...new Map(
+      this.titleItems.map(x => [
+        x.site,
+        {
+          label: x.site,
+          value: x.site
+        }
+      ])
+    ).values()];
+
+    // Storeroom Dropdown
+    this.storeroomOptions = this.titleItems.map(x => ({
+      label: `${x.storeroomCode} - ${x.storeroomName}`,
+      value: x.storeroomCode
+    }));
+
+    this.cdr.detectChanges();
+
+  });
+
+}
+
+onSiteChange(event: any) {
+
+  const siteCode = event.value;
+
+  this.storeroomOptions = this.titleItems
+    .filter((x: any) => x.site === siteCode)
+    .map((x: any) => ({
+      label: `${x.storeroomCode}`,
+      value: x.storeroomCode,
+      description: x.storeroomName
+    }));
+
+}
+
+onStoreroomChange(event: any) {
+
+  const selectedStore = this.storeroomOptions.find(
+    (x: any) => x.value === event.value
+  );
+
+  if (selectedStore) {
+
+    this.addStoreForm.patchValue({
+      storename: selectedStore.value,
+      storedescription: selectedStore.description
+    });
+
+  }
+
 }
 
 

@@ -16,7 +16,7 @@
                 (blur)="closeDropdown()"
                 (input)="filterGroups($event)"
                 placeholder="Item Name"
-                class="w-85 h-6 border border-gray-300 px-2 py-[3px] bg-white" />
+                class="w-79 h-6 border border-gray-300 px-2 py-[3px] bg-white" />
 
               <!-- Dropdown -->
               <div *ngIf="showGroupDropdown"
@@ -41,15 +41,12 @@
           <label class="w-32 text-left">Current Level:</label> 
           <input formControlName="CurrentLevel" class="w-28 h-6 border border-gray-300 text-[12px] px-2 py-[4px]"> 
           <input formControlName="CurrentLevelCode" class="flex-1 h-6 border border-gray-300 text-[12px] px-2 py-[4px]">
-
-          
-
-
-
-         </div> <div class="flex items-center gap-2">
+         </div> 
+         <div class="flex items-center gap-2">
            <label class="w-32 text-left">Belongs To:</label> 
            <input type="text" formControlName="BelongsTo" class="flex-1 h-6 border border-gray-300 text-[12px] px-2 py-1 text-xs"> 
-          </div> <div class="flex items-center gap-2"> 
+          </div> 
+          <div class="flex items-center gap-2"> 
             <label class="w-32 text-left">Remarks:</label> 
             <input type="text" formControlName="Remarks" class="flex-1 h-6 border border-gray-300 text-[12px] px-2 py-1 text-xs">
            </div> 
@@ -189,7 +186,7 @@
             </tr>
 
             <!-- FILTER -->
-            <tr>
+            <tr *ngIf="assemblydetails && assemblydetails.length > 0">
               <th class="border border-gray-200 px-2 py-1">
 
                 <input

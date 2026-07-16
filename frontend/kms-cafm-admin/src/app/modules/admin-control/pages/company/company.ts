@@ -15,8 +15,14 @@ import { subscriptionFields } from '../../configs/subscription-fields/subscripti
 
 import { Adminmaster } from '../../../../core/services/adminmaster';
 import { LucideAngularModule } from 'lucide-angular';
-import {  Building2 } from 'lucide-angular';
+import {  Building2, User } from 'lucide-angular';
 import { ActivatedRoute } from '@angular/router';
+import {
+  Country,
+  State,
+  City
+} from 'country-state-city';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 @Component({
   selector: 'app-company',
@@ -32,7 +38,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class Company {
   
-
+countries: any[] = [];
+states: any[] = [];
+cities: any[] = [];
   // MESSAGE BOX
   showMessageBox = false;
 
@@ -41,7 +49,7 @@ export class Company {
   messageText = '';
 
   Building2 = Building2;
-
+  user = User;
   // STEPPER
   currentStep = 1;
 
@@ -49,20 +57,15 @@ export class Company {
 
   // DYNAMIC FIELDS
   companyFields = companyFields;
-
   addressFields = addressFields;
-
   subscriptionFields = subscriptionFields;
 
   // STEPS
   steps = [
 
     { id: 1, label: 'Company' },
-
     { id: 2, label: 'Address' },
-
     { id: 3, label: 'Subscription' },
-
     { id: 4, label: 'Review' }
 
   ];
@@ -70,7 +73,8 @@ export class Company {
   constructor(
     private fb: FormBuilder,
     private adminMaster: Adminmaster,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private unsavedService:UnsavedChangesService
   ) {
 
     // FORM
@@ -106,6 +110,10 @@ export class Company {
 
     });
 
+         this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
+
   }
   isEdit = false;
 companyId = 0;
@@ -123,10 +131,83 @@ ngOnInit() {
 
     //this.getUserById(this.userId);
       this.getCompany(this.companyId);
+  }
+   
+   this.countries = Country.getAllCountries();
 
+  const countryField =
+    this.addressFields.find(
+      x => x.controlName === 'country'
+    );
+
+  if (countryField) {
+
+    countryField.options =
+      this.countries.map(c => ({
+        label: c.name,
+        value: c.isoCode
+      }));
 
   }
 
+
+}
+
+onCountryChange(countryCode: string) {
+
+  this.states =
+    State.getStatesOfCountry(countryCode);
+
+  const stateField =
+    this.addressFields.find(
+      x => x.controlName === 'state'
+    );
+
+  if (stateField) {
+
+    stateField.options =
+      this.states.map(s => ({
+        label: s.name,
+        value: s.isoCode
+      }));
+
+  }
+
+  this.form.patchValue({
+    state: '',
+    city: ''
+  });
+
+}
+
+onStateChange() {
+
+  const countryCode =
+    this.form.get('country')?.value;
+
+  const stateCode =
+    this.form.get('state')?.value;
+
+  this.cities =
+    City.getCitiesOfState(
+      countryCode,
+      stateCode
+    );
+
+  const cityField =
+    this.addressFields.find(
+      x => x.controlName === 'city'
+    );
+
+  if (cityField) {
+
+    cityField.options =
+      this.cities.map(c => ({
+        label: c.name,
+        value: c.name
+      }));
+
+  }
 
 }
 
@@ -370,20 +451,16 @@ getCompany(id:number) {
             company_email: data.companyEmail,
             company_phone: data.companyPhone,
             business_type: data.businessType,
-
             address1: data.address1,
             address2: data.address2,
             country: data.country,
             state: data.state,
             city: data.city,
             postal_code: data.postalCode,
-
             subscription_plan:
               data.subscriptionPlan,
-
             user_limit:
               data.userLimit,
-
             expiry_date:
               data.expiryDate
 
@@ -396,6 +473,76 @@ getCompany(id:number) {
       }
 
     });
+
+}
+
+loadStates(countryCode: string) {
+
+  this.states =
+    State.getStatesOfCountry(countryCode);
+
+  const stateField =
+    this.addressFields.find(
+      x => x.controlName === 'state'
+    );
+
+  if (stateField) {
+
+    stateField.options =
+      this.states.map(s => ({
+        label: s.name,
+        value: s.isoCode
+      }));
+
+  }
+
+  this.form.patchValue({
+    state: '',
+    city: ''
+  });
+
+}
+
+loadCities(stateCode: string) {
+
+  const countryCode =
+    this.form.get('country')?.value;
+
+  this.cities =
+    City.getCitiesOfState(
+      countryCode,
+      stateCode
+    );
+
+  const cityField =
+    this.addressFields.find(
+      x => x.controlName === 'city'
+    );
+
+  if (cityField) {
+
+    cityField.options =
+      this.cities.map(c => ({
+        label: c.name,
+        value: c.name
+      }));
+
+  }
+
+}
+
+onFieldAction(event: any) {
+
+  switch(event.action) {
+
+    case 'loadStates':
+      this.loadStates(event.value);
+      break;
+
+    case 'loadCities':
+      this.loadCities(event.value);
+      break;
+  }
 
 }
 

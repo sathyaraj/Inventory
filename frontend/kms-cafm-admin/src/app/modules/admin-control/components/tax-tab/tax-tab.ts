@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { LucideAngularModule } from 'lucide-angular';
 import { Save, RotateCcw } from 'lucide-angular';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 @Component({
   selector: 'app-tax-tab',
@@ -47,7 +48,8 @@ export class TaxTab {
     private fb: FormBuilder,
     private adminMaster: Adminmaster,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private unsavedService: UnsavedChangesService
   ) {}
 
   ngOnInit() {
@@ -74,6 +76,10 @@ export class TaxTab {
       this.getById(this.editId);
 
     }
+
+     this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
 
   }
   
@@ -248,7 +254,5 @@ export class TaxTab {
         }
 
       });
-
   }
-
 }

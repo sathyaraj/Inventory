@@ -86,19 +86,19 @@
     <lucide-icon
       *ngIf="field.icon"
       [img]="field.icon"
-      class="w-4 h-4"
+      class="w-4 h-4 cursor-pointer"
       (click)="openCommodityHandler(field.controlName)"
     >
     </lucide-icon>
   </button>
 
   <div
-    *ngIf="showGroupDropdown  && field.controlName"
+*ngIf="showGroupDropdown && activeControl === field.controlName"
     class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50"
   >
     <div
       *ngFor="let group of filteredGroups"
-      (click)="selectGroup(group)"
+      (click)="selectGroup(group,field.controlName)"
       class="px-2 py-1 hover:bg-gray-100 cursor-pointer"
     >
       {{ group.name }}

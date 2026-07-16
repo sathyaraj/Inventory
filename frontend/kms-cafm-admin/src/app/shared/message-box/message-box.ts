@@ -28,6 +28,8 @@ export class MessageBox {
   }
 
   cancel() {
+            console.log('Cancel button clicked');
+
     this.onCancel.emit();
   }
 
@@ -65,4 +67,6 @@ export class MessageBox {
 //     setTimeout(() => this.cancel(), 3000);
 //   }
 // }
+
+
 }

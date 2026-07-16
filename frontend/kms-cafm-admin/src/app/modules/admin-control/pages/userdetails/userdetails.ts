@@ -12,6 +12,7 @@ import { User } from 'lucide-angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageBox } from '../../../../shared/message-box/message-box';
 import { FieldConfig } from '../../validators/input-interface';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 @Component({
   selector: 'app-userdetails',
@@ -41,7 +42,7 @@ export class Userdetails {
   { id: 4, label: 'Review' }
 ];
 
- constructor(private fb: FormBuilder, private adminMaster: Adminmaster, private route: ActivatedRoute,private router: Router, private chr: ChangeDetectorRef) {
+ constructor(private fb: FormBuilder, private adminMaster: Adminmaster, private route: ActivatedRoute,private router: Router, private chr: ChangeDetectorRef, private unsavedService:UnsavedChangesService) {
 
  this.form = this.fb.group({
 
@@ -111,7 +112,9 @@ isEdit = false;
 
   this.getRoles();
 
-
+   this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
 
 }
 
@@ -244,7 +247,8 @@ getUserById(id: number) {
 
           address1: res.address1,
           address2: res.address2,
-          country: res.country,
+
+         country: res.country,
           city: res.city,
 
           role: res.role,

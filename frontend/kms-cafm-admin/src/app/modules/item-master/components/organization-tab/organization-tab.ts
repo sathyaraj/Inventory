@@ -6,6 +6,7 @@ import { MessageBox } from '../../../../shared/message-box/message-box';
 import { LucideAngularModule,
   Search,ArrowBigLeft,ArrowBigRight,ArrowDownNarrowWide,ArrowUpNarrowWide
 } from 'lucide-angular';
+import { UnsavedChangesService } from '../../../../core/services/unsaved-changed';
 
 interface Assmbly {
   item: string;
@@ -42,7 +43,7 @@ export class OrganizationTab implements OnInit {
 
 }
 
-  constructor(private fb: FormBuilder, private MasterService : Master, private chr : ChangeDetectorRef) {}
+  constructor(private fb: FormBuilder, private MasterService : Master, private chr : ChangeDetectorRef, private unsavedService: UnsavedChangesService) {}
 
   ngOnInit(): void {
     if (!this.form) {
@@ -64,6 +65,10 @@ export class OrganizationTab implements OnInit {
     this.form.addControl('assemblydetails', this.fb.array([]));
 
   this.openitemlistgroup();
+
+     this.form.valueChanges.subscribe(() => {
+  this.unsavedService.setDirty(this.form.dirty);
+});
     
   }
 

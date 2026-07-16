@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { ChangeDetectorRef, Component, Input, SimpleChange, SimpleChanges } from '@angular/core';
+import {FormArray,FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators} from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
-import {
-  Search,
-  ChevronsRight,
-  ArrowDownNarrowWide,
-  ArrowUpNarrowWide
-} from 'lucide-angular';
+import {Search,ChevronsRight,ArrowDownNarrowWide,ArrowUpNarrowWide} from 'lucide-angular';
+import { ItemCreate } from '../../../item-master/pages/item-create/item-create';
+import { Master } from '../../../../core/services/master';
+import { ServiceCreate } from '../../pages/service-create/service-create';
+import { Adminmaster } from '../../../../core/services/adminmaster';
+import { MessageBox } from '../../../../shared/message-box/message-box';
+interface supplierdetails {
+  name: string;
+  LeadTimeDays: string;
+  TaxExempt: string;
+  DefaultVendor: string;
+  organization: string;
+  site: string;
+}
 
 @Component({
   selector: 'app-supplier-tab',
@@ -23,7 +24,8 @@ import {
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    LucideAngularModule
+    LucideAngularModule,
+    MessageBox
   ],
   templateUrl: './supplier-tab.html',
   styleUrl: './supplier-tab.css'
@@ -31,8 +33,8 @@ import {
 export class SupplierTab {
 
   showMessageBox: boolean = false;
-messageTitle: string = '';
-messageText: string = '';
+  messageTitle: string = '';
+  messageText: string = '';
 
   @Input() form!: FormGroup;
 
@@ -49,12 +51,20 @@ messageText: string = '';
 
   sortColumn: string = '';
 
-sortDirection: 'asc' | 'desc' = 'asc';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
+    private _itemId: any;
 
-  constructor(private fb: FormBuilder) {}
+@Input()
+set serviceitemId(value: any) {
+  this._itemId = value;
+}
+
+  constructor(private fb: FormBuilder, private serviceCreate:ServiceCreate, private masterService: Master,private adminMaster: Adminmaster, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+
+        this.loadMasters(this._itemId,"ServiceItem")
 
     if (!this.form.get('venitemCode')) {
       this.form.addControl(
@@ -81,41 +91,188 @@ sortDirection: 'asc' | 'desc' = 'asc';
   get supplierdetails(): FormArray {
     return this.form.get('supplierdetails') as FormArray;
   }
+  
 
-  createVendorGroup(data?: any): FormGroup {
+  createVendorGroup(supplierdetails?: any): FormGroup {
     return this.fb.group({
-      id: [data?.id || 0],
-      pono: [data?.pono || '', Validators.required],
-      companyName: [data?.companyName || ''],
-      invoiceno: [data?.invoiceno || ''],
-      leadtimedelay: [data?.leadtimedelay || ''],
-      taxexempt: [data?.taxexempt || false]
+      id: [supplierdetails?.id || 0],
+      pono: [supplierdetails?.pono || '', Validators.required],
+      companyName: [supplierdetails?.companyName || ''],
+      invoiceno: [supplierdetails?.invoiceno || ''],
+      leadtimedelay: [supplierdetails?.leadtimedelay || ''],
+      taxexempt: [supplierdetails?.taxexempt || false]
     });
   }
 
-  addVendor(): void {
-    this.supplierdetails.push(
-      this.createVendorGroup()
-    );
+ 
+  addVendor(supplierdetails?: supplierdetails) {
+  this.supplierdetails.push(this.createVendorGroup(supplierdetails));
+
+  const newIndex = this.supplierdetails.length - 1;
+
+  // Open the newly added row
+  this.expandedIndex = newIndex;
+
+  // Move to the page where the new row exists
+  this.currentPage = Math.floor(newIndex / this.pageSize) + 1;
+}
+
+  toggleDetails(index: number) {
+    this.expandedIndex = this.expandedIndex === index ? null : index;
   }
 
-  saveVendor(index: number): void {
 
-    const rowData = this.supplierdetails.at(index).value;
+    saveVendor(event: any)  {
 
-    console.log('Saved Row:', rowData);
+  const vendordetails = this.supplierdetails.at(event).value;
+   this.expandedIndex = null;
 
-    this.expandedIndex = null;
-  }
+    const index = Number(event);
 
-  deleteVendor(index: number): void {
-
-    this.supplierdetails.removeAt(index);
-
-    if (this.expandedIndex === index) {
-      this.expandedIndex = null;
+    const vendorData = {
+      ...this.supplierdetails.at(index).value,
+      itemId: this._itemId,
+      type : 'ServiceItem'
+    };
+  this.masterService.vendordetails(vendorData).subscribe(res => {
+    if(res.success === true)
+    {
+        this.showMessageBox = true
+        this.messageTitle = 'Save';
+        this.messageText = "Saved supplier successfully"; 
     }
+     this.cdr.detectChanges(); 
+        
+     this.expandedIndex = null; // keep form open
+  });
+
+     this.messageTitle = 'Save';
+     this.messageText = 'Save Successfully';
+     this.showMessageBox = true;
+     this.expandedIndex = index; // keep form open
   }
+
+  // saveVendor(index: number): void {
+
+  //   const rowData = this.supplierdetails.at(index).value;
+
+  //   console.log('Saved Row:', rowData);
+
+  //   this.expandedIndex = null;
+  // }
+
+//   deleteIndex: number | null = null;
+
+// deleteVendor(id: number) {
+
+//   this.deleteIndex = id;
+
+//   this.messageTitle = 'Delete Confirmation';
+//   this.messageText = 'Are you sure you want to delete this vendor?';
+//   this.showMessageBox = false;
+// }
+
+// confirmDeleteVendor() {
+
+//     if (this.deleteIndex == null) return;
+
+//     this.masterService.vendordetaildelete(this.deleteIndex).subscribe({
+//     next: (res: any) => {
+
+//       this.messageTitle = 'Success';
+//       this.messageText = res.message;
+//       this.showMessageBox = true;
+
+//       this.deleteIndex = null;
+
+//     },
+
+//     error: (err: any) => {
+
+//       this.messageTitle = 'Error';
+//       this.messageText = err.error?.message || 'Delete failed';
+//       this.showMessageBox = true;
+
+//       this.deleteIndex = null;
+//     }
+//   });
+
+//   if (this.deleteIndex !== null) {
+//     this.supplierdetails.removeAt(this.deleteIndex);
+
+//     // Handle expanded row
+//     if (this.expandedIndex === this.deleteIndex) {
+
+//       this.expandedIndex = null;
+//     }
+//     else if (
+//       this.expandedIndex !== null &&
+//       this.expandedIndex > this.deleteIndex
+//     ) {
+
+//       this.expandedIndex--;
+//     }
+//   }
+
+//   this.showMessageBox = false;
+//   this.deleteIndex = null;
+// }
+
+deleteId: number | null = null;
+deleteIndex: number | null = null;
+
+showConfirmBox = false;
+
+deleteVendor(id: number, index: number) {
+
+  this.deleteId = id;
+  this.deleteIndex = index;
+
+  this.messageTitle = 'Delete Confirmation';
+  this.messageText = 'Are you sure you want to delete this vendor?';
+
+  this.showConfirmBox = true;
+}
+
+confirmDelete() {
+
+  if (this.deleteId == null || this.deleteIndex == null) {
+    return;
+  }
+
+  this.showConfirmBox = false;
+  this.supplierdetails.removeAt(this.deleteIndex!);
+
+  this.masterService.vendordetaildelete(this.deleteId)
+    .subscribe({
+      next: (res: any) => {
+
+        this.messageTitle = 'Success';
+        this.messageText = res.message || 'Deleted successfully';
+
+        this.showMessageBox = true;
+
+        this.deleteId = null;
+        this.deleteIndex = null;
+        this.cdr.detectChanges()
+      },
+
+      error: (err: any) => {
+
+        this.messageTitle = 'Error';
+        this.messageText =
+          err.error?.message || 'Delete failed';
+
+        this.showMessageBox = true;
+
+        this.deleteId = null;
+        this.deleteIndex = null;
+        this.cdr.detectChanges()
+      }
+    });
+}
+
+
 
   get totalPages(): number {
     return Math.ceil(
@@ -146,39 +303,25 @@ sortDirection: 'asc' | 'desc' = 'asc';
     }
   }
 
-  poNoFilter = '';
+poNoFilter = '';
 companyFilter = '';
 invoiceFilter = '';
 leadTimeFilter = '';
 taxFilter = '';
 
-allvendorsdetail: any[] = [];
+allsupplierdetails: any[] = [];
 
 applyFilters() {
 
-  const filtered = this.allvendorsdetail.filter((row: any) => {
+  const filtered = this.allsupplierdetails.filter((row: any) => {
 
     console.log('FULL ROW:', row);
 
-    const pono =
-      String(row.pono || '')
-        .toLowerCase();
-
-    const company =
-      String(row.companyname || '')
-        .toLowerCase();
-
-    const invoice =
-      String(row.invoiceno || '')
-        .toLowerCase();
-
-    const leadtime =
-      String(row.leadTimeDays || '')
-        .toLowerCase();
-
-    const tax =
-      String(row.taxExempt)
-        .toLowerCase();
+    const pono =String(row.pono || '').toLowerCase();
+    const company =String(row.companyname || '').toLowerCase();
+    const invoice =String(row.invoiceno || '').toLowerCase();
+    const leadtime =String(row.leadTimeDays || '').toLowerCase();
+    const tax =String(row.taxExempt).toLowerCase();
 
     console.log('ROW VALUES:', {
       pono,
@@ -278,5 +421,57 @@ columns = [
 editVendor(event: any) {
   console.log('Edit:', event);
 }
+
+openCommodityHandler(type: string) {
+  this.serviceCreate.openCommodityHandler(type)
+}
+
+ngOnChanges(changes: SimpleChanges) {
+  console.log("Changes:", changes);
+
+  if (changes['serviceitemId']?.currentValue) {
+    console.log("Received ID:", changes['serviceitemId'].currentValue);
+
+    setTimeout(() => {
+      this.loadItem(changes['serviceitemId'].currentValue);
+    });
+  }
+}
+
+loadItem(id: any) {
+  this.adminMaster.getServiceItemById(id).subscribe((res: any) => {  
+    console.log("API RESPONSE:", res);
+    this.form.patchValue({
+      venitemCode: res.serviceCode,
+      venitemName: res.serviceName
+    });
+  });
+}
+
+loadMasters(value: number,type:string) {
+  type="ServiceItem";
+  this.masterService.getvendorsItem(value,type).subscribe((res: any) => {
+
+    console.log('API RESPONSE:', res);
+
+    const data = Array.isArray(res) ? res : [];
+
+    this.allsupplierdetails = res;
+
+    this.supplierdetails.clear();
+
+    data.forEach((item: any) => {
+      this.supplierdetails.push(this.createVendorGroup(item));
+
+    });
+
+
+    console.log("FORM VALUE:", this.supplierdetails.value);
+
+    this.cdr.detectChanges();
+  });
+}
+
+
 
 }

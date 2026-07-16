@@ -3,15 +3,30 @@
   <div class=" bg-white shadow-lg flex flex-col overflow-hidden">
 
     <!-- HEADER -->
-    <div class="bg-gray-100 px-6 py-4 text-white">
+     <div class="flex items-center bg-gray-100 px-6 py-4 text-black">
+        <div
+          class="w-8 h-8 
+                 bg-gradient-to-br from-blue-500 to-indigo-600
+                 flex items-center justify-center shadow-lg "
+        >
 
-      <h1 class="text-[20px] font-bold text-black">
+          <lucide-icon
+            [img]="user"
+            class="w-8 h-8 text-white"
+          >
+          </lucide-icon>
+
+        </div>
+
+      <div class="px-3">
+      <h1 class="text-[20px] font-bold">
         Vendor Registration
       </h1>
 
-      <p class="text-sm text-black mt-1">
+      <p class="text-sm  mt-1">
         Create and manage your enterprise profile
       </p>
+      </div>
 
     </div>
 
@@ -87,7 +102,9 @@
 <div *ngIf="currentStep === 2">
  <app-dynamic-form
     [form]="form"
-    [fields]="addressFields">
+    [fields]="addressFields"
+     (fieldAction)="onFieldAction($event)"
+    >
   </app-dynamic-form>
 
 </div>
@@ -359,7 +376,7 @@
           (click)="submit()"
           class="px-6 py-2 bg-green-600 text-white  hover:bg-green-700"
         >
-         {{ form.value.company_name ? "Update" : "Submit"}} 
+         {{ isEdit  ? "Update" : "Submit"}} 
         </button>
 
       </div>

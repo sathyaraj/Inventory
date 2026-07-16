@@ -1,58 +1,71 @@
 <div [formGroup]="form"  class=" w-full bg-gray-200 text-xs font-sans" >
   <div class="p-3 bg-white">
 
-      <div class="px-2 py-1 mb-3">
+      <div class="px-2 py-1 mb-3 bg-blue-50">
     <span class="text-[14px] font-semibold text-indigo-700">
-      Basic Information
+      Primary Information
     </span>
   </div>
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-[40%_23%_30%] gap-6 mb-3">
 
       <!-- LEFT FORM -->
       <div class="space-y-1">
 
         <!-- Item -->
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Item*:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Item<span class="text-red-500 ml-1 text-[18px]">*</span> :</label>
           <input formControlName="itemCode" placeholder="code"  maxlength="10"  class="w-28 border border-gray-300 px-2 py-[4px] bg-white"> 
-          <!-- <input formControlName="itemName" placeholder="Item Description" class="flex-1 border border-gray-300 px-2 py-[4px]"> -->
-          <div class=" relative dropdown-wrapper-item">
-          <input
-              type="text"
-              formControlName="itemName"
-              (focus)="showStockDropdown=true"
-              (blur)="stockDropdown()"
-              (input)="filterStocks($event)"
-              placeholder="Item Name"
-              class="w-47 border border-gray-300 px-2 py-[4px]"
+              <div class="relative dropdown-wrapper-item w-47">
+              <input
+                type="text"
+                formControlName="itemName"
+                (focus)="showStockDropdown=true"
+                (blur)="stockDropdown()"
+                (input)="filterStocks($event)"
+                placeholder="Item Name"
+                class="w-full border border-gray-300 px-2 py-[4px] pr-10"
               />
 
-              <div *ngIf="showStockDropdown"
-              class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
+              <!-- Plus Icon Inside Input -->
+              <button
+                type="button"
+                (click)="openCommodityHandler('Item')"
+                class="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-200 p-1"
+              >
+                <lucide-icon
+                  [img]="plus"
+                  class="w-4 h-4 text-black cursor-pointer">
+                </lucide-icon>
+              </button>
 
+              <!-- Dropdown -->
               <div
-              *ngFor="let group of filteredStock"
-              (click)="selectStock(group)"
-              class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+                *ngIf="showStockDropdown"
+                class="absolute left-0 w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
 
-              {{group.itemCode}}-{{group.name}}
+                <div
+                  *ngFor="let group of filteredStock"
+                  (click)="selectStock(group)"
+                  class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+
+                  {{ group.itemCode }} - {{ group.name }}
+
+                </div>
+
+                <div
+                  *ngIf="filteredStock.length === 0"
+                  class="px-2 py-1 text-gray-400">
+
+                  No results
+
+                </div>
 
               </div>
 
-              <div *ngIf="filteredmeter.length===0"
-              class="px-2 py-1 text-gray-400">
-              No results
-              </div>
+            </div>
 
-              </div>
-              </div>
-          
-          <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
-          <lucide-icon [img]="plus" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('Item')"></lucide-icon>
-          </button>
-         
-          
         </div>
+
          <div *ngIf="isInvalid('itemCode')" class="text-red-500 text-xs ml-40">
             Item Code is required
           </div>
@@ -61,89 +74,106 @@
         <div class="space-y-1">
         <!-- Item Set -->
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Item RefNo:</label>
+          <label class="w-25 text-[14px] font-medium text-gray-700">Item RefNo:</label>
           <input formControlName="itemSet" readonly class="w-28 border border-gray-300 px-2 py-[4px] bg-white">
         </div>
         </div>
+
+        <div class="space-y-1">
+         <div class="flex items-center">
+          <label class="w-20 text-[14px] font-medium text-gray-700">Status:</label>
+
+                      <select formControlName="status"
+                    class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
+
+              <option value="" disabled selected>Select Status</option>
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="INACTIVE">INACTIVE</option>
+              <option value="PENDING">PENDING</option>
+              <option value="PLANNING">PLANNING</option>
+              <option value="PENDING_OBSOLESCENCE">PENDING OBSOLESCENCE</option>
+              <option value="OBSOLETE">OBSOLETE</option>
+
+            </select>
+
+          <!-- <input formControlName="status" class="border border-gray-300 px-2 py-[4px] w-75 bg-white"> -->
+          <!-- <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('Status')"></lucide-icon> -->
+        </div>
+        </div>
         
         </div>
 
-        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4"></div> -->
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
           <div class="space-y-1">
-        <!-- Commodity Group -->
-        <div class="flex items-center">
-          <label class="w-40 text-[14px]">Commodity Group:</label>
+            <div class="flex items-center">
+              <label class="w-40 text-[14px] font-medium text-gray-700">Commodity Group:</label>
 
-         <div class="relative w-75 dropdown-wrapper">
+            <div class="relative w-75 dropdown-wrapper">
+                  <input
+                    type="text"
+                    formControlName="commodityGroup"
+                    [value]="selectedGroupName"
+                  
+                    (focus)="onGroupFocus()"
+                    (blur)="closeDropdown()"
+                    (input)="filterGroups($event)"
+                    placeholder="Commodity Group"
+                    class="w-75 border border-gray-300 px-2 py-[3px] bg-white" />
 
-              <!-- Input -->
-              <input
-                type="text"
-                formControlName="commodityGroup"
-                [value]="selectedGroupName"
-               
-                (focus)="onGroupFocus()"
-                (blur)="closeDropdown()"
-                (input)="filterGroups($event)"
-                placeholder="Commodity Group"
-                class="w-75 border border-gray-300 px-2 py-[3px] bg-white" />
+                  <div *ngIf="showGroupDropdown"
+                      class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
 
-              <!-- Dropdown -->
-              <div *ngIf="showGroupDropdown"
-                  class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
+                    <div *ngFor="let group of filteredGroups"
+                        (click)="selectGroup(group)"
+                        class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+                      {{ group.commoditygroup }}
 
-                <div *ngFor="let group of filteredGroups"
-                    (click)="selectGroup(group)"
-                    class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
-                  {{ group.name }}
+                    </div>
+
+                    <div *ngIf="filteredGroups.length === 0" class="px-2 py-1 text-gray-400">
+                      No results
+                    </div>
+
+                  </div>
 
                 </div>
-
-                <div *ngIf="filteredGroups.length === 0" class="px-2 py-1 text-gray-400">
-                  No results
-                </div>
-
-              </div>
-
+                <!-- <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
+                  <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('CommodityGroup')"></lucide-icon>
+                </button> -->
             </div>
-                    <!-- <select 
-            formControlName="commodityGroup"
-            class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
-
-            <option value="">Select Group</option>
-
-            <option *ngFor="let group of commodityGroups" [value]="group.id">
-              {{ group.name }}
-            </option>
-
-          </select> -->
-          <!-- <input formControlName="commodityGroup" placeholder="code" class="w-28 border border-gray-300 px-2 py-[4px] bg-white"> -->
-          <!-- <input formControlName="commodityGroupDesc" placeholder="Description" class="flex-1 border border-gray-300 px-2 py-[4px] bg-white"> -->
-          <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
-              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('CommodityGroup')"></lucide-icon>
-            </button>
-        </div>
-        </div>
+          </div>
 
          <div class="space-y-1">
-        <!-- Commodity Code -->
-        <div class="flex items-center">
-          <label class="w-40 text-[14px]">Commodity Code:</label>
-              <input formControlName="commodityCode" readonly placeholder="code" class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
-          <!--<input formControlName="commodityCodeDesc" placeholder="Description" class="flex-1 border border-gray-300 px-2 py-[4px] bg-white"> -->
-          <!-- <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
-              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('CommodityCode')"></lucide-icon>
-            </button> -->
-            
-        </div>
+            <div class="flex items-center">
+              <label class="w-40 text-[14px] font-medium text-gray-700">Commodity Code:</label>
+                  <!-- <input formControlName="commodityCode" readonly placeholder="code" class="w-75 border border-gray-300 px-2 py-[4px] bg-white"> -->
+                                    <select
+                    formControlName="commodityCode"
+                    class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
+
+                    <option value="">
+                      Select Commodity Code
+                    </option>
+
+                    <option
+                      *ngFor="let code of commodityCodes"
+                      [value]="code.code">
+
+                      {{ code.code }} - {{ code.description }}
+
+                    </option>
+
+                  </select>
+                </div>
           </div>
         </div>
         
-      <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
-        <div class="space-y-1">
-        <!-- Meter Group -->
+      <!-- <div class="grid grid-cols-[40%_40%] gap-6 mb-3"> -->
+        <!-- <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Meter Group:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Meter Group:</label>
            <div class="relative w-75 dropdown-wrapper1">
           <input
           type="text"
@@ -174,34 +204,27 @@
 
           </div>
           </div>
-          <!-- <input formControlName="meterGroup" placeholder="code" class="w-28 border border-gray-300 px-2 py-[4px] bg-white">
-          <input formControlName="meterGroupDesc" placeholder="Description" class="flex-1 border border-gray-300 px-2 py-[4px] bg-white"> -->
           <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
               <lucide-icon [img]="plus" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('meterGroup')"></lucide-icon>
             </button>
             
         </div>
-        </div>
-        <div class="space-y-1">
-        <!-- Meter -->
+        </div> -->
+        <!-- <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Meter:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Meter:</label>
           <input formControlName="meter" readonly placeholder="code" class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
-          <!-- <input formControlName="meterDesc" placeholder="Description" class="flex-1 border border-gray-300 px-2 py-[4px] bg-white"> -->
-          <!-- <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
-              <lucide-icon [img]="chevronsright" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('CommodityGroup')"></lucide-icon>
-            </button> -->
         </div>
 
         </div>
-      </div>
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+      </div> -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
         <div class="space-y-1">
 
         <!-- Lot -->
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">LOT Type*:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">LOT Type<span class="text-red-500 ml-1 text-[18px]">*</span> :</label>
           <!-- <input formControlName="lotType" class="flex-1 border border-gray-300 px-2 py-[4px]" value="NOLOT"> -->
           <select 
             formControlName="lotType" 
@@ -210,16 +233,12 @@
             <option value="LOT">LOT</option>
             <option value="NOLOT">NOLOT</option>
           </select>
-
-          <!-- <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
-              <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('LotType')"></lucide-icon>
-            </button> -->
         </div>
         </div>
         <div class="space-y-1">
         <!-- Max Qty -->
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Order Quantity*:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Order Quantity<span class="text-red-500 ml-1 text-[18px]">*</span> :</label>
           <input formControlName="qty" placeholder="Quantity" (input)="checkQuantity('qty')" (keypress)="allowOnlyNumbers($event)" class="w-75 border border-gray-300 px-2 py-[4px]">
         </div>
         <div *ngIf="isInvalid('qty')" class="text-red-500 text-xs ml-40">
@@ -227,43 +246,89 @@
           </div>
         </div>
         </div>
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
           <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Model:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Model:</label>
           <input formControlName="model" class="w-75 border border-gray-300 px-2 py-[4px]">
         </div>
         </div>
         <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Serial No:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Serial No:</label>
           <input formControlName="serialno" class="w-75 border border-gray-300 px-2 py-[4px]">
         </div>
         </div>
         </div>
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
                 <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Manufacturer:</label>
-          <input formControlName="Manufacturer" class="w-75 border border-gray-300 px-2 py-[4px]">
-        </div>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Manufacturer:</label>
+          <!-- <input formControlName="Manufacturer" class="w-75 border border-gray-300 px-2 py-[4px]"> -->
+           <div class="relative w-75">
+
+                <input
+                  type="text"
+                  formControlName="Manufacturer"
+                  (focus)="showmeterDropdown = true"
+                  (blur)="closeMeterDropdown()"
+                  (input)="filterMeter($event)"
+                  placeholder="Manufacturer"
+                  class="w-full border border-gray-300 px-2 py-[3px] pr-10 bg-white"
+                />
+
+                <!-- Plus Icon inside input -->
+                <button
+                  type="button"
+                  class="absolute right-0 top-1/2 -translate-y-1/2 p-1 bg-gray-200"
+                  (click)="openCommodityHandler('Manufacturer')"
+                >
+                  <lucide-icon
+                    [img]="plus"
+                    class="w-4 h-4 text-black cursor-pointer">
+                  </lucide-icon>
+                </button>
+
+                <!-- Dropdown -->
+                <div
+                  *ngIf="showmeterDropdown"
+                  class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50"
+                >
+                  <div
+                    *ngFor="let group of filteredmeter"
+                    (click)="selectMeter(group)"
+                    class="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                  >
+                    {{ group.name }}
+                  </div>
+
+                  <div
+                    *ngIf="filteredmeter.length === 0"
+                    class="px-2 py-1 text-gray-400"
+                  >
+                    No results
+                  </div>
+                </div>
+
+              </div>
+            </div>
         </div>
                         <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Manufacturer Date:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Manufacturer Date:</label>
           <!-- <input type="date" formControlName="ManufactureDate"   class="w-75 border border-gray-300 px-2 py-[4px]" placeholder="dd/mm/yyyy"> -->
          <app-date-picker formControlName="ManufactureDate"></app-date-picker>
         </div>
         </div>
         </div>
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
          <div class="space-y-1">
 
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Warranty Period:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Warranty Period:</label>
           <input type="number" formControlName="period" placeholder="PERIOD" class="w-30 border border-gray-300 px-2 py-[4px]">
                       <select 
               formControlName="warrantyType" 
@@ -281,18 +346,18 @@
         </div>
         <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Warranty End Date:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Warranty End Date:</label>
           <!-- <input type="date" formControlName="WarEndDate" placeholder="END DATE" class="w-75 border border-gray-300 px-2 py-[4px]"> -->
                    <app-date-picker formControlName="WarEndDate"></app-date-picker>
         </div>
         </div>
         </div>
-        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
          <div class="space-y-1">
 
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Overall Remarks:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Overall Remarks:</label>
           <textarea 
   formControlName="overallremarks"
   placeholder="Enter remarks"
@@ -302,33 +367,40 @@
               
         </div>
         </div>
+        <div class="space-y-1">
+        <div class="flex items-center">
+          <label class="w-40 text-[14px] font-medium text-gray-700">Service Item:</label>
+          <input type="checkbox" formControlName="serviceitem">
         </div>
-  <div class=" px-2 py-1 mb-3">
+        </div>
+ 
+        </div>
+  <div class=" px-2 py-1 mb-3 bg-blue-50">
     <span class="text-[14px] font-semibold text-indigo-700">
       Inventory Control
     </span>
   </div>
-     <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
           <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Minimum Stock:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Minimum Stock:</label>
           <input formControlName="minimumStock" type="number" class="w-75 border border-gray-300 px-2 py-[4px]"  (input)="calculationsafetystocklevel()">
         </div>
         </div>
         <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Maximum Stock:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Maximum Stock:</label>
           <input formControlName="maximumStock" type="number" class="w-75 border border-gray-300 px-2 py-[4px]" (input)="calculationtotalstock()" >
         </div>
         </div>
         </div>
 
-         <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
           <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Reorder Level(%):</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Reorder Level(%):</label>
           <input formControlName="reorderLevel" class="w-75 border border-gray-300 px-2 py-[4px]" maxlength="3" type="number" (input)="calculationReorderLevel()">
         </div>
         <div *ngIf="form.controls['reorderLevel'].invalid && form.controls['reorderLevel'].touched"  class="text-red-500 text-xs ml-40">
@@ -337,46 +409,46 @@
         </div>
         <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Reorder Quantity:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Reorder Quantity:</label>
           <input formControlName="reorderQuantity" readonly class="w-75 border border-gray-300 px-2 py-[4px]">
         </div>
         </div>
         </div>
 
-        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
           <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Safety Stock:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Safety Stock:</label>
           <input formControlName="safetyStock" readonly class="w-75 border border-gray-300 px-2 py-[4px]">
         </div>
         </div>
         <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Lead Time (days):</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Lead Time (days):</label>
           <input formControlName="leadTime" class="w-75 border border-gray-300 px-2 py-[4px]">
         </div>
         </div>
         </div>
 
-        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
           <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Current Stock:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Current Stock:</label>
           <input formControlName="currentStock" type="number" class="w-75 border border-gray-300 px-2 py-[4px]">
         </div>
         </div>
       <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Total Stock:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Total Stock:</label>
           <input formControlName="totalStock" readonly class="w-75 border border-gray-300 px-2 py-[4px]">
         </div>
         </div>
         </div>
 
-         <div *ngIf="itemId" class="grid grid-cols-[40%_40%] gap-6 mb-3">
+         <div *ngIf="itemId" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
           <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Stock Return:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Stock Return:</label>
           <select 
             formControlName="stockreturn"
             class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
@@ -388,7 +460,7 @@
         </div>
       <div class="space-y-1">
          <div class="flex items-center">
-          <label class="w-40 text-[14px]">Return Reason:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Return Reason:</label>
         <textarea 
   formControlName="returnreason"
   placeholder="Enter Stock Return Reason"
@@ -400,63 +472,74 @@
         </div>
         </div>
 
-         <div class=" px-2 py-1 mb-3">
+         <div class=" px-2 py-1 mb-3 bg-blue-50">
     <span class="text-[14px] font-semibold text-indigo-700">
       Units & Conversion
     </span>
   </div>
 
-        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
         <div class="space-y-1">
 
               <div class="flex items-center">
-            <label class="w-40 text-[14px]">Order Unit:</label>
+            <label class="w-40 text-[14px] font-medium text-gray-700">Order Unit:</label>
 
-            <div class="relative w-75 dropdown-wrapper2">
+           <div class="relative w-75 dropdown-wrapper2">
 
-            <input
-            type="text"
-            formControlName="orderUnit"
-            [value]="selectedOrderUnit"
-            (focus)="showOrderUnitDropdown=true"
-            (blur)="closeOrderUnitDropdown()"
-            (input)="filterOrderUnit($event)"
-            placeholder="Order Unit"
-            class="w-75 border border-gray-300 px-2 py-[3px] bg-white"
-            />
+                      <input
+                        type="text"
+                        formControlName="orderUnit"
+                        [value]="selectedOrderUnit"
+                        (focus)="showOrderUnitDropdown = true"
+                        (blur)="closeOrderUnitDropdown()"
+                        (input)="filterOrderUnit($event)"
+                        placeholder="Order Unit"
+                        class="w-full border border-gray-300 px-2 py-[3px] pr-10 bg-white"
+                      />
 
-            <div *ngIf="showOrderUnitDropdown"
-            class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50">
+                      <!-- Search Icon inside input -->
+                      <button
+                        type="button"
+                        class="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-200 p-1"
+                        (click)="openCommodityHandler('Orderunit')"
+                      >
+                        <lucide-icon
+                          [img]="search"
+                          class="w-4 h-4 text-black cursor-pointer">
+                        </lucide-icon>
+                      </button>
 
-            <div
-            *ngFor="let unit of filteredOrderUnits"
-            (click)="selectOrderUnit(unit)"
-            class="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+                      <!-- Dropdown -->
+                      <div
+                        *ngIf="showOrderUnitDropdown"
+                        class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50"
+                      >
+                        <div
+                          *ngFor="let unit of filteredOrderUnits"
+                          (click)="selectOrderUnit(unit)"
+                          class="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                        >
+                          {{ unit.name }}
+                        </div>
 
-            {{unit.name}}
+                        <div
+                          *ngIf="filteredOrderUnits.length === 0"
+                          class="px-2 py-1 text-gray-400"
+                        >
+                          No results
+                        </div>
+                      </div>
 
-            </div>
-
-            <div *ngIf="filteredOrderUnits.length==0"
-            class="px-2 py-1 text-gray-400">
-            No results
-            </div>
-
-            </div>
-
-            </div>
-            <button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
-                          <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('Orderunit')"></lucide-icon>
-                        </button>
-            </div>
+                    </div>
+              </div>
         <!-- Order Unit -->
       
         </div>
         <div class="space-y-1">
         <!-- Issue Unit -->
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Issue Unit:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Issue Unit:</label>
           <input formControlName="issueUnit" readonly class="w-40 border border-gray-300 px-2 py-[4px] bg-white">
           <!--<button type="button" class="flex items-center justify-center ml-0 p-1  bg-gray-200 hover:bg-gray-100 ">
               <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('Issueunit')"></lucide-icon>
@@ -465,16 +548,16 @@
         </div>
         </div>
         </div>
-        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
         <!-- <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Stock/Base Quantity:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Stock/Base Quantity:</label>
               <input formControlName="baseqty"  class="w-75 border border-gray-300 px-2 py-[4px]" />
         </div>
         </div> -->
         <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Total order unit:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Total order unit:</label>
           <input formControlName="totalorderunit" readonly class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
         </div>
         </div>
@@ -483,23 +566,23 @@
         <!-- <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
         <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Total Quantity:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Total Quantity:</label>
               <input formControlName="totalqty" readonly  class="w-75 border border-gray-300 px-2 py-[4px]" />
         </div>
         </div>
         </div> -->
 
-          <div class=" px-2 py-1 mb-3">
+          <div class=" px-2 py-1 mb-3 bg-blue-50">
     <span class="text-[14px] font-semibold text-indigo-700">
       Costing Information
     </span>
   </div>
 
-        <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Order Unit Cost:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Order Unit Cost:</label>
           <input formControlName="orderunitCost" type="number"
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationorderofunit()">
         </div>
@@ -507,7 +590,7 @@
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Issue Unit Cost:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Issue Unit Cost:</label>
           <input formControlName="issueunitcost" type="number"
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
         </div>
@@ -517,11 +600,11 @@
 
 
     <!-- Row 1 -->
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Unit Cost:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Unit Cost:</label>
           <input formControlName="unitCost" readonly
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
         </div>
@@ -529,7 +612,7 @@
 <!-- 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Standard Cost:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Standard Cost:</label>
           <input formControlName="standardCost"
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
         </div>
@@ -539,11 +622,11 @@
 
 
     <!-- Row 2 -->
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Last Purchase Cost:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Last Purchase Cost:</label>
           <input formControlName="lastPurchaseCost" type="number"
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationlastPurchaseCost()">
         </div>
@@ -551,7 +634,7 @@
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Average Cost:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Average Cost:</label>
           <input formControlName="averageCost" readonly
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
         </div>
@@ -561,11 +644,11 @@
 
 
     <!-- Row 3 -->
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Currency:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Currency:</label>
 
           <select formControlName="currency"
                   class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
@@ -588,7 +671,7 @@
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Tax %:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Tax %:</label>
           <input formControlName="taxPercent" type="number"
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationfreight()">
         </div>
@@ -598,11 +681,11 @@
 
 
     <!-- Row 4 -->
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Discount %:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Discount %:</label>
           <input formControlName="discountPercent" type="number"
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationfreight()">
         </div>
@@ -610,7 +693,7 @@
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Freight Cost:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Freight Cost:</label>
           <input formControlName="freightCost" type="number"
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white" (input)="calculationfreight()">
         </div>
@@ -620,11 +703,11 @@
 
 
     <!-- Row 5 -->
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Landed Cost:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Landed Cost:</label>
           <input formControlName="landedCost"
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
         </div>
@@ -632,7 +715,7 @@
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Reorder Cost:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Reorder Cost:</label>
           <input formControlName="reorderCost" readonly 
                  class="w-75 border border-gray-300 px-2 py-[4px] bg-white" >
         </div>
@@ -642,11 +725,11 @@
 
 
     <!-- Row 6 -->
-    <div class="grid grid-cols-[40%_40%] gap-6 mb-3">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
 
       <div class="space-y-1">
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Costing Method:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Costing Method:</label>
 
           <select formControlName="costingMethod"
                   class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
@@ -662,14 +745,14 @@
       <div class="space-y-1">
         <!-- Receipt -->
         <div class="flex items-center">
-          <label class="w-40 text-[14px]">Receipt Tolerance %:</label>
+          <label class="w-40 text-[14px] font-medium text-gray-700">Receipt Tolerance %:</label>
           <input formControlName="receiptTolerance" class="w-75 border border-gray-300 px-2 py-[4px] bg-white">
         </div>
         </div>
 
     </div>
 
-     <div class=" px-2 py-1 mb-3">
+     <div class=" px-2 py-1 mb-3 bg-blue-50">
     <span class="text-[14px] font-semibold text-indigo-700">
       Item Controls
     </span>
@@ -677,7 +760,7 @@
 
  
 
-        <div class="grid grid-cols-[40%_40%] gap-6">
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-[2px] mt-2 ">
           <div class="flex items-center">
           <label class="flex items-center gap-2 py-1 w-40 text-[14px]">
@@ -696,7 +779,7 @@
           </div>
           </div>
 
-           <div class="grid grid-cols-[40%_40%] gap-6">
+           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="space-y-[2px] mt-2">
             <div class="flex items-center">
               <label class="w-40 flex items-center gap-2 py-1 text-[14px]">
@@ -715,7 +798,7 @@
             </div>
             </div>
 
-            <div class="grid grid-cols-[40%_40%] gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="space-y-[2px] mt-2">
                <div class="flex items-center">
           <label class="w-40 flex items-center gap-2 py-1 text-[14px]">
@@ -734,7 +817,7 @@
           </div>
           </div>
 
-          <div class="grid grid-cols-[40%_40%] gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="space-y-[2px] mt-2">
               <div class="flex items-center">
           <label class="flex w-40 items-center gap-2 py-1 text-[14px]">
@@ -752,45 +835,6 @@
           </div>
           </div>
         </div>
-
-          <div class=" px-2 py-1 mb-3">
-    <span class="text-[14px] font-semibold text-indigo-700">
-      Status
-    </span>
-  </div>
-
-             <!-- RIGHT SETTINGS -->
-       <div class="grid grid-cols-[40%_40%] gap-6">
-
-      <!-- <div class="space-y-1 col-span-1">
-        <div class="flex items-center">
-          <label class="w-40 text-[14px]">Item Image:</label>
-          <input type="file" formControlName="image" class="flex-1 border border-gray-300 px-2 py-[4px]" />
-        </div>
-        </div> -->
-        <div class="space-y-1">
-        <div class="flex items-center">
-          <label class="w-40 text-[14px]">Status:</label>
-
-                      <select formControlName="status"
-                    class="w-75 border border-gray-300 px-2 py-[3px] bg-white">
-
-              <option value="" disabled selected>Select Status</option>
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="PENDING">PENDING</option>
-              <option value="PLANNING">PLANNING</option>
-              <option value="PENDING_OBSOLESCENCE">PENDING OBSOLESCENCE</option>
-              <option value="OBSOLETE">OBSOLETE</option>
-
-            </select>
-
-          <!-- <input formControlName="status" class="border border-gray-300 px-2 py-[4px] w-75 bg-white"> -->
-          <!-- <lucide-icon [img]="search" class="w-4 h-4 text-black ml-1 cursor-pointer relative right-[3px]" (click)="openCommodityHandler('Status')"></lucide-icon> -->
-        </div>
-        </div>
-        </div>
-
-
       <!-- IMAGE -->
        <!-- <div class="grid grid-cols-[40%_40%] gap-6">
 
