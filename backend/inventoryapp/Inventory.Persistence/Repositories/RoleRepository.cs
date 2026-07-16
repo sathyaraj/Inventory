@@ -58,5 +58,6 @@ namespace Inventory.Persistence.Repositories
                 .Include(x => x.RolePermissions)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Inventory.Application.Servies
 {
@@ -78,9 +79,11 @@ namespace Inventory.Application.Servies
             await _repo.UpdateRangeAsync(items);
         }
 
-        public async Task<List<VendorItem>> GetByItemIdAsync(int itemId)
+        public async Task<List<VendorItem>> GetByItemIdAsync(int itemId, string type)
         {
-            return await _repo.GetByItemIdAsync(itemId);
+            
+            return await _repo.GetByItemIdAsync(itemId,type);
+
         }
     }
 }

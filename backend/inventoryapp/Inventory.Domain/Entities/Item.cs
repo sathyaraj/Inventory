@@ -113,6 +113,8 @@ namespace Inventory.Domain.Entities
 
         public DateTime? CreatedDate { get; set; }
 
+        public bool ServiceItem {get; set;}
+
         public int? UseId { get; set; }
 
         public List<AlternatesItem>? Alternates { get; set; }

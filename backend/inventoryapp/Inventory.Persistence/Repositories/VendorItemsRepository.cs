@@ -9,6 +9,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Inventory.Persistence.Repositories
 {
@@ -82,11 +83,18 @@ namespace Inventory.Persistence.Repositories
         //    }
         //}
 
-        public async Task<List<VendorItem>> GetByItemIdAsync(int itemId)
+        public async Task<List<VendorItem>> GetByItemIdAsync(int itemId,string type)
         {
-            return await _context.VendorItems
-                .Where(x => x.ItemId == itemId && x.Status == true)
+
+            var data = await _context.VendorItems
+                .Where(x => x.ItemId == itemId &&
+                            x.Status == true &&
+                            x.Type == type && x.IsDelete != "D")
                 .ToListAsync();
+
+
+            return data;
+
         }
 
         public async Task<List<VendorItem>> GetByItemIdonlyAsync(int itemId)

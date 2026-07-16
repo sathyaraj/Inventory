@@ -15,6 +15,7 @@ using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
+//builder.WebHost.UseUrls("http://0.0.0.0:10000");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
@@ -60,7 +61,7 @@ builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<DashboardService>();
 
 builder.Services.AddScoped<ICurrencyRepository,CurrencyRepository>();
-
+ 
 builder.Services.AddScoped<CurrencyService>();
 
 builder.Services.AddScoped<IDiscountRepository,DiscountRepository>();
@@ -95,6 +96,15 @@ builder.Services.AddScoped<IServiceItemRepository,ServiceItemRepository>();
 
 builder.Services.AddScoped<ServiceItemService>();
 
+builder.Services.AddScoped<ICommodityGroupRepository,CommodityGroupRepository>();
+
+builder.Services.AddScoped<CommodityGroupService>();
+
+builder.Services.AddScoped<StoreroomCreateService>();
+
+builder.Services.AddScoped<IStoreroomRepository, StoreroomCreateRepository>();
+
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -124,17 +134,31 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowAll",
+//        policy =>
+//        {
+//            policy.AllowAnyOrigin()
+//                   .AllowAnyHeader()
+//                   .AllowAnyMethod();
+//        });
+//});
+
+
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+            "https://kms-cafm-admin.sathyaraj-air.workers.dev",
+            "http://localhost:4200"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
 });
-
 
 
 //builder.Services.AddCors(options =>
@@ -148,20 +172,23 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseStaticFiles();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+app.UseRouting();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
+ 
 app.Run();

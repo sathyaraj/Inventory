@@ -16,6 +16,6 @@ namespace Inventory.Domain.Entities
 
         public string Description { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public string IsActive { get; set; }
     }
 }

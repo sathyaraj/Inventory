@@ -19,7 +19,7 @@ namespace Inventory.Application.Interface
 
         Task UpdateRangeAsync(List<VendorItem> vendorItems);
 
-        Task<List<VendorItem>> GetByItemIdAsync(int itemId);
+        Task<List<VendorItem>> GetByItemIdAsync(int itemId, string type);
 
         Task<List<VendorItem>> GetByItemIdonlyAsync(int itemId);
 

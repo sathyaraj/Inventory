@@ -16,5 +16,7 @@ namespace Inventory.Application.Interface
         Task<Role> GetRoleByNameAsync(string roleName);
 
         Task<Role> GetByIdAsync(int id);
+
+
     }
 }

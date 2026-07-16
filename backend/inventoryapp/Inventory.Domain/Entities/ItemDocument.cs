@@ -15,6 +15,8 @@ namespace Inventory.Domain.Entities
 
         public int? UseId { get; set; }
 
+        public string? Type { get; set; }
+
         public bool Status { get; set; } = false; // Active / Inactive
 
         public string IsDelete { get; set; } = "A";

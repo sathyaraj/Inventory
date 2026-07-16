@@ -24,6 +24,7 @@ namespace Inventory.API.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Save(
            [FromForm] int itemId,
+           [FromForm] string type,
            [FromForm] List<string> names,
            [FromForm] List<IFormFile> files)
         {
@@ -84,7 +85,8 @@ namespace Inventory.API.Controllers
                     {
                         ItemId = itemId,
                         Name = names[i] ?? "",
-                        DocumentPath = filePath 
+                        DocumentPath = filePath,
+                        Type = type
                     });
                 }
 
@@ -116,6 +118,13 @@ namespace Inventory.API.Controllers
 
         }
 
+        //[HttpGet("by-item/{itemId}")]
+        //public async Task<IActionResult> GetByItem(int itemId)
+        //{
+        //    var result = await _service.GetByItemIdAsync(itemId);
+        //    return Ok(result);
+        //}
+
         [HttpGet("by-item/{itemId}")]
         public async Task<IActionResult> GetByItem(int itemId)
         {
@@ -124,11 +133,11 @@ namespace Inventory.API.Controllers
         }
 
         [HttpPut("update-status/{itemId}")]
-        public async Task<IActionResult> UpdateStatus(int itemId, [FromBody] bool status)
+        public async Task<IActionResult> UpdateStatus(int itemId, [FromBody] string type)
         {
             try
             {
-                await _service.UpdateStatusAsync(itemId, status);
+                await _service.UpdateStatusAsync(itemId, type);
                 return Ok(new {
                     success = true,
                     message = "Status updated" });
@@ -160,6 +169,15 @@ namespace Inventory.API.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _service.GetAllAsync();
+
+            return Ok(result);
+        }
+
 
     }
 }

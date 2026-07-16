@@ -21,6 +21,7 @@ namespace Inventory.Domain.Entities
 
         public bool Status { get; set; } = false; // Active / Inactive
 
+        public string? Type { get; set; }
         public string IsDelete { get; set; } = "A";
         public int? UseId { get; set; }
         public DateTime CreateTime { get; set; } = DateTime.Now;

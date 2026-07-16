@@ -20,8 +20,14 @@ namespace Inventory.Domain.Entities
 
         public decimal ReceiptTolerance { get; set; }
 
-        public string OrderUnit { get; set; } = string.Empty;
-        public string IssueUnit { get; set; } = string.Empty;
+        public string OrderUnit { get; set; }
+        public string IssueUnit { get; set; }
+
+        public bool TaxExempt { get; set; }
+
+        public string Taxcode { get; set; }
+
+        public string CostCenter { get; set; }
 
         public decimal MinimumServiceCost { get; set; }
         public decimal MaximumServiceCost { get; set; }
@@ -34,6 +40,8 @@ namespace Inventory.Domain.Entities
         public bool ActiveForWorkOrder { get; set; }
         public bool Prorate { get; set; }
         public bool InspectionRequired { get; set; }
+
+        public DateTime Created { get; set; } = DateTime.Now;
 
         public int? UseId { get; set; }
     }

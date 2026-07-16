@@ -65,11 +65,34 @@ namespace Inventory.Persistence.Context
 
         public DbSet<CostCode> CostCodes { get; set; }
 
+        public DbSet<CommodityGroup> CommodityGroups { get; set; }
 
+        public DbSet<CommodityCode> CommodityCodes { get; set; }
 
+        public DbSet<Storeroom> Storerooms { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<CommodityGroup>()
+           .HasKey(x => x.Id);
+
+            modelBuilder.Entity<CommodityCode>()
+           .HasKey(x => x.Id);
+
+            modelBuilder.Entity<CommodityGroup>()
+            .HasMany(x => x.CommodityCodes)
+            .WithOne(x => x.CommodityGroup)
+            .HasForeignKey(x => x.CommodityGroupId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CommodityGroup>()
+            .Property(x => x.Commoditygroup)
+            .HasMaxLength(100);
+
+            modelBuilder.Entity<CommodityCode>()
+                .Property(x => x.Code)
+                .HasMaxLength(50);
 
             modelBuilder.Entity<Stocklist>()
                 .HasIndex(x => x.ItemId)

@@ -475,7 +475,7 @@ namespace Inventory.API.Controllers
         }
 
 
-        [HttpGet("export-items")]
+    [HttpGet("export-items")]
     public async Task<IActionResult> ExportItems(DateTime? fromDate,
     DateTime? toDate)
     {

@@ -88,5 +88,10 @@ namespace Inventory.Persistence.Repositories
 
             return result > 0;
         }
+
+        public async Task<List<ItemDocument>> GetAllAsync()
+        {
+            return await _context.ItemDocuments.ToListAsync();
+        }
     }
 }

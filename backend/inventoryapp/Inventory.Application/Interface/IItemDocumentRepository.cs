@@ -20,5 +20,7 @@ namespace Inventory.Application.Interface
 
         Task<bool> DeleteAsync(int id);
 
+        Task<List<ItemDocument>> GetAllAsync();
+
     }
 }

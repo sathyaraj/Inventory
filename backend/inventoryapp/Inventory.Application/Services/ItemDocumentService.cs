@@ -61,13 +61,13 @@ namespace Inventory.Application.Services
         //    await _context.SaveChangesAsync();
         //}
 
-        public async Task UpdateStatusAsync(int itemId, bool status)
+        public async Task UpdateStatusAsync(int itemId, string type)
         {
             var items = await _repo.GetByItemIdAsync(itemId);
 
             foreach (var item in items)
             {
-                item.Status = status;
+                item.Status = true;
 
                 if (item.IsDelete == "P")
                 {
@@ -82,6 +82,12 @@ namespace Inventory.Application.Services
         public async Task<bool> DeleteItem(int id)
         {
             return await _repo.DeleteAsync(id); // clean
+        }
+
+
+        public async Task<List<ItemDocument>> GetAllAsync()
+        {
+            return await _repo.GetAllAsync();
         }
 
 

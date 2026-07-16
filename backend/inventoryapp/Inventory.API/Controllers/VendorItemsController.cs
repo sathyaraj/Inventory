@@ -47,9 +47,9 @@ namespace Inventory.API.Controllers
 
         // 🔍 GET BY ID (EDIT)
         [HttpGet("{ItemId}")]
-        public async Task<IActionResult> GetById(int ItemId)
+        public async Task<IActionResult> GetById(int ItemId, [FromQuery] string type)
         {
-            var data = await _service.GetByItemIdAsync(ItemId);
+            var data = await _service.GetByItemIdAsync(ItemId, type);
             return Ok(data);
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Inventory.Domain.Entities
@@ -24,6 +25,7 @@ namespace Inventory.Domain.Entities
 
         public bool Approve { get; set; }
 
+        [JsonIgnore]
         public Role? Role { get; set; }
     }
 }
