@@ -1,0 +1,208 @@
+<form [formGroup]="roleForm">
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+  <!-- LEFT -->
+  <div class="bg-white rounded-2xl shadow-sm border p-6">
+
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">
+      Create Role
+    </h2>
+
+    <p class="text-gray-500 mb-6">
+      Add new role and assign permissions
+    </p>
+
+    <!-- ROLE NAME -->
+    <div class="mb-5">
+
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Role Name
+      </label>
+
+      <input
+        type="text"
+        formControlName="role_name"
+        placeholder="Enter role name"
+        class="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-300"
+      >
+
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="mb-5">
+
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Description
+      </label>
+
+      <textarea
+        rows="4"
+        formControlName="description"
+        placeholder="Enter description"
+        class="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-300"
+      ></textarea>
+
+    </div>
+
+    <!-- STATUS -->
+    <div class="flex items-center gap-3">
+
+      <input
+        type="checkbox"
+        formControlName="is_active"
+      >
+
+      <label class="text-sm text-gray-700">
+        Active Role
+      </label>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border p-6">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-6">
+
+      <div>
+
+        <h2 class="text-2xl font-bold text-gray-800">
+          Assign Permissions
+        </h2>
+
+        <p class="text-gray-500 text-sm mt-1">
+          Select module permissions
+        </p>
+
+      </div>
+
+      <label class="flex items-center gap-2 text-sm text-gray-700">
+
+        <input
+          type="checkbox"
+          (change)="selectAll($event)"
+        >
+
+        Select All
+
+      </label>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="overflow-auto">
+
+      <table class="w-full border-collapse">
+
+        <thead>
+
+          <tr class="bg-gray-50">
+
+            <th class="border p-3 text-left">
+              Module
+            </th>
+
+            <th class="border p-3">
+              Create
+            </th>
+
+            <th class="border p-3">
+              Read
+            </th>
+
+            <th class="border p-3">
+              Update
+            </th>
+
+            <th class="border p-3">
+              Delete
+            </th>
+
+            <th class="border p-3">
+              Approve
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let item of modules"
+            class="hover:bg-gray-50"
+          >
+
+            <td class="border p-3 font-medium">
+              {{ item.module }}
+            </td>
+
+            <td class="border text-center">
+              <input
+                type="checkbox"
+                [(ngModel)]="item.permissions.create"
+                [ngModelOptions]="{standalone: true}"
+              >
+            </td>
+
+            <td class="border text-center">
+              <input
+                type="checkbox"
+                [(ngModel)]="item.permissions.read"
+                [ngModelOptions]="{standalone: true}"
+              >
+            </td>
+
+            <td class="border text-center">
+              <input
+                type="checkbox"
+                [(ngModel)]="item.permissions.update"
+                [ngModelOptions]="{standalone: true}"
+              >
+            </td>
+
+            <td class="border text-center">
+              <input
+                type="checkbox"
+                [(ngModel)]="item.permissions.delete"
+                [ngModelOptions]="{standalone: true}"
+              >
+            </td>
+
+            <td class="border text-center">
+              <input
+                type="checkbox"
+                [(ngModel)]="item.permissions.approve"
+                [ngModelOptions]="{standalone: true}"
+              >
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- BUTTON -->
+    <div class="flex justify-end mt-6">
+
+      <button
+        type="button"
+        (click)="saveRole()"
+        class="px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow"
+      >
+        Save Role
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+</form>

@@ -1,0 +1,157 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold text-gray-800">
+      Consignment Stock Management
+    </h1>
+
+    <button
+      class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+      (click)="openCreateModal()">
+      + New Consignment Entry
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+
+    <div class="bg-white p-4 rounded-2xl shadow-sm">
+      <p class="text-gray-500 text-sm">Active Vendors</p>
+      <h2 class="text-xl font-bold mt-2">12</h2>
+    </div>
+
+    <div class="bg-white p-4 rounded-2xl shadow-sm">
+      <p class="text-gray-500 text-sm">Total Consignment Items</p>
+      <h2 class="text-xl font-bold mt-2">85</h2>
+    </div>
+
+    <div class="bg-white p-4 rounded-2xl shadow-sm">
+      <p class="text-gray-500 text-sm">Consumed This Month</p>
+      <h2 class="text-xl font-bold mt-2">1,240 Units</h2>
+    </div>
+
+    <div class="bg-white p-4 rounded-2xl shadow-sm">
+      <p class="text-gray-500 text-sm">Pending Invoice</p>
+      <h2 class="text-xl font-bold text-orange-500 mt-2">6</h2>
+    </div>
+
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white p-4 rounded-2xl shadow-sm mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+      <input type="text"
+        placeholder="Search Item / Vendor..."
+        class="border rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+
+      <select class="border rounded px-3 py-2">
+        <option>All Vendors</option>
+      </select>
+
+      <select class="border rounded px-3 py-2">
+        <option>All Storerooms</option>
+      </select>
+
+      <select class="border rounded px-3 py-2">
+        <option>Stock Status</option>
+        <option>Available</option>
+        <option>Low</option>
+        <option>Expired</option>
+      </select>
+
+      <button class="bg-gray-200 rounded px-4 py-2">
+        Reset
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+
+    <table class="w-full text-sm">
+      <thead class="bg-gray-100 text-gray-600">
+        <tr>
+          <th class="p-3 text-left">Vendor</th>
+          <th class="p-3 text-left">Item</th>
+          <th class="p-3 text-left">Storeroom</th>
+          <th class="p-3 text-left">Available Qty</th>
+          <th class="p-3 text-left">Consumed Qty</th>
+          <th class="p-3 text-left">Unit Cost</th>
+          <th class="p-3 text-left">Expiry Date</th>
+          <th class="p-3 text-left">Status</th>
+          <th class="p-3 text-left">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr class="border-t hover:bg-gray-50">
+          <td class="p-3">ABC Suppliers</td>
+          <td class="p-3">Industrial Gloves</td>
+          <td class="p-3">Main Warehouse</td>
+          <td class="p-3 font-semibold">450</td>
+          <td class="p-3">120</td>
+          <td class="p-3">₹75</td>
+          <td class="p-3">30-06-2026</td>
+          <td class="p-3">
+            <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
+              Available
+            </span>
+          </td>
+          <td class="p-3 space-x-2">
+            <button class="text-indigo-600">View</button>
+            <button class="text-gray-500">Invoice</button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-end mt-4">
+    <button class="px-3 py-1 border rounded mr-2">Prev</button>
+    <button class="px-3 py-1 border rounded">Next</button>
+  </div>
+
+</div>
+@if (showCreateModal) {
+
+  <div class="fixed inset-0 z-[1000] flex items-center justify-center">
+
+    <!-- Background -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+         (click)="closeCreateModal()">
+    </div>
+
+    <!-- Modal -->
+    <div class="relative bg-white w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden">
+
+      <!-- Header -->
+      <div class="flex justify-between items-center px-6 py-4 border-b bg-gray-50">
+        <h2 class="text-lg font-semibold text-gray-800">
+          Consignment
+        </h2>
+
+        <button (click)="closeCreateModal()"
+                class="text-gray-400 hover:text-red-500 text-xl">
+          ✕
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6 max-h-[80vh] overflow-y-auto">
+        <app-consignment-modal
+          (close)="closeCreateModal()">
+        </app-consignment-modal>
+      </div>
+
+    </div>
+
+  </div>
+
+}

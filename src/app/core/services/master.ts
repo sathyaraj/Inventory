@@ -1,0 +1,264 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environment/environment';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class Master {
+
+    //private apiUrl = 'https://localhost:7108/api/Masterdetail';
+    //private baseUrl = 'https://localhost:7108/api';
+
+private baseUrl = environment.apiUrl
+
+
+  constructor(private http: HttpClient) {}
+
+  createMaster(data: any) {
+    return this.http.post(`${this.baseUrl}/Masterdetail`, data);
+  }
+
+  getMasters() {
+    return this.http.get(`${this.baseUrl}/Masterdetail`);
+  }
+
+getMasterscommodityById() {
+   return this.http.get(`${this.baseUrl}/CommodityGroup`);
+}
+
+
+ getMastersById(id: number) {
+   return this.http.get(`${this.baseUrl}/Masterdetail/${id}`);
+  //return this.http.get(`${this.apiUrl}?masterId=${id}`);
+}
+
+ getItemList() {
+   return this.http.get(`${this.baseUrl}/ItemList`);
+  //return this.http.get(`${this.apiUrl}?masterId=${id}`);
+}
+
+saveTab(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/Item`, data);
+  }
+
+  //  storeroomTab(itemid: number,data: any): Observable<any> {
+  //   return this.http.post(`${this.baseUrl}/Storeroom/${itemid}`, data);
+  // }
+
+  storeroomTab(itemId: number,status: boolean): Observable<any> {
+  return this.http.put(`${this.baseUrl}/Storeroom/update-status/${itemId}`,JSON.stringify(status),
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
+}
+  storeroomdetaildelete(id: number):Observable<any> {
+  return this.http.delete(`${this.baseUrl}/Storeroom/${id}`);
+  }
+
+
+ storeroomDetails(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/Storeroom`, data);
+  }
+
+  // vendoritemTab(tabName: string, data: any): Observable<any> {
+  //   const payload = Array.isArray(data) ? data[0] : data;
+  //   return this.http.post(`${this.baseUrl}/Vendor`, payload);
+  // }
+
+
+  assemblydetailTab(tabName: string, data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/ItemAssembly`, data);
+  }
+
+   getItemlist() {
+    return this.http.get(`${this.baseUrl}/Item`);
+  }
+
+  getItemlistlastid() {
+    return this.http.get(`${this.baseUrl}/Item/group-items`);
+  }
+
+  getmasterDetailList(id:number) {
+    return this.http.get(`${this.baseUrl}/Masterdetails/${id}`);
+  }
+ 
+  getItempost(data:any) {
+    return this.http.post(`${this.baseUrl}/Itemlist`, data);
+  }
+ 
+
+  getitemlastId():Observable<any>{
+    return this.http.get(`${this.baseUrl}/item/lastid`)
+  }
+
+  deleteItem(id: number):Observable<any> {
+  return this.http.delete(`${this.baseUrl}/Item/${id}`);
+  }
+
+   getItemById(id: number):Observable<any>  {
+    return this.http.get<any>(`${this.baseUrl}/Item/${id}`);
+  }
+
+  updateItem(id: number, payload: any) {
+    console.log(payload)
+  return this.http.put(`${this.baseUrl}/Item/${id}`, payload);
+}
+
+getstoreroomItem(id:number){
+      return this.http.get(`${this.baseUrl}/Storeroom/${id}`);
+}
+
+getvendorsItem(id:number, type: string){
+      return this.http.get(`${this.baseUrl}/Vendor/${id}?type=${type}`);
+}
+
+  specificationitemTab(tabName: string, data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/ItemSpecification`, data);
+  }
+
+getspecificationItem(id:number){
+      return this.http.get(`${this.baseUrl}/ItemSpecification/${id}`);
+}
+
+  ItemAssemblyTab(tabName: string, data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/ItemAssembly`, data);
+  }
+
+
+getorganizationItem(id:number){
+      return this.http.get(`${this.baseUrl}/ItemAssembly/${id}`);
+}
+
+importcsvfile(data:any){
+  return this.http.post(`${this.baseUrl}/item/import`,data);
+}
+
+// exportItems(fromDate:any, toDate:any) {
+//   const params = {
+//     fromDate: fromDate,
+//     toDate: toDate
+//   };
+//   return this.http.get(`${this.baseUrl}/Item/export-items`, {
+//     responseType: 'blob'
+//   });
+// }
+exportItems(fromDate:any, toDate:any) {
+
+  console.log(fromDate +"---"+toDate)
+
+
+  const params:any = {};
+
+  if (fromDate) {
+    params.fromDate = fromDate;
+  }
+
+  if (toDate) {
+    params.toDate = toDate;
+  }
+
+  return this.http.get(`${this.baseUrl}/Item/export-items`,
+    {
+      params,
+      responseType: 'blob'
+    }
+  );
+
+}
+
+documentsTab(itemId: number, type: string): Observable<any> {
+  return this.http.put(
+    `${this.baseUrl}/ItemDocument/update-status/${itemId}`,
+    JSON.stringify(type),
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+}
+
+ documentsdetails(formData: FormData): Observable<any> {
+  return this.http.post(`${this.baseUrl}/ItemDocument/save`, formData);
+}
+
+ vendordetails(Data:any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/vendor`, Data);
+}
+
+// vendoritemTab(itemId: number,status: boolean): Observable<any> {
+//     return this.http.put(`${this.baseUrl}/vendor/update-status/${itemId}`, status );
+//   }
+
+vendoritemTab(itemId: number,status: boolean): Observable<any> {
+  return this.http.put(`${this.baseUrl}/vendor/update-status/${itemId}`,JSON.stringify(status),
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
+}
+
+vendordetaildelete(id: number):Observable<any> {
+  return this.http.delete(`${this.baseUrl}/vendor/${id}`);
+  }
+
+// getDocuments(itemId: number,type:string) {
+//   return this.http.get<any[]>(`${this.baseUrl}/ItemDocument/by-item/${itemId}`,type);
+// }
+
+getDocuments(itemId: number) {
+  return this.http.get<any[]>(
+    `${this.baseUrl}/ItemDocument/by-item/${itemId}`
+  );
+}
+
+getDocumentsall(){
+  return this.http.get(`${this.baseUrl}/ItemDocument/`)
+}
+
+documentDetailsdelete(id: number):Observable<any> {
+  return this.http.delete(`${this.baseUrl}/ItemDocument/delete/${id}`);
+  }
+
+
+stockcancel(Data:any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/vendor`, Data);
+ }
+
+getDashboard(): Observable<any> {
+  return this.http.get(`${this.baseUrl}/dashboard`);
+}
+
+getOverviewChart(type:any):Observable<any> {
+  return this.http.get(`${this.baseUrl}/dashboard/overview-chart?type=${type}`);
+}
+
+getBarChart(type:any) {
+
+  return this.http.get(
+    `${this.baseUrl}/dashboard/bar-chart?type=${type}`
+  );
+
+}
+
+downloadExcel(masterId: number) {
+  return this.http.get(
+    `${this.baseUrl}/Masterdetail/download-excel/${masterId}`,
+    {
+      responseType: 'blob'
+    }
+  );
+}
+
+
+
+}

@@ -1,0 +1,135 @@
+<div [formGroup]="form">
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <div *ngFor="let field of fields">
+
+      <div class="flex items-center gap-3">
+
+        <!-- Label -->
+        <label class="w-40 text-[14px] font-medium text-gray-700">
+
+          {{ field.label }}
+
+          <span
+            *ngIf="form.get(field.controlName)?.hasValidator(requiredValidator)"
+            class="text-red-500"
+          >
+            *
+          </span>
+
+        </label>
+
+        <!-- Text / Number -->
+        <input
+          *ngIf="
+            field.type === 'text' ||
+            field.type === 'number' ||
+            field.type === 'email'
+          "
+          [type]="field.type"
+          [formControlName]="field.controlName"
+          [placeholder]="field.placeholder"
+          class="w-72 border border-gray-300 px-2 py-[4px] bg-white"
+        />
+
+        <!-- Select -->
+        <select
+          *ngIf="field.type === 'select'"
+          [formControlName]="field.controlName"
+          class="w-72 border border-gray-300 px-2 py-[4px] bg-white"
+        >
+          <option value="">Select</option>
+
+          <option
+            *ngFor="let op of field.options"
+            [value]="op.value"
+          >
+            {{ op.label }}
+          </option>
+
+        </select>
+
+        <!-- Checkbox -->
+        <input
+          *ngIf="field.type === 'checkbox' || field.type === 'toggle'"
+          type="checkbox"
+          [formControlName]="field.controlName"
+          class="h-4 w-4"
+        />
+
+
+          <textarea
+           *ngIf="field.type === 'textarea'"
+    [formControlName]="field.controlName"
+    [placeholder]="field.placeholder"
+    rows="4"
+    class="w-72 border border-gray-300 px-2 py-[4px] bg-white resize-none"
+  >
+  </textarea>
+
+  <!-- Autocomplete -->
+<div *ngIf="field.type === 'autocomplete'" class="relative w-72">
+  <input
+    type="text"
+    [formControlName]="field.controlName"
+    [placeholder]="field.placeholder"
+    class="w-full border border-gray-300 px-2 py-[4px] bg-white"
+    (focus)="onGroupFocus(field.controlName)"
+    (input)="filterGroups($event,field.controlName)"
+  />
+
+  <button
+    type="button"
+    class="absolute right-0 bg-gray-200 p-1 top-1/2 -translate-y-1/2"
+  >
+    <lucide-icon
+      *ngIf="field.icon"
+      [img]="field.icon"
+      class="w-4 h-4 cursor-pointer"
+      (click)="openCommodityHandler(field.controlName)"
+    >
+    </lucide-icon>
+  </button>
+
+  <div
+*ngIf="showGroupDropdown && activeControl === field.controlName"
+    class="absolute w-full bg-white border mt-1 max-h-40 overflow-y-auto z-50"
+  >
+    <div
+      *ngFor="let group of filteredGroups"
+      (click)="selectGroup(group,field.controlName)"
+      class="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+    >
+      {{ group.name }}
+    </div>
+
+    <div
+      *ngIf="filteredGroups.length === 0"
+      class="px-2 py-1 text-gray-400"
+    >
+      No results
+    </div>
+
+  </div>
+
+</div>
+
+      </div>
+
+      <!-- Error -->
+      <div
+        *ngIf="
+          form.get(field.controlName)?.touched &&
+          form.get(field.controlName)?.invalid
+        "
+        class="text-red-500 text-xs ml-40 mt-1"
+      >
+        {{ field.label }} is required
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,151 @@
+<form [formGroup]="form" class="p-6 bg-white rounded shadow">
+
+<h2 class="text-xl font-semibold mb-6">
+Return Item
+</h2>
+
+<!-- Header -->
+
+<div class="grid grid-cols-3 gap-4 mb-6">
+
+<div>
+<select formControlName="storeroom" class="border p-2 w-full">
+<option value="">Select Storeroom</option>
+<option>Main Store</option>
+</select>
+
+<div class="text-red-500 text-sm"
+*ngIf="form.get('storeroom')?.touched && form.get('storeroom')?.invalid">
+Storeroom required
+</div>
+</div>
+
+<div>
+<input
+type="text"
+placeholder="Return From"
+formControlName="returnFrom"
+class="border p-2 w-full">
+
+<div class="text-red-500 text-sm"
+*ngIf="form.get('returnFrom')?.touched && form.get('returnFrom')?.invalid">
+Return From required
+</div>
+</div>
+
+<div>
+<input
+type="date"
+formControlName="date"
+class="border p-2 w-full">
+
+<div class="text-red-500 text-sm"
+*ngIf="form.get('date')?.touched && form.get('date')?.invalid">
+Date required
+</div>
+</div>
+
+</div>
+
+<!-- Item Table -->
+
+<table class="w-full border">
+
+<thead class="bg-gray-100">
+
+<tr>
+<th class="p-2">Item Code</th>
+<th class="p-2">Item Name</th>
+<th class="p-2">Issued Qty</th>
+<th class="p-2">Return Qty</th>
+<th class="p-2">Condition</th>
+<th class="p-2">Remarks</th>
+<th class="p-2">Action</th>
+</tr>
+
+</thead>
+
+<tbody formArrayName="items">
+
+<tr *ngFor="let item of items.controls; let i=index"
+[formGroupName]="i">
+
+<td>
+<input formControlName="code" class="border p-2 w-full">
+</td>
+
+<td>
+<input formControlName="name" class="border p-2 w-full">
+</td>
+
+<td>
+<input formControlName="issuedQty" class="border p-2 w-full">
+</td>
+
+<td>
+<input
+type="number"
+formControlName="returnQty"
+class="border p-2 w-full">
+
+<div class="text-red-500 text-sm"
+*ngIf="item.get('returnQty')?.touched && item.get('returnQty')?.invalid">
+Return Qty required
+</div>
+
+</td>
+
+<td>
+
+<select formControlName="condition" class="border p-2 w-full">
+<option value="">Select</option>
+<option>Good</option>
+<option>Damaged</option>
+</select>
+
+</td>
+
+<td>
+<input formControlName="remarks" class="border p-2 w-full">
+</td>
+
+<td>
+
+<button
+type="button"
+class="text-red-600"
+(click)="removeRow(i)">
+Delete
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<button
+type="button"
+class="mt-4 bg-green-600 text-white px-4 py-2 rounded"
+(click)="addRow()">
+
++ Add Item
+
+</button>
+
+<div class="mt-6 text-right">
+
+<button
+type="button"
+class="bg-indigo-600 text-white px-6 py-2 rounded"
+(click)="submit()">
+
+Return Item
+
+</button>
+
+</div>
+
+</form>

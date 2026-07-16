@@ -1,0 +1,158 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold text-gray-800">
+      Reorder Level Monitoring
+    </h1>
+
+    <button
+      class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+      (click)="openCreateModal()">
+      + Create Purchase Request
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+
+    <div class="bg-white p-4 shadow-sm">
+      <p class="text-gray-500 text-sm">Low Stock Items</p>
+      <h2 class="text-xl font-bold text-red-500 mt-2">18</h2>
+    </div>
+
+    <div class="bg-white p-4 shadow-sm">
+      <p class="text-gray-500 text-sm">Critical Stock</p>
+      <h2 class="text-xl font-bold text-orange-500 mt-2">6</h2>
+    </div>
+
+    <div class="bg-white p-4 shadow-sm">
+      <p class="text-gray-500 text-sm">Auto Reorder Enabled</p>
+      <h2 class="text-xl font-bold mt-2">24</h2>
+    </div>
+
+    <div class="bg-white p-4 shadow-sm">
+      <p class="text-gray-500 text-sm">Pending PR</p>
+      <h2 class="text-xl font-bold text-blue-600 mt-2">5</h2>
+    </div>
+
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white p-4 shadow-sm mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+      <input type="text"
+        placeholder="Search Item..."
+        class="border rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+
+      <select class="border rounded px-3 py-2">
+        <option>All Storerooms</option>
+      </select>
+
+      <select class="border rounded px-3 py-2">
+        <option>All Categories</option>
+      </select>
+
+      <select class="border rounded px-3 py-2">
+        <option>Stock Status</option>
+        <option>Low</option>
+        <option>Critical</option>
+        <option>Normal</option>
+      </select>
+
+      <button class="bg-gray-200 rounded px-4 py-2">
+        Reset
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white shadow-sm overflow-hidden">
+
+    <table class="w-full text-sm">
+      <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="px-6 py-3">Item Code</th>
+          <th class="px-6 py-3">Item Name</th>
+          <th class="px-6 py-3">Storeroom</th>
+          <th class="px-6 py-3">Current Stock</th>
+          <th class="px-6 py-3">Reorder Level</th>
+          <th class="px-6 py-3">Reorder Qty</th>
+          <th class="px-6 py-3">Lead Time</th>
+          <th class="px-6 py-3">Status</th>
+          <th class="px-6 py-3">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr class="border-0 hover:bg-gray-50">
+          <td class="px-6 py-3">ITM-1023</td>
+          <td class="px-6 py-3">Electrical Cable</td>
+          <td class="px-6 py-3">Main Warehouse</td>
+          <td class="px-6 py-3 font-semibold text-red-500">45</td>
+          <td class="px-6 py-3">100</td>
+          <td class="px-6 py-3">200</td>
+          <td class="px-6 py-3">7 Days</td>
+          <td class="px-6 py-3">
+            <span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">
+              Critical
+            </span>
+          </td>
+          <td class="p-3 space-x-2">
+            <button class="text-indigo-600">Create PR</button>
+            <button class="text-gray-500">View</button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-end mt-4">
+    <button class="px-3 py-1 border rounded mr-2">Prev</button>
+    <button class="px-3 py-1 border rounded">Next</button>
+  </div>
+
+</div>
+
+@if (showCreateModal) {
+
+  <div class="fixed inset-0 z-[1000] flex items-center justify-center">
+
+    <!-- Background -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+         (click)="closeCreateModal()">
+    </div>
+
+    <!-- Modal -->
+    <div class="relative bg-white w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden">
+
+      <!-- Header -->
+      <div class="flex justify-between items-center px-6 py-4 border-b bg-gray-50">
+        <h2 class="text-lg font-semibold text-gray-800">
+          Reorder
+        </h2>
+
+        <button (click)="closeCreateModal()"
+                class="text-gray-400 hover:text-red-500 text-xl">
+          ✕
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6 max-h-[80vh] overflow-y-auto">
+        <app-reorder-modal
+          (close)="closeCreateModal()">
+        </app-reorder-modal>
+      </div>
+
+    </div>
+
+  </div>
+
+}

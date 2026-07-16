@@ -1,0 +1,80 @@
+<form [formGroup]="form" class="w-full text-sm bg-white ">
+
+  <!-- HEADER -->
+  <div class="bg-white  p-3">
+    <div class="flex items-center gap-3">
+      <label class=" font-medium">Service Item:</label>
+      <input formControlName="itemCode" class="border px-2 py-1 w-40" >
+      <input formControlName="description" class="border px-2 py-1 w-72">
+    </div>
+  </div>
+
+  <!-- CHANGE STATUS BOX -->
+  <div class="bg-white p-4 space-y-4">
+
+    <div class="text-sm bg-gray-100 p-3 pb-2">
+      Change Status
+    </div>
+
+    <!-- CURRENT STATUS -->
+    <div class="flex items-center">
+      <label class="w-48">Current Status:</label>
+      <input formControlName="currentStatus"
+             class="border px-2 py-1 w-40 bg-gray-100" readonly>
+    </div>
+
+    <!-- NEW STATUS -->
+    <div class="flex items-center">
+      <label class="w-48">New Status:</label>
+      <select formControlName="newStatus"
+              class="border px-2 py-1 w-60">
+        <option value="">Select Status</option>
+        <option value="PENDING">PENDING</option>
+        <option value="PLANNING">PLANNING</option>
+        <option value="ACTIVE">ACTIVE</option>
+        <option value="PENDING_OBSOLESCENCE">PENDING OBSOLESCENCE</option>
+        <option value="OBSOLETE">OBSOLETE</option>
+      </select>
+    </div>
+
+    <!-- STATUS DATE -->
+    <div class="flex items-center">
+      <label class="w-48">Status Date:</label>
+      <input type="date"
+             formControlName="statusDate"
+             class="border px-2 py-1 w-60">
+    </div>
+
+    <!-- REASON -->
+    <div class="flex items-start">
+      <label class="w-48 pt-1">Reason:</label>
+      <textarea formControlName="reason"
+                rows="3"
+                class="border px-2 py-1 w-80"
+                placeholder="Enter reason..."></textarea>
+    </div>
+
+    <!-- CHECKBOX -->
+    <div class="flex items-center gap-2">
+      <input type="checkbox" formControlName="rollToOrg">
+      <label>Roll New Status to Organizations</label>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="flex justify-end gap-3 pt-3 border-t">
+      <button type="button"
+              (click)="resetForm()"
+              class="px-4 py-1 border bg-gray-200 hover:bg-gray-300">
+        Cancel
+      </button>
+
+      <button type="button"
+              (click)="changeStatus()"
+              class="px-4 py-1 bg-blue-600 text-white hover:bg-blue-700">
+        OK
+      </button>
+    </div>
+
+  </div>
+
+</form>

@@ -1,0 +1,142 @@
+<div [formGroup]="form" class="text-xs">
+
+  <!-- HEADER -->
+  <div class="flex justify-between items-center p-3 bg-white">
+    <div class="flex items-center gap-2">
+      <span class="text-[14px]">Item:</span>
+
+      <input formControlName="itemCode"
+             class="border px-2 py-1 w-40" />
+
+      <input formControlName="itemName"
+             class="border px-2 py-1 w-72" />
+    </div>
+  </div>
+
+  <!-- TITLE -->
+  <div class="px-3 py-2 bg-gray-100 flex justify-between">
+    <div class="font-semibold">Unit of Measure Conversion</div>
+
+    <button (click)="addRow()" class="text-blue-600 hover:underline">
+      New Row
+    </button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-xs border">
+
+      <!-- HEADER -->
+      <thead class="bg-white">
+        <tr>
+          <th class="border px-2 py-1">From UOM</th>
+          <th class="border px-2 py-1">To UOM</th>
+          <th class="border px-2 py-1">Factor</th>
+          <th class="border px-2 py-1">Base Qty</th>
+          <th class="border px-2 py-1">Converted Qty</th>
+          <th class="border px-2 py-1">Action</th>
+        </tr>
+      </thead>
+
+      <!-- BODY -->
+      <tbody formArrayName="conversions">
+
+        <ng-container *ngFor="let row of conversions.controls; let i = index">
+
+          <!-- DISPLAY ROW -->
+          <tr [formGroupName]="i">
+
+            <td class="border px-2 py-1">
+              {{ row.get('fromUom')?.value }}
+            </td>
+
+            <td class="border px-2 py-1">
+              {{ row.get('toUom')?.value }}
+            </td>
+
+            <td class="border px-2 py-1">
+              {{ row.get('factor')?.value }}
+            </td>
+
+            <td class="border px-2 py-1">
+              {{ row.get('baseQty')?.value }}
+            </td>
+
+            <td class="border px-2 py-1">
+              {{ row.get('convertedQty')?.value }}
+            </td>
+
+            <td class="border px-2 py-1 flex gap-2">
+              <button (click)="toggleDetails(i)" class="text-blue-600">
+                {{ expandedIndex === i ? 'Hide' : 'Edit' }}
+              </button>
+
+              <button (click)="deleteRow(i)" class="text-red-600">
+                Delete
+              </button>
+            </td>
+
+          </tr>
+
+          <!-- EDIT ROW -->
+          <tr *ngIf="expandedIndex === i" [formGroupName]="i">
+            <td colspan="6" class="p-4 bg-gray-50">
+
+              <div class="grid grid-cols-2 gap-4">
+
+                <!-- From UOM -->
+                <select formControlName="fromUom"
+                        class="border px-2 py-1">
+                  <option value="">Select From UOM</option>
+                  <option *ngFor="let u of uomList" [value]="u">
+                    {{ u }}
+                  </option>
+                </select>
+
+                <!-- To UOM -->
+                <select formControlName="toUom"
+                        class="border px-2 py-1">
+                  <option value="">Select To UOM</option>
+                  <option *ngFor="let u of uomList" [value]="u">
+                    {{ u }}
+                  </option>
+                </select>
+
+                <!-- Factor -->
+                <input type="number"
+                       formControlName="factor"
+                       (input)="calculate(i)"
+                       placeholder="Factor"
+                       class="border px-2 py-1" />
+
+                <!-- Base Qty -->
+                <input type="number"
+                       formControlName="baseQty"
+                       (input)="calculate(i)"
+                       placeholder="Base Qty"
+                       class="border px-2 py-1" />
+
+                <!-- Converted Qty -->
+                <input formControlName="convertedQty"
+                       readonly
+                       class="border px-2 py-1 bg-gray-200" />
+
+              </div>
+
+              <div class="mt-3 text-right">
+                <button (click)="saveRow(i)"
+                        class="bg-gray-200 px-3 py-1">
+                  Save
+                </button>
+              </div>
+
+            </td>
+          </tr>
+
+        </ng-container>
+
+      </tbody>
+
+    </table>
+  </div>
+</div>

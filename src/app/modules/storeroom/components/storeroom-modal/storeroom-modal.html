@@ -1,0 +1,124 @@
+<form [formGroup]="storeroomForm" (ngSubmit)="save()">
+
+<div class="bg-white p-0 rounded-xl shadow-md max-w-4xl mx-auto">
+
+  <!-- Two Column Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <!-- Storeroom Code -->
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2">
+        Storeroom Code
+      </label>
+
+      <input type="text"
+        formControlName="storeroomCode"
+        class="w-full border rounded px-3 py-2 mt-1">
+
+      <p class="text-red-500 text-xs"
+         *ngIf="f['storeroomCode'].touched && f['storeroomCode'].invalid">
+        Storeroom Code required
+      </p>
+    </div>
+
+    <!-- Storeroom Name -->
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2">
+        Storeroom Name
+      </label>
+
+      <input type="text"
+        formControlName="storeroomName"
+        class="w-full border rounded px-3 py-2 mt-1">
+
+      <p class="text-red-500 text-xs"
+         *ngIf="f['storeroomName'].touched && f['storeroomName'].invalid">
+        Storeroom Name required
+      </p>
+    </div>
+
+    <!-- Organization -->
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2">
+        Organization
+      </label>
+
+      <select formControlName="organization"
+        class="w-full border rounded px-3 py-2 mt-1">
+
+        <option value="">Select Organization</option>
+        <option>ORG01</option>
+        <option>ORG02</option>
+
+      </select>
+
+      <p class="text-red-500 text-xs"
+         *ngIf="f['organization'].touched && f['organization'].invalid">
+        Organization required
+      </p>
+    </div>
+
+    <!-- Location -->
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2">
+        Location
+      </label>
+
+      <input type="text"
+        formControlName="location"
+        class="w-full border rounded px-3 py-2 mt-1">
+    </div>
+
+    <!-- Capacity -->
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2">
+        Capacity (Units)
+      </label>
+
+      <input type="number"
+        formControlName="capacity"
+        class="w-full border rounded px-3 py-2 mt-1">
+    </div>
+
+    <!-- Manager -->
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-2">
+        Manager
+      </label>
+
+      <input type="text"
+        formControlName="manager"
+        class="w-full border rounded px-3 py-2 mt-1">
+    </div>
+
+  </div>
+
+  <!-- Description -->
+  <div class="mt-6">
+    <label class="block text-sm font-medium text-gray-600 mb-2">
+      Description
+    </label>
+
+    <textarea rows="3"
+      formControlName="description"
+      class="w-full border rounded px-3 py-2 mt-1"></textarea>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex justify-end mt-6 gap-3">
+
+    <button type="button"
+      class="px-4 py-2 bg-gray-200 rounded">
+      Cancel
+    </button>
+
+    <button type="submit"
+      class="px-4 py-2 bg-indigo-600 text-white rounded">
+      Save
+    </button>
+
+  </div>
+
+</div>
+
+</form>

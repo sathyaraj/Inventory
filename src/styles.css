@@ -1,0 +1,68 @@
+@import "tailwindcss";
+@import "@ng-select/ng-select/themes/default.theme.css";
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+html, body {
+  height: 100%;
+}
+
+/* SweetAlert Custom Buttons - GLOBAL */
+.swal-btn-danger {
+  background: #dc2626;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.swal-btn-danger:hover {
+  background: #b91c1c;
+}
+
+.swal-btn-secondary {
+  background: #e5e7eb;
+  color: #111827;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.swal-btn-secondary:hover {
+  background: #d1d5db;
+}
+
+/* MOBILE ONLY */
+@media (max-width: 768px) {
+
+  .w-75,
+  .w-40,
+  .w-45,
+  .w-35,
+  .w-30,
+  .w-28,
+  .w-47 {
+    width: 100% !important;
+  }
+
+  .flex.items-center {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  label {
+    width: 100% !important;
+  }
+}

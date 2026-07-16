@@ -1,0 +1,135 @@
+<!-- HEADER -->
+<div class="px-3 py-2 bg-gray-100 flex justify-between">
+  <div class="font-semibold">{{ title }}</div>
+
+  <button (click)="add.emit()" class="text-blue-600 hover:underline">
+    New Row
+  </button>
+</div>
+
+<!-- TABLE -->
+<div class="overflow-x-auto">
+
+<table class="min-w-full text-sm border">
+
+  <!-- HEADER -->
+  <thead class="bg-gray-100 text-xs uppercase">
+
+    <!-- COLUMN ROW -->
+    <tr>
+      <th
+        *ngFor="let col of columns"
+        (click)="onSort(col.field)"
+        class="border px-3 py-2 cursor-pointer">
+
+        <div class="flex items-center gap-1">
+
+          {{ col.label }}
+
+          <!-- SORT ICON -->
+          <span *ngIf="sortColumn === col.field">
+
+            <lucide-icon
+              *ngIf="sortDirection === 'asc'"
+              [img]="chevronUp"
+              class="w-4 h-4 text-blue-600">
+            </lucide-icon>
+
+            <lucide-icon
+              *ngIf="sortDirection === 'desc'"
+              [img]="chevronDown"
+              class="w-4 h-4 text-blue-600">
+            </lucide-icon>
+
+          </span>
+
+        </div>
+
+      </th>
+
+      <th class="border px-3 py-2">Action</th>
+    </tr>
+
+  </thead>
+
+  <!-- BODY -->
+  <tbody>
+
+    <tr *ngFor="let row of data; let i = index">
+
+      <td *ngFor="let col of columns" class="border px-3 py-2">
+
+        <!-- EDIT MODE -->
+        <input
+          *ngIf="expandedIndex === i"
+          [(ngModel)]="row[col.field]"
+          class="border px-2 py-1 w-full">
+
+        <!-- VIEW MODE -->
+        <span *ngIf="expandedIndex !== i">
+          {{ row[col.field] }}
+        </span>
+
+      </td>
+
+      <!-- ACTION -->
+      <td class="border px-3 py-2">
+
+        <div class="flex gap-2 justify-center">
+
+          <button
+            *ngIf="expandedIndex !== i"
+            (click)="onEdit(i)"
+            class="text-blue-600">
+            Edit
+          </button>
+
+          <button
+            *ngIf="expandedIndex !== i"
+            (click)="onDelete(i)"
+            class="text-red-600">
+            Delete
+          </button>
+
+          <button
+            *ngIf="expandedIndex === i"
+            (click)="onSave(i)"
+            class="text-green-600">
+            Save
+          </button>
+
+        </div>
+
+      </td>
+
+    </tr>
+
+  </tbody>
+
+</table>
+
+</div>
+
+<!-- PAGINATION -->
+<div class="flex justify-center gap-2 mt-4">
+
+  <button (click)="goTo(currentPage-1)"
+          [disabled]="currentPage===1"
+          class="px-3 py-1 border">
+    Prev
+  </button>
+
+  <button *ngFor="let p of pages"
+          (click)="goTo(p)"
+          [class.bg-indigo-600]="currentPage===p"
+          class="px-3 py-1 border">
+    {{ p }}
+  </button>
+
+  <button (click)="goTo(currentPage+1)"
+          [disabled]="currentPage===totalPages"
+          class="px-3 py-1 border">
+    Next
+  </button>
+
+</div>

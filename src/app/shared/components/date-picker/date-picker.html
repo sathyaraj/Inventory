@@ -1,0 +1,93 @@
+<div class="relative w-75">
+
+  <!-- Input -->
+  <div
+    class="border border-gray-300  px-1 py-1 flex justify-between items-center cursor-pointer bg-white"
+    (click)="toggle()"
+  >
+    <span class="text-xs">
+      {{ selectedDate ? formatDate(selectedDate) : 'dd/mm/yyyyy' }}
+    </span>
+    <span class="text-sm"><lucide-icon [img]="CalendarDays" class="w-3 h-3"></lucide-icon></span>
+  </div>
+
+  <!-- Popup -->
+  <div
+    *ngIf="isOpen"
+    class="absolute z-100 mt-1 w-full bg-white border p-2"
+  >
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-2 relative">
+
+      <!-- Month -->
+      <button
+        class="text-xs font-medium px-2 py-1 hover:bg-gray-100"
+        (click)="showMonth = !showMonth; showYear = false"
+      >
+        {{ months[viewMonth] }}
+      </button>
+
+      <!-- Year -->
+      <button
+        class="text-xs font-medium px-2 py-1 rounded hover:bg-gray-100"
+        (click)="showYear = !showYear; showMonth = false"
+      >
+        {{ viewYear }}
+      </button>
+
+      <!-- MONTH DROPDOWN -->
+      <div
+        *ngIf="showMonth"
+        class="absolute top-8 left-0 bg-white border border-gray-200  w-full grid grid-cols-3 gap-1 p-2 z-50"
+      >
+        <div
+          *ngFor="let m of months; let i = index"
+          (click)="viewMonth = i; generateCalendar(); showMonth = false"
+          class="text-xs text-left px-2 py-1 rounded cursor-pointer hover:bg-blue-100"
+        >
+          {{ m }}
+        </div>
+      </div>
+
+      <!-- YEAR DROPDOWN -->
+      <div
+        *ngIf="showYear"
+        class="absolute top-8 right-0 bg-white border border-gray-200  w-24 max-h-40 overflow-y-auto z-50"
+      >
+        <div
+          *ngFor="let y of years"
+          (click)="viewYear = y; generateCalendar(); showYear = false"
+          class="text-xs text-center px-2 py-1 hover:bg-blue-100 cursor-pointer"
+        >
+          {{ y }}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Week -->
+    <div class="grid grid-cols-7 text-[10px] text-gray-500 text-center mb-1">
+      <div>Su</div><div>Mo</div><div>Tu</div>
+      <div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+    </div>
+
+    <!-- Days -->
+    <div class="grid grid-cols-7 gap-0.5 text-center">
+    <div
+  *ngFor="let day of days"
+  (click)="day && selectDate(day)"
+  [ngClass]="{
+    'text-gray-300 cursor-default': !day,
+    'hover:bg-blue-100 cursor-pointer': day,
+    'bg-blue-500 text-white': selectedDate && day &&
+      selectedDate.toDateString() === day.toDateString()
+  }"
+  class="h-7 flex items-center justify-center rounded text-xs"
+>
+  {{ day ? day.getDate() : '' }}
+</div>
+    </div>
+
+  </div>
+</div>

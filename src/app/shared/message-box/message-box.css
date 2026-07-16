@@ -1,0 +1,14 @@
+@keyframes slideInBottomRight {
+  from {
+    transform: translate(100%, 20%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.animate-slideIn {
+  animation: slideInBottomRight 0.3s ease-out;
+}

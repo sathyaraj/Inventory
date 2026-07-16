@@ -1,0 +1,85 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="save()"
+  *ngIf="form"
+>
+
+  <div class="min-h-screen overflow-y-auto bg-gray-100 p-2">
+
+    <div
+      class="bg-white shadow-lg
+             flex flex-col
+             overflow-hidden
+             p-5"
+    >
+
+      <!-- DYNAMIC FORM -->
+      <app-dynamic-form
+        [form]="form"
+        [fields]="fields">
+      </app-dynamic-form>
+
+      <!-- ACTION BUTTONS -->
+      <div
+        class="flex justify-end gap-4
+               border-t mt-10 pt-8"
+      >
+
+        <!-- RESET -->
+        <button
+          type="button"
+          (click)="onReset()"
+          class="flex items-center gap-3
+                 px-3 py-2
+                 border border-gray-300
+                 text-gray-700 text-[14px]
+                 hover:bg-gray-100 transition"
+        >
+
+          <lucide-icon
+            [img]="RotateCcw"
+            class="w-4 h-4">
+          </lucide-icon>
+
+          Reset
+
+        </button>
+
+        <!-- SAVE -->
+        <button
+          type="submit"
+          class="flex items-center gap-1
+                 px-3 py-2
+                 bg-gradient-to-r
+                 from-blue-600 to-indigo-600
+                 text-white text-[14px]
+                 font-medium
+                 shadow-lg hover:shadow-xl
+                 transition-all"
+        >
+
+          <lucide-icon
+            [img]="Save"
+            class="w-4 h-4">
+          </lucide-icon>
+
+          {{ editId > 0 ? 'Update' : 'Save' }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</form>
+
+<!-- MESSAGE BOX -->
+<app-message-box
+  [title]="messageTitle"
+  [message]="messageText"
+  [visible]="showMessageBox"
+  (onConfirm)="confirmadd()"
+  (onCancel)="showMessageBox = false">
+</app-message-box>
