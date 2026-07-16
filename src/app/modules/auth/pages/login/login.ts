@@ -79,6 +79,7 @@ loginForm!: FormGroup
 showMessage = false;
 messageText = '';
 messageType = '';
+isLoading = false;
 
 onSubmit() {
 
@@ -95,6 +96,8 @@ onSubmit() {
     return;
   }
 
+    this.isLoading = true;   // Loader Start
+
   const payload = {
 
     email: this.loginForm.value.email,
@@ -106,12 +109,13 @@ onSubmit() {
 
   this.authService.login(payload).subscribe(res => {
 
-this.showMessage = true;
+  this.showMessage = true;
+
+   this.isLoading = false;   // Loader Stop
 
   console.log('LOGIN RESPONSE', res);
 
       this.authService.saveToken(res.token);
-
        console.log(
     'TOKEN AFTER SAVE',
     localStorage.getItem('token')

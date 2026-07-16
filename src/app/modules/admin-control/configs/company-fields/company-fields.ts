@@ -4,7 +4,8 @@ import {
   Phone,
   Briefcase,
   Hash,
-  FileText
+  FileText,
+  Image
 } from 'lucide-angular';
 
 export interface FieldConfig {

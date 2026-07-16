@@ -136,6 +136,9 @@ save(): void {
 
     };
 
+
+    console.log(payload);
+
     this.adminMaster.saveCommodityGroup(payload).subscribe({
 
         next: (res: any) => {

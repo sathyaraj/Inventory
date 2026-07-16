@@ -1033,11 +1033,12 @@ MultiNewRow(type: string) {
   const masterMap: any = {
     CommodityGroup: 1,
     meterGroup: 2,
-    Orderunit: 3
+    Orderunit: 3,
+    Manufacturer: 5
   };
 
  
-    if (type === "Item")
+if (type === "Item")
     {
 
     this.masterService.getItempost(this.newItemRow).subscribe({
@@ -1077,25 +1078,20 @@ MultiNewRow(type: string) {
     }
   });
 }else{
-    if (!this.newRow.name) return;
-
-   this.newRow.masterName = type;
+  if(!this.newRow.name) return;
+  this.newRow.masterName = type;
   this.newRow.masterId = masterMap[type] ?? 0;
   this.newRow.groupId = 0;
 
   this.masterService.createMaster(this.newRow).subscribe({
     next: (res: any) => {
+          console.log(res)
 
       const newItem = res?.data ?? res;
-        
-      this.citems.unshift(newItem);   // ✅ single insert
-
+      this.citems.unshift(newItem);
         this.applyFilters();   
         this.cdr.detectChanges();
-
         this.showSuccess= true;
-
-           // ✅ refresh view properly
       this.currentPage = 1;
 
       this.selectedRowId = newItem.id || newItem.masterId;
@@ -1596,8 +1592,10 @@ selectItem(item: any) {
     issueUnit: item.name
   });
  }else if(item.masterId == 5){
+  console.log(item.name)
+  console.log("selectItem")
   this.itemForm.get('general')?.patchValue({
-    lotType: item.name,
+    Manufacturer: item.name,
   });
  }else if(item.masterId == 2){
   this.itemForm.get('general')?.patchValue({

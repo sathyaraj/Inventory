@@ -66,12 +66,44 @@
 
   <!-- Button -->
    <!-- [disabled]="loginForm.invalid" -->
-  <button
+  <!-- <button
     type="submit"
     class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
     Login
-  </button>
+  </button> -->
+<button
+    type="submit"
+    [disabled]="isLoading"
+    class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
 
+    <span *ngIf="!isLoading">
+        Login
+    </span>
+
+    <span
+        *ngIf="isLoading"
+        class="flex justify-center items-center">
+
+        <svg
+            class="animate-spin h-5 w-5 mr-2"
+            viewBox="0 0 24 24">
+
+            <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="white"
+                stroke-width="3"
+                fill="none">
+            </circle>
+
+        </svg>
+
+        Logging in...
+
+    </span>
+
+</button>
   
 
 </form>

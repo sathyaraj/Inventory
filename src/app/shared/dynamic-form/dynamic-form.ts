@@ -63,14 +63,83 @@ export class DynamicForm {
 
   }
 
-handleChange(field: any, value: any) {
+// handleChange(field: any, value: any) {
+
+//   this.fieldAction.emit({
+//     action: field.onChange,
+//     controlName: field.controlName,
+//     value: value.value
+//   });
+
+// }
+
+handleChange(field: any, event: any) {
+
+  switch (field.type) {
+
+    case 'file':
+      this.handleFile(field, event);
+      break;
+
+    case 'ng-select':
+      this.fieldAction.emit({
+        action: field.onChange,
+        controlName: field.controlName,
+        value: event?.value ?? event
+      });
+      break;
+
+    default:
+      break;
+  }
+
+}
+
+handleFile(field: any, event: any) {
+
+  const file = event.target.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  if (!file.type.startsWith('image/')) {
+
+    this.form.get(field.controlName)?.setErrors({
+      invalidFile: true
+    });
+
+    event.target.value = '';
+
+    return;
+  }
+
+  // 2MB Limit
+  const maxSize = 2 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+
+    this.form.get(field.controlName)?.setErrors({
+      maxSize: true
+    });
+
+    event.target.value = '';
+
+    return;
+  }
+
+  // Form-ல் set
+  this.form.patchValue({
+    [field.controlName]: file
+  });
 
   this.fieldAction.emit({
-    action: field.onChange,
+    action: 'fileSelected',
     controlName: field.controlName,
-    value: value.value
+    value: file
   });
 
 }
+
 
 }
